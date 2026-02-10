@@ -67,5 +67,7 @@ namespace AccuPay.Core.Interfaces
         Task<Product> UpdateDisciplinaryTypeAsync(int id, int userId, string adjustmentName, string description);
 
         Task UpdateLoanTypeAsync(int id, string loanTypeName);
+
+        Task<ICollection<Product>> GetBenchmarkLoanTypesAsync(int organizationId);
     }
 }

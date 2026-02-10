@@ -40,9 +40,9 @@ Public Class BenchmarkPayrollForm
 
     Private _ecola As Allowance
 
-    Private _pagibigLoan As Loan
+    Private _pagibigSalaryLoan As Loan
 
-    Private _sssLoan As Loan
+    Private _sssSalaryLoan As Loan
 
     Private _leaveBalance As Decimal
 
@@ -61,6 +61,9 @@ Public Class BenchmarkPayrollForm
     Private ReadOnly _overtimeRateService As IOvertimeRateService
 
     Private _benchmarkPayrollGenerationOutput As BenchmarkPayrollGeneration.DoProcessOutput
+    Private _sssCalamityLoan As Loan
+    Private _sssEmergencyLoan As Loan
+    Private _pagibigCalamityLoan As Loan
 
     Sub New()
 
@@ -89,6 +92,9 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Panel6.Visible = False
+        Panel8.Visible = False
+        Panel9.Visible = False
 
         Await RefreshForm()
 
@@ -284,25 +290,58 @@ Public Class BenchmarkPayrollForm
             Return False
         End If
 
-        Dim pagibigLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+        Dim pagibigSalaryLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_SALARY_LOAN, employeeId.Value)
 
-        If pagibigLoans.Count > 1 Then
+        If pagibigSalaryLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _pagibigLoan = pagibigLoans.FirstOrDefault
+            _pagibigSalaryLoan = pagibigSalaryLoans.FirstOrDefault
 
         End If
 
-        Dim sssLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+        Dim sssSalaryLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_SALARY_LOAN, employeeId.Value)
 
-        If sssLoans.Count > 1 Then
+        If sssSalaryLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _sssLoan = sssLoans.FirstOrDefault
+            _sssSalaryLoan = sssSalaryLoans.FirstOrDefault
+
+        End If
+
+        Dim sssCalamityLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_CALAMITY_LOAN, employeeId.Value)
+
+        If sssCalamityLoans.Count > 1 Then
+
+            MessageBoxHelper.Warning("Selected employee currently has multiple active SSS Calamity Loan(s). Please delete one in the loan schedule form first.")
+            Return False
+        Else
+            _sssCalamityLoan = sssCalamityLoans.FirstOrDefault
+
+        End If
+
+        Dim sssEmergencyLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_EMERGENCY_LOAN, employeeId.Value)
+
+        If sssEmergencyLoans.Count > 1 Then
+
+            MessageBoxHelper.Warning("Selected employee currently has multiple active SSS Emergency Loan(s). Please delete one in the loan schedule form first.")
+            Return False
+        Else
+            _sssEmergencyLoan = sssEmergencyLoans.FirstOrDefault
+
+        End If
+
+        Dim pagibigCalamityLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_CALAMITY_LOAN, employeeId.Value)
+
+        If pagibigCalamityLoans.Count > 1 Then
+
+            MessageBoxHelper.Warning("Selected employee currently has multiple active Pag-IBIG Calamity Loan(s). Please delete one in the loan schedule form first.")
+            Return False
+        Else
+            _pagibigCalamityLoan = pagibigCalamityLoans.FirstOrDefault
 
         End If
 
@@ -340,6 +379,9 @@ Public Class BenchmarkPayrollForm
         WithholdingTaxTextBox.ResetText()
         PagibigLoanTextBox.ResetText()
         SssLoanTextBox.ResetText()
+        SssCalamityLoanTextBox.ResetText()
+        SssEmergencyLoanTextBox.ResetText()
+        PagibigCalamityLoanTextBox.ResetText()
 
         EcolaAmountTextBox.ResetText()
         ThirteenthMonthPayTextBox.ResetText()
@@ -519,8 +561,12 @@ Public Class BenchmarkPayrollForm
             loans.Add(loan.Clone())
         Next
 
-        Dim pagIbigLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigLoan Is Nothing, 0, Nothing)
-        Dim sssLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssLoan Is Nothing, 0, Nothing)
+        Dim pagIbigSalaryLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigSalaryLoan Is Nothing, 0, Nothing)
+        Dim sssSalaryLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssSalaryLoan Is Nothing, 0, Nothing)
+
+        Dim sssCalamityLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssCalamityLoan Is Nothing, 0, Nothing)
+        Dim sssEmergencyLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssEmergencyLoan Is Nothing, 0, Nothing)
+        Dim pagibigCalamityLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigCalamityLoan Is Nothing, 0, Nothing)
 
         Dim loanIndex As Integer = 0
 
@@ -528,34 +574,73 @@ Public Class BenchmarkPayrollForm
 
             Dim loan = loans(loanIndex)
 
-            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _pagibigLoan.RowID.Value Then
+            If _pagibigSalaryLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _pagibigSalaryLoan.RowID.Value Then
 
-                If pagIbigLoan Is Nothing Then
+                If pagIbigSalaryLoan Is Nothing Then
 
-                    pagIbigLoan = loan.DeductionAmount
+                    pagIbigSalaryLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else
-                    'This most likely happens when there are multiple active pagibig loans which is not allowed.
+                    'This most likely happens when there are multiple active pagibig salary loans which is not allowed.
                     MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
                     Return
                 End If
 
-            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssLoan.RowID.Value Then
+            ElseIf _sssSalaryLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssSalaryLoan.RowID.Value Then
 
-                If sssLoan Is Nothing Then
+                If sssSalaryLoan Is Nothing Then
 
-                    sssLoan = loan.DeductionAmount
+                    sssSalaryLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else
-                    'This most likely happens when there are multiple active SSS loans which is not allowed.
+                    'This most likely happens when there are multiple active SSS salary loans which is not allowed.
+                    MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                    Return
+                End If
+
+            ElseIf _sssCalamityLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssCalamityLoan.RowID.Value Then
+
+                If sssCalamityLoan Is Nothing Then
+
+                    sssCalamityLoan = loan.DeductionAmount
+                    loans.Remove(loan)
+                    Continue While
+                Else
+                    'This most likely happens when there are multiple active SSS calamity loans which is not allowed.
+                    MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                    Return
+                End If
+
+            ElseIf _sssEmergencyLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssEmergencyLoan.RowID.Value Then
+
+                If sssEmergencyLoan Is Nothing Then
+
+                    sssEmergencyLoan = loan.DeductionAmount
+                    loans.Remove(loan)
+                    Continue While
+                Else
+                    'This most likely happens when there are multiple active SSS emergency loans which is not allowed.
+                    MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                    Return
+                End If
+
+            ElseIf _pagibigCalamityLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _pagibigCalamityLoan.RowID.Value Then
+
+                If pagibigCalamityLoan Is Nothing Then
+
+                    pagibigCalamityLoan = loan.DeductionAmount
+                    loans.Remove(loan)
+                    Continue While
+                Else
+                    'This most likely happens when there are multiple active Pag-IBIG Calamity loans which is not allowed.
                     MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
                     Return
                 End If
             Else
 
-                'This most likely happens when there are multiple active SSS loans which is not allowed.
+                'This most likely happens when there are multiple active loans of the same kind which is not allowed.
                 MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
                 Return
             End If
@@ -571,8 +656,17 @@ Public Class BenchmarkPayrollForm
         SssAmountTextBox.Text = currentPaystub.SssEmployeeShare.RoundToString()
         PagibigAmountTextBox.Text = currentPaystub.HdmfEmployeeShare.RoundToString()
         WithholdingTaxTextBox.Text = currentPaystub.WithholdingTax.RoundToString()
-        PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
-        SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
+        PagibigLoanTextBox.Text = If(pagIbigSalaryLoan, 0).RoundToString()
+        SssLoanTextBox.Text = If(sssSalaryLoan, 0).RoundToString()
+
+        SssCalamityLoanTextBox.Text = If(sssCalamityLoan, 0).RoundToString()
+        Panel6.Visible = Val(SssCalamityLoanTextBox.Text) > 0
+
+        SssEmergencyLoanTextBox.Text = If(sssEmergencyLoan, 0).RoundToString()
+        Panel8.Visible = Val(SssEmergencyLoanTextBox.Text) > 0
+
+        PagibigCalamityLoanTextBox.Text = If(pagibigCalamityLoan, 0).RoundToString()
+        Panel9.Visible = Val(PagibigCalamityLoanTextBox.Text) > 0
 
         EcolaAmountTextBox.Text = currentPaystub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
@@ -830,6 +924,21 @@ Public Class BenchmarkPayrollForm
     Private Sub BenchmarkPayrollForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         PayrollForm.listPayrollForm.Remove(Me.Name)
+
+    End Sub
+
+    Private Sub SssCalamityLoanTextBox_TextChanged(sender As Object, e As EventArgs) Handles SssCalamityLoanTextBox.TextChanged
+        Panel6.Visible = Val(SssCalamityLoanTextBox.Text) > 0
+
+    End Sub
+
+    Private Sub SssEmergencyLoanTextBox_TextChanged(sender As Object, e As EventArgs) Handles SssEmergencyLoanTextBox.TextChanged
+        Panel8.Visible = Val(SssEmergencyLoanTextBox.Text) > 0
+
+    End Sub
+
+    Private Sub PagibigCalamityLoanTextBox_TextChanged(sender As Object, e As EventArgs) Handles PagibigCalamityLoanTextBox.TextChanged
+        Panel9.Visible = Val(PagibigCalamityLoanTextBox.Text) > 0
 
     End Sub
 

@@ -22,5 +22,17 @@ namespace AccuPay.Core.Helpers
         public const string SSS_LOAN = "SSS Loan";
         public const string VACATION_LEAVE = "Vacation leave";
         public const string PARENT_LEAVE = "Maternity/paternity leave";
+
+        public const string SSS_SALARY_LOAN = "SSS Salary Loan";
+        public const string SSS_CALAMITY_LOAN = "SSS Calamity Loan";
+        public const string SSS_EMERGENCY_LOAN = "SSS Emergency Loan";
+        public const string PAG_IBIG_SALARY_LOAN = "Pag-IBIG Salary Loan";
+        public const string PAG_IBIG_CALAMITY_LOAN = "Pag-IBIG Calamity Loan";
+
+        public static readonly string[] BENCHMARK_SUPPORTED_LOAN_TYPES = new[] { SSS_SALARY_LOAN,
+            SSS_CALAMITY_LOAN,
+            SSS_EMERGENCY_LOAN,
+            PAG_IBIG_SALARY_LOAN,
+            PAG_IBIG_CALAMITY_LOAN};
     }
 }

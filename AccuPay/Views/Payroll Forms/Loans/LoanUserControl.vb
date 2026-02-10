@@ -198,7 +198,7 @@ Public Class LoanUserControl
 
         If if_sysowner_is_benchmark Then
 
-            loanTypeList = New List(Of Product)(Await productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
+            loanTypeList = New List(Of Product)(Await productRepository.GetBenchmarkLoanTypesAsync(z_OrganizationID))
         Else
             loanTypeList = New List(Of Product)(Await productRepository.GetLoanTypesAsync(z_OrganizationID))
 

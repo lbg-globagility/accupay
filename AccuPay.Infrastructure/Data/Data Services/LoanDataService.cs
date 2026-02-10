@@ -59,12 +59,14 @@ namespace AccuPay.Infrastructure.Data
         public async Task DeleteAllLoansExceptGovernmentLoansAsync(
             int employeeId,
             int pagibigLoanId,
-            int ssLoanId)
+            int ssLoanId,
+            int[] otherGovtLoanIds)
         {
             await _loanRepository.DeleteAllLoansExceptGovernmentLoansAsync(
                 employeeId: employeeId,
                 pagibigLoanId: pagibigLoanId,
-                ssLoanId: ssLoanId);
+                ssLoanId: ssLoanId,
+                otherGovtLoanIds: otherGovtLoanIds);
         }
 
         public async Task BatchApply(IReadOnlyCollection<LoanImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
@@ -545,8 +547,7 @@ namespace AccuPay.Infrastructure.Data
 
                 // #1
                 if (loan.LoanType == null ||
-                    (!loan.LoanType.IsPagibigLoan &&
-                    !loan.LoanType.IsSssLoan))
+                    !ProductConstant.BENCHMARK_SUPPORTED_LOAN_TYPES.Contains(loan.LoanType.PartNo))
                     throw new BusinessLogicException("Only PAGIBIG and SSS loan are allowed!");
 
                 // #2

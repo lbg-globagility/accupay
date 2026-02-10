@@ -7,7 +7,7 @@ namespace AccuPay.Core.Interfaces
 {
     public interface ILoanRepository : ISavableRepository<Loan>
     {
-        Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId, int pagibigLoanId, int ssLoanId);
+        Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId, int pagibigLoanId, int ssLoanId, int[] otherGovtLoanIds);
 
         Task<ICollection<Loan>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId);
 

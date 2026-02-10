@@ -7,6 +7,7 @@ Imports AccuPay.Core.Entities.Paystub
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -20,9 +21,9 @@ Public Class BenchmarkPaystubForm
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
-    Private _pagibigLoanId As Integer?
+    Private _pagibigSalaryLoanId As Integer?
 
-    Private _sssLoanId As Integer?
+    Private _sssSalaryLoanId As Integer?
 
     Private _overtimeRate As OvertimeRate
 
@@ -72,13 +73,16 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Panel6.Visible = False
+        Panel8.Visible = False
+        Panel9.Visible = False
 
-        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID)
+        Dim govermentLoans = Await _productRepository.GetBenchmarkLoanTypesAsync(z_OrganizationID)
 
-        _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
-        _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
+        _pagibigSalaryLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagIbigSalaryLoan)?.RowID
+        _sssSalaryLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssSalaryLoan)?.RowID
 
-        If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
+        If _pagibigSalaryLoanId Is Nothing OrElse _sssSalaryLoanId Is Nothing Then
 
             MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
             Return
@@ -265,8 +269,8 @@ Public Class BenchmarkPaystubForm
     Private Async Function ShowSummaryData(employee As Employee, payStub As Paystub) As Task
         'loans
         Dim loanAmounts = GetGovernmentLoanAmounts(payStub)
-        Dim pagIbigLoan = loanAmounts.Item1
-        Dim sssLoan = loanAmounts.Item2
+        Dim pagIbigSalaryLoan = loanAmounts.Item1
+        Dim sssSalaryLoan = loanAmounts.Item2
 
         TotalDeductionsLabel.Text = "Php " & Math.Abs(payStub.TotalDeductionAdjustments).RoundToString()
         TotalOtherIncomeLabel.Text = "Php " & payStub.TotalAdditionAdjustments.RoundToString()
@@ -276,8 +280,22 @@ Public Class BenchmarkPaystubForm
         SssAmountTextBox.Text = payStub.SssEmployeeShare.RoundToString()
         PagibigAmountTextBox.Text = payStub.HdmfEmployeeShare.RoundToString()
         WithholdingTaxTextBox.Text = payStub.WithholdingTax.RoundToString()
-        PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
-        SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
+        PagibigLoanTextBox.Text = If(pagIbigSalaryLoan, 0).RoundToString()
+        SssLoanTextBox.Text = If(sssSalaryLoan, 0).RoundToString()
+
+        Dim otherLoanAmounts = Await GetOtherGovernmentLoanAmountsAsync(payStub)
+        Dim sssCalamityLoan As Decimal? = otherLoanAmounts.Item1
+        Dim sssEmergencyLoan As Decimal? = otherLoanAmounts.Item2
+        Dim pagibigCalamityLoan As Decimal? = otherLoanAmounts.Item3
+
+        SssCalamityLoanTextBox.Text = If(sssCalamityLoan, 0).RoundToString()
+        Panel6.Visible = Val(SssCalamityLoanTextBox.Text) > 0
+
+        SssEmergencyLoanTextBox.Text = If(sssEmergencyLoan, 0).RoundToString()
+        Panel8.Visible = Val(SssEmergencyLoanTextBox.Text) > 0
+
+        PagibigCalamityLoanTextBox.Text = If(pagibigCalamityLoan, 0).RoundToString()
+        Panel9.Visible = Val(PagibigCalamityLoanTextBox.Text) > 0
 
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
@@ -672,12 +690,33 @@ Public Class BenchmarkPaystubForm
 
         Dim loanRecords = payStub.LoanTransactions
 
-        Dim pagIbigLoan = loanRecords.
-            FirstOrDefault(Function(l) l.Loan.LoanTypeID.Value = _pagibigLoanId.Value)?.DeductionAmount
-        Dim sssLoan = loanRecords.
-            FirstOrDefault(Function(l) l.Loan.LoanTypeID.Value = _sssLoanId.Value)?.DeductionAmount
+        Dim pagIbigSalaryLoan = loanRecords.
+            FirstOrDefault(Function(l) l.Loan.LoanTypeID.Value = _pagibigSalaryLoanId.Value)?.DeductionAmount
+        Dim sssSalaryLoan = loanRecords.
+            FirstOrDefault(Function(l) l.Loan.LoanTypeID.Value = _sssSalaryLoanId.Value)?.DeductionAmount
 
-        Return (pagIbigLoan, sssLoan)
+        Return (pagIbigSalaryLoan, sssSalaryLoan)
+
+    End Function
+
+    Private Async Function GetOtherGovernmentLoanAmountsAsync(payStub As Paystub) As Task(Of (Decimal?, Decimal?, Decimal?))
+
+        Dim loanRecords = payStub.LoanTransactions
+
+        Dim govermentLoans = Await _productRepository.GetBenchmarkLoanTypesAsync(z_OrganizationID)
+
+        Dim sssCalamityLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssCalamityLoan)?.RowID
+        Dim sssEmergencyLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssEmergencyLoan)?.RowID
+        Dim pagibigCalamityLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagIbigCalamityLoan)?.RowID
+
+        Dim sssCalamityLoan = loanRecords.
+            FirstOrDefault(Function(l) If(l.Loan.LoanTypeID, 0) = If(sssCalamityLoanId, 0))?.DeductionAmount
+        Dim sssEmergencyLoan = loanRecords.
+            FirstOrDefault(Function(l) If(l.Loan.LoanTypeID, 0) = If(sssEmergencyLoanId, 0))?.DeductionAmount
+        Dim pagibigCalamityLoan = loanRecords.
+            FirstOrDefault(Function(l) If(l.Loan.LoanTypeID, 0) = If(pagibigCalamityLoanId, 0))?.DeductionAmount
+
+        Return (sssCalamityLoan, sssEmergencyLoan, pagibigCalamityLoan)
 
     End Function
 

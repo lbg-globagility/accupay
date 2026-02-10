@@ -1,0 +1,103 @@
+DELIMITER $$
+
+DECLARE ite INT(11) DEFAULT 0;
+
+SET @orgCount=0;
+
+/**/SELECT COUNT(og.RowID)
+FROM `organization` og
+WHERE og.NoPurpose=FALSE
+INTO @orgCount
+;
+
+SET @pagibigLoan='PAGIBIG Loan';
+SET @sssLoan='SSS Loan';
+
+SET @pagibigSalaryLoan='Pag-IBIG Salary Loan';
+SET @sssSalaryLoan='SSS Salary Loan';
+SET @sssCalamityLoan='SSS Calamity Loan';
+SET @sssEmergencyLoan='SSS Emergency Loan';
+SET @pagibigCalamityLoan='Pag-IBIG Calamity Loan';
+
+WHILE ite < @orgCount DO
+	SET @orgId=(SELECT og.RowID FROM `organization` og WHERE og.NoPurpose=FALSE ORDER BY og.RowID LIMIT ite, 1);
+	
+	SET @categoryId=(SELECT c.RowID FROM category c WHERE c.CategoryName='Loan type' AND c.OrganizationID=@orgId LIMIT 1);
+	
+	SET @pagibigLoanId=0;
+	
+	SELECT
+	p.RowID
+	FROM product p
+	WHERE p.OrganizationID=@orgId
+	AND p.PartNo=@pagibigSalaryLoan
+	AND p.CategoryID=@categoryId
+	LIMIT 1
+	INTO @pagibigLoanId
+	;
+	
+	INSERT INTO `product` (`RowID`, `Name`, `OrganizationID`, `Description`, `PartNo`, `Created`, `LastUpd`, `LastArrivedQty`, `CreatedBy`, `LastUpdBy`, `Category`, `CategoryID`, `AccountingAccountID`, `Catalog`, `Comments`, `Status`, `Fixed`, `UnitPrice`, `VATPercent`, `FirstBillFlag`, `SecondBillFlag`, `ThirdBillFlag`, `PDCFlag`, `MonthlyBIllFlag`, `PenaltyFlag`, `WithholdingTaxPercent`, `CostPrice`, `UnitOfMeasure`, `SKU`, `Image`, `LeadTime`, `BarCode`, `BusinessUnitID`, `LastRcvdFromShipmentDate`, `LastRcvdFromShipmentCount`, `TotalShipmentCount`, `BookPageNo`, `BrandName`, `LastPurchaseDate`, `LastSoldDate`, `LastSoldCount`, `ReOrderPoint`, `AllocateBelowSafetyFlag`, `Strength`, `UnitsBackordered`, `UnitsBackorderAsOf`, `DateLastInventoryCount`, `TaxVAT`, `WithholdingTax`, `ActiveData`, `IsPaidWhenOvertime`) VALUES (@pagibigLoanId, @pagibigSalaryLoan, @orgId, '0', @pagibigSalaryLoan, CURRENT_TIMESTAMP(), '2019-08-07 09:57:11', NULL, 1, NULL, 'Loan Type', @categoryId, NULL, '0', '0', 'Active', 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, '0', '0', NULL, NULL, '0', 0, NULL, NULL, NULL, '0', '0', NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0) ON DUPLICATE KEY UPDATE `Name`=@pagibigSalaryLoan, PartNo=@pagibigSalaryLoan;
+	
+	SET @sssLoanId=0;
+	
+	SELECT
+	p.RowID
+	FROM product p
+	WHERE p.OrganizationID=@orgId
+	AND p.PartNo=@sssSalaryLoan
+	AND p.CategoryID=@categoryId
+	LIMIT 1
+	INTO @sssLoanId
+	;
+	
+	INSERT INTO `product` (`RowID`, `Name`, `OrganizationID`, `Description`, `PartNo`, `Created`, `LastUpd`, `LastArrivedQty`, `CreatedBy`, `LastUpdBy`, `Category`, `CategoryID`, `AccountingAccountID`, `Catalog`, `Comments`, `Status`, `Fixed`, `UnitPrice`, `VATPercent`, `FirstBillFlag`, `SecondBillFlag`, `ThirdBillFlag`, `PDCFlag`, `MonthlyBIllFlag`, `PenaltyFlag`, `WithholdingTaxPercent`, `CostPrice`, `UnitOfMeasure`, `SKU`, `Image`, `LeadTime`, `BarCode`, `BusinessUnitID`, `LastRcvdFromShipmentDate`, `LastRcvdFromShipmentCount`, `TotalShipmentCount`, `BookPageNo`, `BrandName`, `LastPurchaseDate`, `LastSoldDate`, `LastSoldCount`, `ReOrderPoint`, `AllocateBelowSafetyFlag`, `Strength`, `UnitsBackordered`, `UnitsBackorderAsOf`, `DateLastInventoryCount`, `TaxVAT`, `WithholdingTax`, `ActiveData`, `IsPaidWhenOvertime`) VALUES (@sssLoanId, @sssSalaryLoan, @orgId, '0', @sssSalaryLoan, CURRENT_TIMESTAMP(), '2019-08-07 09:57:11', NULL, 1, NULL, 'Loan Type', @categoryId, NULL, '0', '0', 'Active', 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, '0', '0', NULL, NULL, '0', 0, NULL, NULL, NULL, '0', '0', NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0) ON DUPLICATE KEY UPDATE `Name`=@sssSalaryLoan, PartNo=@sssSalaryLoan;
+	
+	/********************************************************/
+	
+	SET @sssCalamityLoanId=NULL;
+	
+	SELECT
+	p.RowID
+	FROM product p
+	WHERE p.OrganizationID=@orgId
+	AND p.PartNo=@sssCalamityLoan
+	AND p.CategoryID=@categoryId
+	LIMIT 1
+	INTO @sssCalamityLoanId
+	;
+	
+	INSERT INTO `product` (`RowID`, `Name`, `OrganizationID`, `Description`, `PartNo`, `Created`, `LastUpd`, `LastArrivedQty`, `CreatedBy`, `LastUpdBy`, `Category`, `CategoryID`, `AccountingAccountID`, `Catalog`, `Comments`, `Status`, `Fixed`, `UnitPrice`, `VATPercent`, `FirstBillFlag`, `SecondBillFlag`, `ThirdBillFlag`, `PDCFlag`, `MonthlyBIllFlag`, `PenaltyFlag`, `WithholdingTaxPercent`, `CostPrice`, `UnitOfMeasure`, `SKU`, `Image`, `LeadTime`, `BarCode`, `BusinessUnitID`, `LastRcvdFromShipmentDate`, `LastRcvdFromShipmentCount`, `TotalShipmentCount`, `BookPageNo`, `BrandName`, `LastPurchaseDate`, `LastSoldDate`, `LastSoldCount`, `ReOrderPoint`, `AllocateBelowSafetyFlag`, `Strength`, `UnitsBackordered`, `UnitsBackorderAsOf`, `DateLastInventoryCount`, `TaxVAT`, `WithholdingTax`, `ActiveData`, `IsPaidWhenOvertime`) VALUES (@sssCalamityLoanId, @sssCalamityLoan, @orgId, '0', @sssCalamityLoan, CURRENT_TIMESTAMP(), '2019-08-07 09:57:11', NULL, 1, NULL, 'Loan Type', @categoryId, NULL, '0', '0', 'Active', 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, '0', '0', NULL, NULL, '0', 0, NULL, NULL, NULL, '0', '0', NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0) ON DUPLICATE KEY UPDATE `Name`=@sssCalamityLoan, PartNo=@sssCalamityLoan;
+	
+	SET @sssEmergencyLoanId=NULL;
+	
+	SELECT
+	p.RowID
+	FROM product p
+	WHERE p.OrganizationID=@orgId
+	AND p.PartNo=@sssEmergencyLoan
+	AND p.CategoryID=@categoryId
+	LIMIT 1
+	INTO @sssEmergencyLoanId
+	;
+	
+	INSERT INTO `product` (`RowID`, `Name`, `OrganizationID`, `Description`, `PartNo`, `Created`, `LastUpd`, `LastArrivedQty`, `CreatedBy`, `LastUpdBy`, `Category`, `CategoryID`, `AccountingAccountID`, `Catalog`, `Comments`, `Status`, `Fixed`, `UnitPrice`, `VATPercent`, `FirstBillFlag`, `SecondBillFlag`, `ThirdBillFlag`, `PDCFlag`, `MonthlyBIllFlag`, `PenaltyFlag`, `WithholdingTaxPercent`, `CostPrice`, `UnitOfMeasure`, `SKU`, `Image`, `LeadTime`, `BarCode`, `BusinessUnitID`, `LastRcvdFromShipmentDate`, `LastRcvdFromShipmentCount`, `TotalShipmentCount`, `BookPageNo`, `BrandName`, `LastPurchaseDate`, `LastSoldDate`, `LastSoldCount`, `ReOrderPoint`, `AllocateBelowSafetyFlag`, `Strength`, `UnitsBackordered`, `UnitsBackorderAsOf`, `DateLastInventoryCount`, `TaxVAT`, `WithholdingTax`, `ActiveData`, `IsPaidWhenOvertime`) VALUES (@sssEmergencyLoanId, @sssEmergencyLoan, @orgId, '0', @sssEmergencyLoan, CURRENT_TIMESTAMP(), '2019-08-07 09:57:11', NULL, 1, NULL, 'Loan Type', @categoryId, NULL, '0', '0', 'Active', 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, '0', '0', NULL, NULL, '0', 0, NULL, NULL, NULL, '0', '0', NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0) ON DUPLICATE KEY UPDATE `Name`=@sssEmergencyLoan, PartNo=@sssEmergencyLoan;
+	
+	SET @pagibigCalamityLoanId=NULL;
+	
+	SELECT
+	p.RowID
+	FROM product p
+	WHERE p.OrganizationID=@orgId
+	AND p.PartNo=@pagibigCalamityLoan
+	AND p.CategoryID=@categoryId
+	LIMIT 1
+	INTO @pagibigCalamityLoanId
+	;
+	
+	INSERT INTO `product` (`RowID`, `Name`, `OrganizationID`, `Description`, `PartNo`, `Created`, `LastUpd`, `LastArrivedQty`, `CreatedBy`, `LastUpdBy`, `Category`, `CategoryID`, `AccountingAccountID`, `Catalog`, `Comments`, `Status`, `Fixed`, `UnitPrice`, `VATPercent`, `FirstBillFlag`, `SecondBillFlag`, `ThirdBillFlag`, `PDCFlag`, `MonthlyBIllFlag`, `PenaltyFlag`, `WithholdingTaxPercent`, `CostPrice`, `UnitOfMeasure`, `SKU`, `Image`, `LeadTime`, `BarCode`, `BusinessUnitID`, `LastRcvdFromShipmentDate`, `LastRcvdFromShipmentCount`, `TotalShipmentCount`, `BookPageNo`, `BrandName`, `LastPurchaseDate`, `LastSoldDate`, `LastSoldCount`, `ReOrderPoint`, `AllocateBelowSafetyFlag`, `Strength`, `UnitsBackordered`, `UnitsBackorderAsOf`, `DateLastInventoryCount`, `TaxVAT`, `WithholdingTax`, `ActiveData`, `IsPaidWhenOvertime`) VALUES (@pagibigCalamityLoanId, @pagibigCalamityLoan, @orgId, '0', @pagibigCalamityLoan, CURRENT_TIMESTAMP(), '2019-08-07 09:57:11', NULL, 1, NULL, 'Loan Type', @categoryId, NULL, '0', '0', 'Active', 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, '0', '0', NULL, NULL, '0', 0, NULL, NULL, NULL, '0', '0', NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0) ON DUPLICATE KEY UPDATE `Name`=@pagibigCalamityLoan, PartNo=@pagibigCalamityLoan;
+	
+	SET ite = ite + 1;
+	
+END WHILE;
+
+$$

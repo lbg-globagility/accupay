@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class BenchmarkPayrollForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,18 +20,18 @@ Partial Class BenchmarkPayrollForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BenchmarkPayrollForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.RefreshFormButton = New System.Windows.Forms.Button()
         Me.PayPeriodLabel = New System.Windows.Forms.Label()
@@ -50,51 +50,27 @@ Partial Class BenchmarkPayrollForm
         Me.SearchEmployeeTextBox = New System.Windows.Forms.TextBox()
         Me.PictureBox18 = New System.Windows.Forms.PictureBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.SummaryGroupBox = New System.Windows.Forms.GroupBox()
-        Me.ResetPayrollButton = New System.Windows.Forms.Button()
-        Me.Label187 = New System.Windows.Forms.Label()
-        Me.TotalLeaveTextBox = New System.Windows.Forms.TextBox()
-        Me.Label169 = New System.Windows.Forms.Label()
-        Me.Label148 = New System.Windows.Forms.Label()
-        Me.Panel20 = New System.Windows.Forms.Panel()
-        Me.Label147 = New System.Windows.Forms.Label()
-        Me.LeaveBalanceTextBox = New System.Windows.Forms.TextBox()
-        Me.Label146 = New System.Windows.Forms.Label()
-        Me.ThirteenthMonthPayTextBox = New System.Windows.Forms.TextBox()
-        Me.Label144 = New System.Windows.Forms.Label()
-        Me.Panel16 = New System.Windows.Forms.Panel()
-        Me.Label143 = New System.Windows.Forms.Label()
-        Me.Panel11 = New System.Windows.Forms.Panel()
-        Me.GrossPayTextBox = New System.Windows.Forms.TextBox()
-        Me.GrossPayLabel = New System.Windows.Forms.Label()
-        Me.Label142 = New System.Windows.Forms.Label()
-        Me.TotalOvertimeTextBox = New System.Windows.Forms.TextBox()
-        Me.Label141 = New System.Windows.Forms.Label()
-        Me.TotalOtherIncomeTextBox = New System.Windows.Forms.TextBox()
-        Me.Label137 = New System.Windows.Forms.Label()
-        Me.PagibigLoanTextBox = New System.Windows.Forms.TextBox()
-        Me.Label138 = New System.Windows.Forms.Label()
-        Me.SssLoanTextBox = New System.Windows.Forms.TextBox()
-        Me.Label136 = New System.Windows.Forms.Label()
-        Me.PagibigAmountTextBox = New System.Windows.Forms.TextBox()
-        Me.Label135 = New System.Windows.Forms.Label()
-        Me.WithholdingTaxTextBox = New System.Windows.Forms.TextBox()
-        Me.Label134 = New System.Windows.Forms.Label()
-        Me.Label133 = New System.Windows.Forms.Label()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.Label116 = New System.Windows.Forms.Label()
-        Me.PictureBox33 = New System.Windows.Forms.PictureBox()
-        Me.BasicPaySummaryTextBox = New System.Windows.Forms.TextBox()
-        Me.Label88 = New System.Windows.Forms.Label()
-        Me.PhilhealthAmountTextBox = New System.Windows.Forms.TextBox()
-        Me.SavePayrollButton = New System.Windows.Forms.Button()
-        Me.SssAmountTextBox = New System.Windows.Forms.TextBox()
-        Me.EcolaAmountTextBox = New System.Windows.Forms.TextBox()
-        Me.TotalDeductionTextBox = New System.Windows.Forms.TextBox()
-        Me.NetPayTextBox = New System.Windows.Forms.TextBox()
-        Me.Label91 = New System.Windows.Forms.Label()
-        Me.Label96 = New System.Windows.Forms.Label()
-        Me.Label92 = New System.Windows.Forms.Label()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
+        Me.EmployeeDetailsGroupBox = New System.Windows.Forms.GroupBox()
+        Me.AllowanceTextBox = New System.Windows.Forms.TextBox()
+        Me.Label201 = New System.Windows.Forms.Label()
+        Me.PhilhealthNumberTextBox = New System.Windows.Forms.TextBox()
+        Me.Label128 = New System.Windows.Forms.Label()
+        Me.Panel12 = New System.Windows.Forms.Panel()
+        Me.Label127 = New System.Windows.Forms.Label()
+        Me.Label126 = New System.Windows.Forms.Label()
+        Me.Label125 = New System.Windows.Forms.Label()
+        Me.Label124 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.TinLabel = New System.Windows.Forms.Label()
+        Me.TinTextBox = New System.Windows.Forms.TextBox()
+        Me.SssNumberTextBox = New System.Windows.Forms.TextBox()
+        Me.PagibigNumberTextBox = New System.Windows.Forms.TextBox()
+        Me.BasicPayTextBox = New System.Windows.Forms.TextBox()
+        Me.PerDayTextBox = New System.Windows.Forms.TextBox()
+        Me.PerHourTextBox = New System.Windows.Forms.TextBox()
         Me.InputsTabControl = New System.Windows.Forms.TabControl()
         Me.DaysWorkedTabPage = New System.Windows.Forms.TabPage()
         Me.Label207 = New System.Windows.Forms.Label()
@@ -140,24 +116,62 @@ Partial Class BenchmarkPayrollForm
         Me.PictureBox28 = New System.Windows.Forms.PictureBox()
         Me.AddIncomeButton = New System.Windows.Forms.Button()
         Me.OtherIncomeComboBox = New System.Windows.Forms.ComboBox()
-        Me.EmployeeDetailsGroupBox = New System.Windows.Forms.GroupBox()
-        Me.AllowanceTextBox = New System.Windows.Forms.TextBox()
-        Me.Label201 = New System.Windows.Forms.Label()
-        Me.PhilhealthNumberTextBox = New System.Windows.Forms.TextBox()
-        Me.Label128 = New System.Windows.Forms.Label()
-        Me.Panel12 = New System.Windows.Forms.Panel()
-        Me.Label127 = New System.Windows.Forms.Label()
-        Me.Label126 = New System.Windows.Forms.Label()
-        Me.Label125 = New System.Windows.Forms.Label()
-        Me.Label124 = New System.Windows.Forms.Label()
-        Me.Label38 = New System.Windows.Forms.Label()
-        Me.TinLabel = New System.Windows.Forms.Label()
-        Me.TinTextBox = New System.Windows.Forms.TextBox()
-        Me.SssNumberTextBox = New System.Windows.Forms.TextBox()
-        Me.PagibigNumberTextBox = New System.Windows.Forms.TextBox()
-        Me.BasicPayTextBox = New System.Windows.Forms.TextBox()
-        Me.PerDayTextBox = New System.Windows.Forms.TextBox()
-        Me.PerHourTextBox = New System.Windows.Forms.TextBox()
+        Me.SummaryGroupBox = New System.Windows.Forms.GroupBox()
+        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.EcolaAmountTextBox = New System.Windows.Forms.TextBox()
+        Me.Label96 = New System.Windows.Forms.Label()
+        Me.NetPayTextBox = New System.Windows.Forms.TextBox()
+        Me.Label187 = New System.Windows.Forms.Label()
+        Me.TotalDeductionTextBox = New System.Windows.Forms.TextBox()
+        Me.TotalLeaveTextBox = New System.Windows.Forms.TextBox()
+        Me.Label133 = New System.Windows.Forms.Label()
+        Me.Label169 = New System.Windows.Forms.Label()
+        Me.Label134 = New System.Windows.Forms.Label()
+        Me.Label148 = New System.Windows.Forms.Label()
+        Me.TotalOtherIncomeTextBox = New System.Windows.Forms.TextBox()
+        Me.Panel20 = New System.Windows.Forms.Panel()
+        Me.Label141 = New System.Windows.Forms.Label()
+        Me.Label147 = New System.Windows.Forms.Label()
+        Me.TotalOvertimeTextBox = New System.Windows.Forms.TextBox()
+        Me.LeaveBalanceTextBox = New System.Windows.Forms.TextBox()
+        Me.Label142 = New System.Windows.Forms.Label()
+        Me.Label146 = New System.Windows.Forms.Label()
+        Me.GrossPayLabel = New System.Windows.Forms.Label()
+        Me.ThirteenthMonthPayTextBox = New System.Windows.Forms.TextBox()
+        Me.GrossPayTextBox = New System.Windows.Forms.TextBox()
+        Me.Label144 = New System.Windows.Forms.Label()
+        Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.Panel9 = New System.Windows.Forms.Panel()
+        Me.PagibigCalamityLoanTextBox = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Panel8 = New System.Windows.Forms.Panel()
+        Me.SssEmergencyLoanTextBox = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.SssCalamityLoanTextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.SssLoanTextBox = New System.Windows.Forms.TextBox()
+        Me.ResetPayrollButton = New System.Windows.Forms.Button()
+        Me.Label92 = New System.Windows.Forms.Label()
+        Me.Label91 = New System.Windows.Forms.Label()
+        Me.SssAmountTextBox = New System.Windows.Forms.TextBox()
+        Me.SavePayrollButton = New System.Windows.Forms.Button()
+        Me.PhilhealthAmountTextBox = New System.Windows.Forms.TextBox()
+        Me.Label88 = New System.Windows.Forms.Label()
+        Me.BasicPaySummaryTextBox = New System.Windows.Forms.TextBox()
+        Me.PictureBox33 = New System.Windows.Forms.PictureBox()
+        Me.Label116 = New System.Windows.Forms.Label()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.WithholdingTaxTextBox = New System.Windows.Forms.TextBox()
+        Me.Label135 = New System.Windows.Forms.Label()
+        Me.Label143 = New System.Windows.Forms.Label()
+        Me.PagibigAmountTextBox = New System.Windows.Forms.TextBox()
+        Me.Panel11 = New System.Windows.Forms.Panel()
+        Me.Label136 = New System.Windows.Forms.Label()
+        Me.Label138 = New System.Windows.Forms.Label()
+        Me.PagibigLoanTextBox = New System.Windows.Forms.TextBox()
+        Me.Label137 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -174,8 +188,19 @@ Partial Class BenchmarkPayrollForm
         CType(Me.EmployeesGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox18, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        Me.SummaryGroupBox.SuspendLayout()
-        CType(Me.PictureBox33, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer2.Panel1.SuspendLayout()
+        Me.SplitContainer2.Panel2.SuspendLayout()
+        Me.SplitContainer2.SuspendLayout()
+        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer3.Panel1.SuspendLayout()
+        Me.SplitContainer3.Panel2.SuspendLayout()
+        Me.SplitContainer3.SuspendLayout()
+        Me.EmployeeDetailsGroupBox.SuspendLayout()
         Me.InputsTabControl.SuspendLayout()
         Me.DaysWorkedTabPage.SuspendLayout()
         CType(Me.PictureBox27, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -185,7 +210,13 @@ Partial Class BenchmarkPayrollForm
         Me.OtherIncomeTabPage.SuspendLayout()
         CType(Me.OtherIncomeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox28, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.EmployeeDetailsGroupBox.SuspendLayout()
+        Me.SummaryGroupBox.SuspendLayout()
+        Me.Panel7.SuspendLayout()
+        Me.Panel9.SuspendLayout()
+        Me.Panel8.SuspendLayout()
+        Me.Panel6.SuspendLayout()
+        Me.Panel4.SuspendLayout()
+        CType(Me.PictureBox33, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -197,7 +228,7 @@ Partial Class BenchmarkPayrollForm
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1167, 100)
+        Me.Panel1.Size = New System.Drawing.Size(1266, 100)
         Me.Panel1.TabIndex = 0
         '
         'RefreshFormButton
@@ -209,7 +240,7 @@ Partial Class BenchmarkPayrollForm
         Me.RefreshFormButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.RefreshFormButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RefreshFormButton.ForeColor = System.Drawing.Color.White
-        Me.RefreshFormButton.Location = New System.Drawing.Point(1002, 3)
+        Me.RefreshFormButton.Location = New System.Drawing.Point(1101, 3)
         Me.RefreshFormButton.Name = "RefreshFormButton"
         Me.RefreshFormButton.Size = New System.Drawing.Size(125, 45)
         Me.RefreshFormButton.TabIndex = 45
@@ -222,7 +253,7 @@ Partial Class BenchmarkPayrollForm
         Me.PayPeriodLabel.Cursor = System.Windows.Forms.Cursors.Hand
         Me.PayPeriodLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PayPeriodLabel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.PayPeriodLabel.Location = New System.Drawing.Point(753, 53)
+        Me.PayPeriodLabel.Location = New System.Drawing.Point(852, 53)
         Me.PayPeriodLabel.Name = "PayPeriodLabel"
         Me.PayPeriodLabel.Size = New System.Drawing.Size(374, 41)
         Me.PayPeriodLabel.TabIndex = 44
@@ -248,7 +279,7 @@ Partial Class BenchmarkPayrollForm
         Me.Panel21.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel21.Location = New System.Drawing.Point(0, 100)
         Me.Panel21.Name = "Panel21"
-        Me.Panel21.Size = New System.Drawing.Size(1167, 28)
+        Me.Panel21.Size = New System.Drawing.Size(1266, 28)
         Me.Panel21.TabIndex = 43
         '
         'Panel22
@@ -290,19 +321,21 @@ Partial Class BenchmarkPayrollForm
         Me.GroupBox5.Controls.Add(Me.Label47)
         Me.GroupBox5.Controls.Add(Me.SearchEmployeeTextBox)
         Me.GroupBox5.Controls.Add(Me.PictureBox18)
-        Me.GroupBox5.Location = New System.Drawing.Point(27, 20)
+        Me.GroupBox5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GroupBox5.Location = New System.Drawing.Point(0, 0)
         Me.GroupBox5.Margin = New System.Windows.Forms.Padding(3, 3, 3, 50)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(350, 541)
+        Me.GroupBox5.Size = New System.Drawing.Size(348, 412)
         Me.GroupBox5.TabIndex = 44
         Me.GroupBox5.TabStop = False
         '
         'PictureBox26
         '
+        Me.PictureBox26.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox26.BackColor = System.Drawing.Color.Crimson
         Me.PictureBox26.BackgroundImage = CType(resources.GetObject("PictureBox26.BackgroundImage"), System.Drawing.Image)
         Me.PictureBox26.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox26.Location = New System.Drawing.Point(319, 61)
+        Me.PictureBox26.Location = New System.Drawing.Point(317, 61)
         Me.PictureBox26.Name = "PictureBox26"
         Me.PictureBox26.Padding = New System.Windows.Forms.Padding(3)
         Me.PictureBox26.Size = New System.Drawing.Size(21, 22)
@@ -311,10 +344,12 @@ Partial Class BenchmarkPayrollForm
         '
         'Panel3
         '
+        Me.Panel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel3.BackColor = System.Drawing.Color.Gray
         Me.Panel3.Location = New System.Drawing.Point(9, 54)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(331, 2)
+        Me.Panel3.Size = New System.Drawing.Size(329, 2)
         Me.Panel3.TabIndex = 7
         '
         'EmployeesGridView
@@ -326,31 +361,31 @@ Partial Class BenchmarkPayrollForm
         Me.EmployeesGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.EmployeesGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.EmployeesGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
         Me.EmployeesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.EmployeesGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EmployeesGridViewColumn1, Me.EmployeesGridViewColumn2})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesGridView.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesGridView.DefaultCellStyle = DataGridViewCellStyle11
         Me.EmployeesGridView.Location = New System.Drawing.Point(9, 87)
         Me.EmployeesGridView.MultiSelect = False
         Me.EmployeesGridView.Name = "EmployeesGridView"
         Me.EmployeesGridView.ReadOnly = True
         Me.EmployeesGridView.RowHeadersVisible = False
         Me.EmployeesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.EmployeesGridView.Size = New System.Drawing.Size(331, 437)
+        Me.EmployeesGridView.Size = New System.Drawing.Size(329, 308)
         Me.EmployeesGridView.TabIndex = 1
         '
         'EmployeesGridViewColumn1
@@ -381,11 +416,13 @@ Partial Class BenchmarkPayrollForm
         '
         'SearchEmployeeTextBox
         '
+        Me.SearchEmployeeTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SearchEmployeeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SearchEmployeeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.SearchEmployeeTextBox.Location = New System.Drawing.Point(9, 61)
         Me.SearchEmployeeTextBox.Name = "SearchEmployeeTextBox"
-        Me.SearchEmployeeTextBox.Size = New System.Drawing.Size(310, 22)
+        Me.SearchEmployeeTextBox.Size = New System.Drawing.Size(329, 22)
         Me.SearchEmployeeTextBox.TabIndex = 2
         '
         'PictureBox18
@@ -401,1100 +438,77 @@ Partial Class BenchmarkPayrollForm
         'Panel2
         '
         Me.Panel2.AutoScroll = True
-        Me.Panel2.Controls.Add(Me.GroupBox5)
-        Me.Panel2.Controls.Add(Me.SummaryGroupBox)
-        Me.Panel2.Controls.Add(Me.InputsTabControl)
-        Me.Panel2.Controls.Add(Me.EmployeeDetailsGroupBox)
+        Me.Panel2.Controls.Add(Me.SplitContainer1)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 128)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1167, 414)
+        Me.Panel2.Size = New System.Drawing.Size(1266, 414)
         Me.Panel2.TabIndex = 44
         '
-        'SummaryGroupBox
+        'SplitContainer1
         '
-        Me.SummaryGroupBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SummaryGroupBox.Controls.Add(Me.ResetPayrollButton)
-        Me.SummaryGroupBox.Controls.Add(Me.Label187)
-        Me.SummaryGroupBox.Controls.Add(Me.TotalLeaveTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label169)
-        Me.SummaryGroupBox.Controls.Add(Me.Label148)
-        Me.SummaryGroupBox.Controls.Add(Me.Panel20)
-        Me.SummaryGroupBox.Controls.Add(Me.Label147)
-        Me.SummaryGroupBox.Controls.Add(Me.LeaveBalanceTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label146)
-        Me.SummaryGroupBox.Controls.Add(Me.ThirteenthMonthPayTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label144)
-        Me.SummaryGroupBox.Controls.Add(Me.Panel16)
-        Me.SummaryGroupBox.Controls.Add(Me.Label143)
-        Me.SummaryGroupBox.Controls.Add(Me.Panel11)
-        Me.SummaryGroupBox.Controls.Add(Me.GrossPayTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.GrossPayLabel)
-        Me.SummaryGroupBox.Controls.Add(Me.Label142)
-        Me.SummaryGroupBox.Controls.Add(Me.TotalOvertimeTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label141)
-        Me.SummaryGroupBox.Controls.Add(Me.TotalOtherIncomeTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label137)
-        Me.SummaryGroupBox.Controls.Add(Me.PagibigLoanTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label138)
-        Me.SummaryGroupBox.Controls.Add(Me.SssLoanTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label136)
-        Me.SummaryGroupBox.Controls.Add(Me.PagibigAmountTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label135)
-        Me.SummaryGroupBox.Controls.Add(Me.WithholdingTaxTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label134)
-        Me.SummaryGroupBox.Controls.Add(Me.Label133)
-        Me.SummaryGroupBox.Controls.Add(Me.Panel5)
-        Me.SummaryGroupBox.Controls.Add(Me.Label116)
-        Me.SummaryGroupBox.Controls.Add(Me.PictureBox33)
-        Me.SummaryGroupBox.Controls.Add(Me.BasicPaySummaryTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label88)
-        Me.SummaryGroupBox.Controls.Add(Me.PhilhealthAmountTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.SavePayrollButton)
-        Me.SummaryGroupBox.Controls.Add(Me.SssAmountTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.EcolaAmountTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.TotalDeductionTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.NetPayTextBox)
-        Me.SummaryGroupBox.Controls.Add(Me.Label91)
-        Me.SummaryGroupBox.Controls.Add(Me.Label96)
-        Me.SummaryGroupBox.Controls.Add(Me.Label92)
-        Me.SummaryGroupBox.Location = New System.Drawing.Point(732, 20)
-        Me.SummaryGroupBox.Name = "SummaryGroupBox"
-        Me.SummaryGroupBox.Size = New System.Drawing.Size(323, 541)
-        Me.SummaryGroupBox.TabIndex = 50
-        Me.SummaryGroupBox.TabStop = False
+        Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Name = "SplitContainer1"
         '
-        'ResetPayrollButton
+        'SplitContainer1.Panel1
         '
-        Me.ResetPayrollButton.BackColor = System.Drawing.Color.Crimson
-        Me.ResetPayrollButton.FlatAppearance.BorderSize = 0
-        Me.ResetPayrollButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ResetPayrollButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ResetPayrollButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight
-        Me.ResetPayrollButton.Location = New System.Drawing.Point(286, 15)
-        Me.ResetPayrollButton.Name = "ResetPayrollButton"
-        Me.ResetPayrollButton.Size = New System.Drawing.Size(31, 26)
-        Me.ResetPayrollButton.TabIndex = 66
-        Me.ResetPayrollButton.Text = "X"
-        Me.ResetPayrollButton.UseVisualStyleBackColor = False
+        Me.SplitContainer1.Panel1.Controls.Add(Me.GroupBox5)
+        Me.SplitContainer1.Panel1MinSize = 350
         '
-        'Label187
+        'SplitContainer1.Panel2
         '
-        Me.Label187.AutoSize = True
-        Me.Label187.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label187.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label187.Location = New System.Drawing.Point(258, 326)
-        Me.Label187.Name = "Label187"
-        Me.Label187.Size = New System.Drawing.Size(54, 16)
-        Me.Label187.TabIndex = 65
-        Me.Label187.Text = "DAY/S"
+        Me.SplitContainer1.Panel2.Controls.Add(Me.SplitContainer2)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1266, 414)
+        Me.SplitContainer1.SplitterDistance = 350
+        Me.SplitContainer1.TabIndex = 51
         '
-        'TotalLeaveTextBox
+        'SplitContainer2
         '
-        Me.TotalLeaveTextBox.BackColor = System.Drawing.Color.White
-        Me.TotalLeaveTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalLeaveTextBox.Location = New System.Drawing.Point(150, 400)
-        Me.TotalLeaveTextBox.Name = "TotalLeaveTextBox"
-        Me.TotalLeaveTextBox.ReadOnly = True
-        Me.TotalLeaveTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.TotalLeaveTextBox.TabIndex = 64
+        Me.SplitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
+        Me.SplitContainer2.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer2.Name = "SplitContainer2"
         '
-        'Label169
+        'SplitContainer2.Panel1
         '
-        Me.Label169.AutoSize = True
-        Me.Label169.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label169.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label169.Location = New System.Drawing.Point(98, 401)
-        Me.Label169.Name = "Label169"
-        Me.Label169.Size = New System.Drawing.Size(49, 16)
-        Me.Label169.TabIndex = 63
-        Me.Label169.Text = "SL/VL"
+        Me.SplitContainer2.Panel1.Controls.Add(Me.SplitContainer3)
+        Me.SplitContainer2.Panel1MinSize = 484
         '
-        'Label148
+        'SplitContainer2.Panel2
         '
-        Me.Label148.AutoSize = True
-        Me.Label148.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label148.ForeColor = System.Drawing.Color.Silver
-        Me.Label148.Location = New System.Drawing.Point(140, 350)
-        Me.Label148.Name = "Label148"
-        Me.Label148.Size = New System.Drawing.Size(67, 16)
-        Me.Label148.TabIndex = 62
-        Me.Label148.Text = "TOTALS"
+        Me.SplitContainer2.Panel2.Controls.Add(Me.SummaryGroupBox)
+        Me.SplitContainer2.Panel2MinSize = 327
+        Me.SplitContainer2.Size = New System.Drawing.Size(912, 414)
+        Me.SplitContainer2.SplitterDistance = 484
+        Me.SplitContainer2.TabIndex = 0
         '
-        'Panel20
+        'SplitContainer3
         '
-        Me.Panel20.BackColor = System.Drawing.Color.Silver
-        Me.Panel20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.Panel20.Location = New System.Drawing.Point(-4, 358)
-        Me.Panel20.Name = "Panel20"
-        Me.Panel20.Size = New System.Drawing.Size(537, 1)
-        Me.Panel20.TabIndex = 61
+        Me.SplitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
+        Me.SplitContainer3.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer3.Name = "SplitContainer3"
+        Me.SplitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
-        'Label147
+        'SplitContainer3.Panel1
         '
-        Me.Label147.AutoSize = True
-        Me.Label147.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label147.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label147.Location = New System.Drawing.Point(25, 326)
-        Me.Label147.Name = "Label147"
-        Me.Label147.Size = New System.Drawing.Size(122, 16)
-        Me.Label147.TabIndex = 59
-        Me.Label147.Text = "SL/VL BALANCE"
+        Me.SplitContainer3.Panel1.Controls.Add(Me.EmployeeDetailsGroupBox)
+        Me.SplitContainer3.Panel1MinSize = 221
         '
-        'LeaveBalanceTextBox
+        'SplitContainer3.Panel2
         '
-        Me.LeaveBalanceTextBox.BackColor = System.Drawing.Color.White
-        Me.LeaveBalanceTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LeaveBalanceTextBox.Location = New System.Drawing.Point(150, 325)
-        Me.LeaveBalanceTextBox.Name = "LeaveBalanceTextBox"
-        Me.LeaveBalanceTextBox.ReadOnly = True
-        Me.LeaveBalanceTextBox.Size = New System.Drawing.Size(104, 21)
-        Me.LeaveBalanceTextBox.TabIndex = 60
-        '
-        'Label146
-        '
-        Me.Label146.AutoSize = True
-        Me.Label146.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label146.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label146.Location = New System.Drawing.Point(10, 301)
-        Me.Label146.Name = "Label146"
-        Me.Label146.Size = New System.Drawing.Size(138, 16)
-        Me.Label146.TabIndex = 57
-        Me.Label146.Text = "13TH MONTH PAY"
-        '
-        'ThirteenthMonthPayTextBox
-        '
-        Me.ThirteenthMonthPayTextBox.BackColor = System.Drawing.Color.White
-        Me.ThirteenthMonthPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ThirteenthMonthPayTextBox.Location = New System.Drawing.Point(150, 300)
-        Me.ThirteenthMonthPayTextBox.Name = "ThirteenthMonthPayTextBox"
-        Me.ThirteenthMonthPayTextBox.ReadOnly = True
-        Me.ThirteenthMonthPayTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.ThirteenthMonthPayTextBox.TabIndex = 58
-        '
-        'Label144
-        '
-        Me.Label144.AutoSize = True
-        Me.Label144.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label144.ForeColor = System.Drawing.Color.Silver
-        Me.Label144.Location = New System.Drawing.Point(105, 250)
-        Me.Label144.Name = "Label144"
-        Me.Label144.Size = New System.Drawing.Size(133, 16)
-        Me.Label144.TabIndex = 54
-        Me.Label144.Text = "OTHER INCOMES"
-        '
-        'Panel16
-        '
-        Me.Panel16.BackColor = System.Drawing.Color.Silver
-        Me.Panel16.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.Panel16.Location = New System.Drawing.Point(-11, 258)
-        Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(537, 1)
-        Me.Panel16.TabIndex = 53
-        '
-        'Label143
-        '
-        Me.Label143.AutoSize = True
-        Me.Label143.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label143.ForeColor = System.Drawing.Color.Silver
-        Me.Label143.Location = New System.Drawing.Point(120, 80)
-        Me.Label143.Name = "Label143"
-        Me.Label143.Size = New System.Drawing.Size(107, 16)
-        Me.Label143.TabIndex = 52
-        Me.Label143.Text = "DEDUCTIONS"
-        '
-        'Panel11
-        '
-        Me.Panel11.BackColor = System.Drawing.Color.Silver
-        Me.Panel11.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.Panel11.Location = New System.Drawing.Point(0, 88)
-        Me.Panel11.Name = "Panel11"
-        Me.Panel11.Size = New System.Drawing.Size(537, 1)
-        Me.Panel11.TabIndex = 51
-        '
-        'GrossPayTextBox
-        '
-        Me.GrossPayTextBox.BackColor = System.Drawing.Color.White
-        Me.GrossPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GrossPayTextBox.Location = New System.Drawing.Point(150, 375)
-        Me.GrossPayTextBox.Name = "GrossPayTextBox"
-        Me.GrossPayTextBox.ReadOnly = True
-        Me.GrossPayTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.GrossPayTextBox.TabIndex = 50
-        '
-        'GrossPayLabel
-        '
-        Me.GrossPayLabel.AutoSize = True
-        Me.GrossPayLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GrossPayLabel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.GrossPayLabel.Location = New System.Drawing.Point(52, 376)
-        Me.GrossPayLabel.Name = "GrossPayLabel"
-        Me.GrossPayLabel.Size = New System.Drawing.Size(95, 16)
-        Me.GrossPayLabel.TabIndex = 49
-        Me.GrossPayLabel.Text = "GROSS PAY"
-        '
-        'Label142
-        '
-        Me.Label142.AutoSize = True
-        Me.Label142.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label142.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label142.Location = New System.Drawing.Point(60, 476)
-        Me.Label142.Name = "Label142"
-        Me.Label142.Size = New System.Drawing.Size(86, 16)
-        Me.Label142.TabIndex = 47
-        Me.Label142.Text = "OVERTIME"
-        '
-        'TotalOvertimeTextBox
-        '
-        Me.TotalOvertimeTextBox.BackColor = System.Drawing.Color.White
-        Me.TotalOvertimeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalOvertimeTextBox.Location = New System.Drawing.Point(150, 475)
-        Me.TotalOvertimeTextBox.Name = "TotalOvertimeTextBox"
-        Me.TotalOvertimeTextBox.ReadOnly = True
-        Me.TotalOvertimeTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.TotalOvertimeTextBox.TabIndex = 48
-        '
-        'Label141
-        '
-        Me.Label141.AutoSize = True
-        Me.Label141.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label141.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label141.Location = New System.Drawing.Point(23, 451)
-        Me.Label141.Name = "Label141"
-        Me.Label141.Size = New System.Drawing.Size(123, 16)
-        Me.Label141.TabIndex = 45
-        Me.Label141.Text = "OTHER INCOME"
-        '
-        'TotalOtherIncomeTextBox
-        '
-        Me.TotalOtherIncomeTextBox.BackColor = System.Drawing.Color.White
-        Me.TotalOtherIncomeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalOtherIncomeTextBox.Location = New System.Drawing.Point(150, 450)
-        Me.TotalOtherIncomeTextBox.Name = "TotalOtherIncomeTextBox"
-        Me.TotalOtherIncomeTextBox.ReadOnly = True
-        Me.TotalOtherIncomeTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.TotalOtherIncomeTextBox.TabIndex = 46
-        '
-        'Label137
-        '
-        Me.Label137.AutoSize = True
-        Me.Label137.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label137.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label137.Location = New System.Drawing.Point(35, 201)
-        Me.Label137.Name = "Label137"
-        Me.Label137.Size = New System.Drawing.Size(112, 16)
-        Me.Label137.TabIndex = 43
-        Me.Label137.Text = "PAGIBIG LOAN"
-        '
-        'PagibigLoanTextBox
-        '
-        Me.PagibigLoanTextBox.BackColor = System.Drawing.Color.White
-        Me.PagibigLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PagibigLoanTextBox.Location = New System.Drawing.Point(150, 200)
-        Me.PagibigLoanTextBox.Name = "PagibigLoanTextBox"
-        Me.PagibigLoanTextBox.ReadOnly = True
-        Me.PagibigLoanTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.PagibigLoanTextBox.TabIndex = 36
-        '
-        'Label138
-        '
-        Me.Label138.AutoSize = True
-        Me.Label138.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label138.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label138.Location = New System.Drawing.Point(65, 226)
-        Me.Label138.Name = "Label138"
-        Me.Label138.Size = New System.Drawing.Size(82, 16)
-        Me.Label138.TabIndex = 41
-        Me.Label138.Text = "SSS LOAN"
-        '
-        'SssLoanTextBox
-        '
-        Me.SssLoanTextBox.BackColor = System.Drawing.Color.White
-        Me.SssLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SssLoanTextBox.Location = New System.Drawing.Point(150, 225)
-        Me.SssLoanTextBox.Name = "SssLoanTextBox"
-        Me.SssLoanTextBox.ReadOnly = True
-        Me.SssLoanTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.SssLoanTextBox.TabIndex = 37
-        '
-        'Label136
-        '
-        Me.Label136.AutoSize = True
-        Me.Label136.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label136.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label136.Location = New System.Drawing.Point(78, 151)
-        Me.Label136.Name = "Label136"
-        Me.Label136.Size = New System.Drawing.Size(68, 16)
-        Me.Label136.TabIndex = 39
-        Me.Label136.Text = "PAGIBIG"
-        '
-        'PagibigAmountTextBox
-        '
-        Me.PagibigAmountTextBox.BackColor = System.Drawing.Color.White
-        Me.PagibigAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PagibigAmountTextBox.Location = New System.Drawing.Point(150, 150)
-        Me.PagibigAmountTextBox.Name = "PagibigAmountTextBox"
-        Me.PagibigAmountTextBox.ReadOnly = True
-        Me.PagibigAmountTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.PagibigAmountTextBox.TabIndex = 34
-        '
-        'Label135
-        '
-        Me.Label135.AutoSize = True
-        Me.Label135.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label135.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label135.Location = New System.Drawing.Point(109, 176)
-        Me.Label135.Name = "Label135"
-        Me.Label135.Size = New System.Drawing.Size(37, 16)
-        Me.Label135.TabIndex = 37
-        Me.Label135.Text = "TAX"
-        '
-        'WithholdingTaxTextBox
-        '
-        Me.WithholdingTaxTextBox.BackColor = System.Drawing.Color.White
-        Me.WithholdingTaxTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.WithholdingTaxTextBox.Location = New System.Drawing.Point(150, 175)
-        Me.WithholdingTaxTextBox.Name = "WithholdingTaxTextBox"
-        Me.WithholdingTaxTextBox.ReadOnly = True
-        Me.WithholdingTaxTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.WithholdingTaxTextBox.TabIndex = 35
-        '
-        'Label134
-        '
-        Me.Label134.AutoSize = True
-        Me.Label134.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label134.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label134.Location = New System.Drawing.Point(90, 276)
-        Me.Label134.Name = "Label134"
-        Me.Label134.Size = New System.Drawing.Size(57, 16)
-        Me.Label134.TabIndex = 35
-        Me.Label134.Text = "ECOLA"
-        '
-        'Label133
-        '
-        Me.Label133.AutoSize = True
-        Me.Label133.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label133.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label133.Location = New System.Drawing.Point(72, 501)
-        Me.Label133.Name = "Label133"
-        Me.Label133.Size = New System.Drawing.Size(73, 16)
-        Me.Label133.TabIndex = 34
-        Me.Label133.Text = "NET PAY"
-        '
-        'Panel5
-        '
-        Me.Panel5.BackColor = System.Drawing.Color.Gray
-        Me.Panel5.Location = New System.Drawing.Point(8, 47)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(307, 2)
-        Me.Panel5.TabIndex = 7
-        '
-        'Label116
-        '
-        Me.Label116.AutoSize = True
-        Me.Label116.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label116.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label116.Location = New System.Drawing.Point(40, 15)
-        Me.Label116.Name = "Label116"
-        Me.Label116.Size = New System.Drawing.Size(112, 24)
-        Me.Label116.TabIndex = 6
-        Me.Label116.Text = "SUMMARY"
-        '
-        'PictureBox33
-        '
-        Me.PictureBox33.BackgroundImage = CType(resources.GetObject("PictureBox33.BackgroundImage"), System.Drawing.Image)
-        Me.PictureBox33.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox33.Location = New System.Drawing.Point(8, 12)
-        Me.PictureBox33.Name = "PictureBox33"
-        Me.PictureBox33.Size = New System.Drawing.Size(29, 31)
-        Me.PictureBox33.TabIndex = 3
-        Me.PictureBox33.TabStop = False
-        '
-        'BasicPaySummaryTextBox
-        '
-        Me.BasicPaySummaryTextBox.BackColor = System.Drawing.Color.White
-        Me.BasicPaySummaryTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BasicPaySummaryTextBox.Location = New System.Drawing.Point(150, 55)
-        Me.BasicPaySummaryTextBox.Name = "BasicPaySummaryTextBox"
-        Me.BasicPaySummaryTextBox.ReadOnly = True
-        Me.BasicPaySummaryTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.BasicPaySummaryTextBox.TabIndex = 31
-        '
-        'Label88
-        '
-        Me.Label88.AutoSize = True
-        Me.Label88.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label88.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label88.Location = New System.Drawing.Point(60, 57)
-        Me.Label88.Name = "Label88"
-        Me.Label88.Size = New System.Drawing.Size(86, 16)
-        Me.Label88.TabIndex = 20
-        Me.Label88.Text = "BASIC PAY"
-        '
-        'PhilhealthAmountTextBox
-        '
-        Me.PhilhealthAmountTextBox.BackColor = System.Drawing.Color.White
-        Me.PhilhealthAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PhilhealthAmountTextBox.Location = New System.Drawing.Point(150, 100)
-        Me.PhilhealthAmountTextBox.Name = "PhilhealthAmountTextBox"
-        Me.PhilhealthAmountTextBox.ReadOnly = True
-        Me.PhilhealthAmountTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.PhilhealthAmountTextBox.TabIndex = 32
-        '
-        'SavePayrollButton
-        '
-        Me.SavePayrollButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
-        Me.SavePayrollButton.FlatAppearance.BorderSize = 0
-        Me.SavePayrollButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.SavePayrollButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SavePayrollButton.Location = New System.Drawing.Point(186, 15)
-        Me.SavePayrollButton.Name = "SavePayrollButton"
-        Me.SavePayrollButton.Size = New System.Drawing.Size(100, 26)
-        Me.SavePayrollButton.TabIndex = 33
-        Me.SavePayrollButton.Text = "SAVE ALL"
-        Me.SavePayrollButton.UseVisualStyleBackColor = False
-        '
-        'SssAmountTextBox
-        '
-        Me.SssAmountTextBox.BackColor = System.Drawing.Color.White
-        Me.SssAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SssAmountTextBox.Location = New System.Drawing.Point(150, 125)
-        Me.SssAmountTextBox.Name = "SssAmountTextBox"
-        Me.SssAmountTextBox.ReadOnly = True
-        Me.SssAmountTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.SssAmountTextBox.TabIndex = 33
-        '
-        'EcolaAmountTextBox
-        '
-        Me.EcolaAmountTextBox.BackColor = System.Drawing.Color.White
-        Me.EcolaAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EcolaAmountTextBox.Location = New System.Drawing.Point(150, 275)
-        Me.EcolaAmountTextBox.Name = "EcolaAmountTextBox"
-        Me.EcolaAmountTextBox.ReadOnly = True
-        Me.EcolaAmountTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.EcolaAmountTextBox.TabIndex = 38
-        '
-        'TotalDeductionTextBox
-        '
-        Me.TotalDeductionTextBox.BackColor = System.Drawing.Color.White
-        Me.TotalDeductionTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalDeductionTextBox.Location = New System.Drawing.Point(150, 425)
-        Me.TotalDeductionTextBox.Name = "TotalDeductionTextBox"
-        Me.TotalDeductionTextBox.ReadOnly = True
-        Me.TotalDeductionTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.TotalDeductionTextBox.TabIndex = 39
-        '
-        'NetPayTextBox
-        '
-        Me.NetPayTextBox.BackColor = System.Drawing.Color.White
-        Me.NetPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NetPayTextBox.Location = New System.Drawing.Point(150, 500)
-        Me.NetPayTextBox.Name = "NetPayTextBox"
-        Me.NetPayTextBox.ReadOnly = True
-        Me.NetPayTextBox.Size = New System.Drawing.Size(160, 21)
-        Me.NetPayTextBox.TabIndex = 40
-        '
-        'Label91
-        '
-        Me.Label91.AutoSize = True
-        Me.Label91.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label91.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label91.Location = New System.Drawing.Point(44, 101)
-        Me.Label91.Name = "Label91"
-        Me.Label91.Size = New System.Drawing.Size(101, 16)
-        Me.Label91.TabIndex = 28
-        Me.Label91.Text = "PHILHEALTH"
-        '
-        'Label96
-        '
-        Me.Label96.AutoSize = True
-        Me.Label96.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label96.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label96.Location = New System.Drawing.Point(49, 426)
-        Me.Label96.Name = "Label96"
-        Me.Label96.Size = New System.Drawing.Size(97, 16)
-        Me.Label96.TabIndex = 30
-        Me.Label96.Text = "DEDUCTION"
-        '
-        'Label92
-        '
-        Me.Label92.AutoSize = True
-        Me.Label92.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label92.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label92.Location = New System.Drawing.Point(108, 126)
-        Me.Label92.Name = "Label92"
-        Me.Label92.Size = New System.Drawing.Size(38, 16)
-        Me.Label92.TabIndex = 29
-        Me.Label92.Text = "SSS"
-        '
-        'InputsTabControl
-        '
-        Me.InputsTabControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.InputsTabControl.Controls.Add(Me.DaysWorkedTabPage)
-        Me.InputsTabControl.Controls.Add(Me.DeductionsTabPage)
-        Me.InputsTabControl.Controls.Add(Me.OtherIncomeTabPage)
-        Me.InputsTabControl.Enabled = False
-        Me.InputsTabControl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.InputsTabControl.Location = New System.Drawing.Point(430, 245)
-        Me.InputsTabControl.Name = "InputsTabControl"
-        Me.InputsTabControl.SelectedIndex = 0
-        Me.InputsTabControl.Size = New System.Drawing.Size(250, 316)
-        Me.InputsTabControl.TabIndex = 49
-        '
-        'DaysWorkedTabPage
-        '
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label207)
-        Me.DaysWorkedTabPage.Controls.Add(Me.ResignedCheckBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label140)
-        Me.DaysWorkedTabPage.Controls.Add(Me.EcolaTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.ComputeSalaryButton)
-        Me.DaysWorkedTabPage.Controls.Add(Me.SetOvertimeButton)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label129)
-        Me.DaysWorkedTabPage.Controls.Add(Me.PictureBox27)
-        Me.DaysWorkedTabPage.Controls.Add(Me.LeaveTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Panel24)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label77)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label86)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label130)
-        Me.DaysWorkedTabPage.Controls.Add(Me.RegularDaysTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.LateTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.OvertimeTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.Label131)
-        Me.DaysWorkedTabPage.Location = New System.Drawing.Point(4, 24)
-        Me.DaysWorkedTabPage.Name = "DaysWorkedTabPage"
-        Me.DaysWorkedTabPage.Size = New System.Drawing.Size(242, 288)
-        Me.DaysWorkedTabPage.TabIndex = 2
-        Me.DaysWorkedTabPage.Text = "DAYS WORKED"
-        Me.DaysWorkedTabPage.UseVisualStyleBackColor = True
-        '
-        'Label207
-        '
-        Me.Label207.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label207.AutoSize = True
-        Me.Label207.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label207.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label207.Location = New System.Drawing.Point(187, 92)
-        Me.Label207.Name = "Label207"
-        Me.Label207.Size = New System.Drawing.Size(40, 18)
-        Me.Label207.TabIndex = 48
-        Me.Label207.Text = "HRS"
-        '
-        'ResignedCheckBox
-        '
-        Me.ResignedCheckBox.AutoSize = True
-        Me.ResignedCheckBox.FlatAppearance.BorderSize = 0
-        Me.ResignedCheckBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ResignedCheckBox.ForeColor = System.Drawing.Color.Black
-        Me.ResignedCheckBox.Location = New System.Drawing.Point(17, 205)
-        Me.ResignedCheckBox.Name = "ResignedCheckBox"
-        Me.ResignedCheckBox.Size = New System.Drawing.Size(105, 20)
-        Me.ResignedCheckBox.TabIndex = 18
-        Me.ResignedCheckBox.Text = "RESIGNED"
-        Me.ResignedCheckBox.UseVisualStyleBackColor = True
-        Me.ResignedCheckBox.Visible = False
-        '
-        'Label140
-        '
-        Me.Label140.AutoSize = True
-        Me.Label140.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label140.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label140.Location = New System.Drawing.Point(77, 167)
-        Me.Label140.Name = "Label140"
-        Me.Label140.Size = New System.Drawing.Size(68, 20)
-        Me.Label140.TabIndex = 46
-        Me.Label140.Text = "ECOLA"
-        '
-        'EcolaTextBox
-        '
-        Me.EcolaTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.EcolaTextBox.BackColor = System.Drawing.SystemColors.ButtonHighlight
-        Me.EcolaTextBox.Enabled = False
-        Me.EcolaTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EcolaTextBox.Location = New System.Drawing.Point(155, 166)
-        Me.EcolaTextBox.Name = "EcolaTextBox"
-        Me.EcolaTextBox.ReadOnly = True
-        Me.EcolaTextBox.Size = New System.Drawing.Size(66, 22)
-        Me.EcolaTextBox.TabIndex = 47
-        Me.EcolaTextBox.Text = "0"
-        '
-        'ComputeSalaryButton
-        '
-        Me.ComputeSalaryButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComputeSalaryButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
-        Me.ComputeSalaryButton.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.ComputeSalaryButton.FlatAppearance.BorderSize = 0
-        Me.ComputeSalaryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ComputeSalaryButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComputeSalaryButton.Location = New System.Drawing.Point(97, 230)
-        Me.ComputeSalaryButton.Name = "ComputeSalaryButton"
-        Me.ComputeSalaryButton.Size = New System.Drawing.Size(125, 45)
-        Me.ComputeSalaryButton.TabIndex = 31
-        Me.ComputeSalaryButton.Text = "COMPUTE"
-        Me.ComputeSalaryButton.UseVisualStyleBackColor = False
-        '
-        'SetOvertimeButton
-        '
-        Me.SetOvertimeButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
-        Me.SetOvertimeButton.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.SetOvertimeButton.FlatAppearance.BorderSize = 0
-        Me.SetOvertimeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.SetOvertimeButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SetOvertimeButton.Location = New System.Drawing.Point(10, 230)
-        Me.SetOvertimeButton.Name = "SetOvertimeButton"
-        Me.SetOvertimeButton.Size = New System.Drawing.Size(125, 45)
-        Me.SetOvertimeButton.TabIndex = 23
-        Me.SetOvertimeButton.Text = "SET/REVIEW OVERTIME"
-        Me.SetOvertimeButton.UseVisualStyleBackColor = False
-        '
-        'Label129
-        '
-        Me.Label129.AutoSize = True
-        Me.Label129.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label129.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label129.Location = New System.Drawing.Point(41, 12)
-        Me.Label129.Name = "Label129"
-        Me.Label129.Size = New System.Drawing.Size(160, 24)
-        Me.Label129.TabIndex = 6
-        Me.Label129.Text = "DAYS WORKED"
-        '
-        'PictureBox27
-        '
-        Me.PictureBox27.BackgroundImage = CType(resources.GetObject("PictureBox27.BackgroundImage"), System.Drawing.Image)
-        Me.PictureBox27.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox27.Location = New System.Drawing.Point(9, 9)
-        Me.PictureBox27.Name = "PictureBox27"
-        Me.PictureBox27.Size = New System.Drawing.Size(29, 31)
-        Me.PictureBox27.TabIndex = 3
-        Me.PictureBox27.TabStop = False
-        '
-        'LeaveTextBox
-        '
-        Me.LeaveTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LeaveTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LeaveTextBox.Location = New System.Drawing.Point(155, 141)
-        Me.LeaveTextBox.Name = "LeaveTextBox"
-        Me.LeaveTextBox.Size = New System.Drawing.Size(66, 22)
-        Me.LeaveTextBox.TabIndex = 29
-        Me.LeaveTextBox.Text = "1"
-        '
-        'Panel24
-        '
-        Me.Panel24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel24.BackColor = System.Drawing.Color.Gray
-        Me.Panel24.Location = New System.Drawing.Point(9, 44)
-        Me.Panel24.Name = "Panel24"
-        Me.Panel24.Size = New System.Drawing.Size(212, 2)
-        Me.Panel24.TabIndex = 7
-        '
-        'Label77
-        '
-        Me.Label77.AutoSize = True
-        Me.Label77.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label77.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label77.Location = New System.Drawing.Point(10, 67)
-        Me.Label77.Name = "Label77"
-        Me.Label77.Size = New System.Drawing.Size(135, 18)
-        Me.Label77.TabIndex = 9
-        Me.Label77.Text = "REGULAR DAYS"
-        '
-        'Label86
-        '
-        Me.Label86.AutoSize = True
-        Me.Label86.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label86.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label86.Location = New System.Drawing.Point(52, 91)
-        Me.Label86.Name = "Label86"
-        Me.Label86.Size = New System.Drawing.Size(93, 18)
-        Me.Label86.TabIndex = 10
-        Me.Label86.Text = "OVERTIME"
-        '
-        'Label130
-        '
-        Me.Label130.AutoSize = True
-        Me.Label130.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label130.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label130.Location = New System.Drawing.Point(97, 116)
-        Me.Label130.Name = "Label130"
-        Me.Label130.Size = New System.Drawing.Size(48, 18)
-        Me.Label130.TabIndex = 13
-        Me.Label130.Text = "LATE"
-        '
-        'RegularDaysTextBox
-        '
-        Me.RegularDaysTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RegularDaysTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RegularDaysTextBox.Location = New System.Drawing.Point(155, 66)
-        Me.RegularDaysTextBox.Name = "RegularDaysTextBox"
-        Me.RegularDaysTextBox.Size = New System.Drawing.Size(66, 22)
-        Me.RegularDaysTextBox.TabIndex = 25
-        '
-        'LateTextBox
-        '
-        Me.LateTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LateTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LateTextBox.Location = New System.Drawing.Point(155, 116)
-        Me.LateTextBox.Name = "LateTextBox"
-        Me.LateTextBox.Size = New System.Drawing.Size(66, 22)
-        Me.LateTextBox.TabIndex = 27
-        '
-        'OvertimeTextBox
-        '
-        Me.OvertimeTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.OvertimeTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight
-        Me.OvertimeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OvertimeTextBox.Location = New System.Drawing.Point(155, 91)
-        Me.OvertimeTextBox.Name = "OvertimeTextBox"
-        Me.OvertimeTextBox.ReadOnly = True
-        Me.OvertimeTextBox.Size = New System.Drawing.Size(29, 22)
-        Me.OvertimeTextBox.TabIndex = 26
-        '
-        'Label131
-        '
-        Me.Label131.AutoSize = True
-        Me.Label131.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label131.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label131.Location = New System.Drawing.Point(93, 141)
-        Me.Label131.Name = "Label131"
-        Me.Label131.Size = New System.Drawing.Size(52, 18)
-        Me.Label131.TabIndex = 14
-        Me.Label131.Text = "SL/VL"
-        '
-        'DeductionsTabPage
-        '
-        Me.DeductionsTabPage.Controls.Add(Me.RemoveDeductionButton)
-        Me.DeductionsTabPage.Controls.Add(Me.TotalDeductionsLabel)
-        Me.DeductionsTabPage.Controls.Add(Me.Label97)
-        Me.DeductionsTabPage.Controls.Add(Me.Panel13)
-        Me.DeductionsTabPage.Controls.Add(Me.Label12)
-        Me.DeductionsTabPage.Controls.Add(Me.DeductionsGridView)
-        Me.DeductionsTabPage.Controls.Add(Me.PictureBox23)
-        Me.DeductionsTabPage.Controls.Add(Me.AddDeductionButton)
-        Me.DeductionsTabPage.Controls.Add(Me.DeductionComboBox)
-        Me.DeductionsTabPage.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DeductionsTabPage.Location = New System.Drawing.Point(4, 24)
-        Me.DeductionsTabPage.Name = "DeductionsTabPage"
-        Me.DeductionsTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DeductionsTabPage.Size = New System.Drawing.Size(259, 288)
-        Me.DeductionsTabPage.TabIndex = 0
-        Me.DeductionsTabPage.Text = "DEDUCTIONS"
-        Me.DeductionsTabPage.UseVisualStyleBackColor = True
-        '
-        'RemoveDeductionButton
-        '
-        Me.RemoveDeductionButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RemoveDeductionButton.BackColor = System.Drawing.Color.Transparent
-        Me.RemoveDeductionButton.BackgroundImage = CType(resources.GetObject("RemoveDeductionButton.BackgroundImage"), System.Drawing.Image)
-        Me.RemoveDeductionButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.RemoveDeductionButton.Location = New System.Drawing.Point(225, 52)
-        Me.RemoveDeductionButton.Name = "RemoveDeductionButton"
-        Me.RemoveDeductionButton.Size = New System.Drawing.Size(29, 29)
-        Me.RemoveDeductionButton.TabIndex = 29
-        Me.RemoveDeductionButton.UseVisualStyleBackColor = False
-        '
-        'TotalDeductionsLabel
-        '
-        Me.TotalDeductionsLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TotalDeductionsLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalDeductionsLabel.Location = New System.Drawing.Point(106, 261)
-        Me.TotalDeductionsLabel.Name = "TotalDeductionsLabel"
-        Me.TotalDeductionsLabel.Size = New System.Drawing.Size(152, 20)
-        Me.TotalDeductionsLabel.TabIndex = 28
-        Me.TotalDeductionsLabel.Text = "00.00"
-        Me.TotalDeductionsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'Label97
-        '
-        Me.Label97.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label97.AutoSize = True
-        Me.Label97.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label97.Location = New System.Drawing.Point(4, 261)
-        Me.Label97.Name = "Label97"
-        Me.Label97.Size = New System.Drawing.Size(69, 20)
-        Me.Label97.TabIndex = 27
-        Me.Label97.Text = "TOTAL:"
-        '
-        'Panel13
-        '
-        Me.Panel13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel13.BackColor = System.Drawing.Color.Gray
-        Me.Panel13.Location = New System.Drawing.Point(9, 44)
-        Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(244, 2)
-        Me.Panel13.TabIndex = 10
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label12.Location = New System.Drawing.Point(41, 12)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(142, 24)
-        Me.Label12.TabIndex = 9
-        Me.Label12.Text = "DEDUCTIONS"
-        '
-        'DeductionsGridView
-        '
-        Me.DeductionsGridView.AllowUserToAddRows = False
-        Me.DeductionsGridView.AllowUserToDeleteRows = False
-        Me.DeductionsGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.DeductionsGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeductionsGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.DeductionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.DeductionsGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DeductionsGridViewColumn1, Me.DeductionsGridViewColumn2, Me.DeductionsGridViewColumn3})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DeductionsGridView.DefaultCellStyle = DataGridViewCellStyle5
-        Me.DeductionsGridView.Location = New System.Drawing.Point(9, 85)
-        Me.DeductionsGridView.Name = "DeductionsGridView"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeductionsGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.DeductionsGridView.RowHeadersVisible = False
-        Me.DeductionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DeductionsGridView.Size = New System.Drawing.Size(244, 173)
-        Me.DeductionsGridView.TabIndex = 24
-        '
-        'DeductionsGridViewColumn1
-        '
-        Me.DeductionsGridViewColumn1.DataPropertyName = "Code"
-        Me.DeductionsGridViewColumn1.FillWeight = 15.0!
-        Me.DeductionsGridViewColumn1.HeaderText = "CODE"
-        Me.DeductionsGridViewColumn1.Name = "DeductionsGridViewColumn1"
-        Me.DeductionsGridViewColumn1.ReadOnly = True
-        '
-        'DeductionsGridViewColumn2
-        '
-        Me.DeductionsGridViewColumn2.DataPropertyName = "Description"
-        Me.DeductionsGridViewColumn2.FillWeight = 65.0!
-        Me.DeductionsGridViewColumn2.HeaderText = "Description"
-        Me.DeductionsGridViewColumn2.Name = "DeductionsGridViewColumn2"
-        Me.DeductionsGridViewColumn2.ReadOnly = True
-        '
-        'DeductionsGridViewColumn3
-        '
-        Me.DeductionsGridViewColumn3.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Format = "N2"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.DeductionsGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle4
-        Me.DeductionsGridViewColumn3.FillWeight = 20.0!
-        Me.DeductionsGridViewColumn3.HeaderText = "Amount"
-        Me.DeductionsGridViewColumn3.Name = "DeductionsGridViewColumn3"
-        '
-        'PictureBox23
-        '
-        Me.PictureBox23.BackgroundImage = CType(resources.GetObject("PictureBox23.BackgroundImage"), System.Drawing.Image)
-        Me.PictureBox23.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox23.Location = New System.Drawing.Point(9, 9)
-        Me.PictureBox23.Name = "PictureBox23"
-        Me.PictureBox23.Size = New System.Drawing.Size(29, 31)
-        Me.PictureBox23.TabIndex = 8
-        Me.PictureBox23.TabStop = False
-        '
-        'AddDeductionButton
-        '
-        Me.AddDeductionButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AddDeductionButton.BackColor = System.Drawing.Color.Transparent
-        Me.AddDeductionButton.BackgroundImage = CType(resources.GetObject("AddDeductionButton.BackgroundImage"), System.Drawing.Image)
-        Me.AddDeductionButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.AddDeductionButton.Location = New System.Drawing.Point(195, 52)
-        Me.AddDeductionButton.Name = "AddDeductionButton"
-        Me.AddDeductionButton.Size = New System.Drawing.Size(29, 29)
-        Me.AddDeductionButton.TabIndex = 2
-        Me.AddDeductionButton.UseVisualStyleBackColor = False
-        '
-        'DeductionComboBox
-        '
-        Me.DeductionComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.DeductionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.DeductionComboBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DeductionComboBox.FormattingEnabled = True
-        Me.DeductionComboBox.Location = New System.Drawing.Point(9, 53)
-        Me.DeductionComboBox.Name = "DeductionComboBox"
-        Me.DeductionComboBox.Size = New System.Drawing.Size(180, 28)
-        Me.DeductionComboBox.TabIndex = 1
-        '
-        'OtherIncomeTabPage
-        '
-        Me.OtherIncomeTabPage.Controls.Add(Me.RemoveIncomeButton)
-        Me.OtherIncomeTabPage.Controls.Add(Me.TotalOtherIncomeLabel)
-        Me.OtherIncomeTabPage.Controls.Add(Me.Label40)
-        Me.OtherIncomeTabPage.Controls.Add(Me.Panel14)
-        Me.OtherIncomeTabPage.Controls.Add(Me.Label37)
-        Me.OtherIncomeTabPage.Controls.Add(Me.OtherIncomeGridView)
-        Me.OtherIncomeTabPage.Controls.Add(Me.PictureBox28)
-        Me.OtherIncomeTabPage.Controls.Add(Me.AddIncomeButton)
-        Me.OtherIncomeTabPage.Controls.Add(Me.OtherIncomeComboBox)
-        Me.OtherIncomeTabPage.Location = New System.Drawing.Point(4, 24)
-        Me.OtherIncomeTabPage.Name = "OtherIncomeTabPage"
-        Me.OtherIncomeTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.OtherIncomeTabPage.Size = New System.Drawing.Size(259, 288)
-        Me.OtherIncomeTabPage.TabIndex = 1
-        Me.OtherIncomeTabPage.Text = "OTHER INCOME"
-        Me.OtherIncomeTabPage.UseVisualStyleBackColor = True
-        '
-        'RemoveIncomeButton
-        '
-        Me.RemoveIncomeButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RemoveIncomeButton.BackColor = System.Drawing.Color.Transparent
-        Me.RemoveIncomeButton.BackgroundImage = CType(resources.GetObject("RemoveIncomeButton.BackgroundImage"), System.Drawing.Image)
-        Me.RemoveIncomeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.RemoveIncomeButton.Location = New System.Drawing.Point(225, 52)
-        Me.RemoveIncomeButton.Name = "RemoveIncomeButton"
-        Me.RemoveIncomeButton.Size = New System.Drawing.Size(29, 29)
-        Me.RemoveIncomeButton.TabIndex = 32
-        Me.RemoveIncomeButton.UseVisualStyleBackColor = False
-        '
-        'TotalOtherIncomeLabel
-        '
-        Me.TotalOtherIncomeLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TotalOtherIncomeLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalOtherIncomeLabel.Location = New System.Drawing.Point(106, 261)
-        Me.TotalOtherIncomeLabel.Name = "TotalOtherIncomeLabel"
-        Me.TotalOtherIncomeLabel.Size = New System.Drawing.Size(152, 20)
-        Me.TotalOtherIncomeLabel.TabIndex = 30
-        Me.TotalOtherIncomeLabel.Text = "00.00"
-        Me.TotalOtherIncomeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'Label40
-        '
-        Me.Label40.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label40.AutoSize = True
-        Me.Label40.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label40.Location = New System.Drawing.Point(4, 261)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(69, 20)
-        Me.Label40.TabIndex = 31
-        Me.Label40.Text = "TOTAL:"
-        '
-        'Panel14
-        '
-        Me.Panel14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel14.BackColor = System.Drawing.Color.Gray
-        Me.Panel14.Location = New System.Drawing.Point(9, 44)
-        Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(244, 2)
-        Me.Panel14.TabIndex = 13
-        '
-        'Label37
-        '
-        Me.Label37.AutoSize = True
-        Me.Label37.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label37.Location = New System.Drawing.Point(41, 12)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(169, 24)
-        Me.Label37.TabIndex = 12
-        Me.Label37.Text = "OTHER INCOME"
-        '
-        'OtherIncomeGridView
-        '
-        Me.OtherIncomeGridView.AllowUserToAddRows = False
-        Me.OtherIncomeGridView.AllowUserToDeleteRows = False
-        Me.OtherIncomeGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.OtherIncomeGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.OtherIncomeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.OtherIncomeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.OtherIncomeGridViewColumn1, Me.OtherIncomeGridViewColumn2, Me.OtherIncomeGridViewColumn3})
-        Me.OtherIncomeGridView.Location = New System.Drawing.Point(9, 85)
-        Me.OtherIncomeGridView.Name = "OtherIncomeGridView"
-        Me.OtherIncomeGridView.RowHeadersVisible = False
-        Me.OtherIncomeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.OtherIncomeGridView.Size = New System.Drawing.Size(244, 173)
-        Me.OtherIncomeGridView.TabIndex = 25
-        '
-        'OtherIncomeGridViewColumn1
-        '
-        Me.OtherIncomeGridViewColumn1.DataPropertyName = "Code"
-        Me.OtherIncomeGridViewColumn1.FillWeight = 15.0!
-        Me.OtherIncomeGridViewColumn1.HeaderText = "CODE"
-        Me.OtherIncomeGridViewColumn1.Name = "OtherIncomeGridViewColumn1"
-        '
-        'OtherIncomeGridViewColumn2
-        '
-        Me.OtherIncomeGridViewColumn2.DataPropertyName = "Description"
-        Me.OtherIncomeGridViewColumn2.FillWeight = 65.0!
-        Me.OtherIncomeGridViewColumn2.HeaderText = "Description"
-        Me.OtherIncomeGridViewColumn2.Name = "OtherIncomeGridViewColumn2"
-        '
-        'OtherIncomeGridViewColumn3
-        '
-        Me.OtherIncomeGridViewColumn3.DataPropertyName = "Amount"
-        DataGridViewCellStyle7.Format = "N2"
-        DataGridViewCellStyle7.NullValue = Nothing
-        Me.OtherIncomeGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle7
-        Me.OtherIncomeGridViewColumn3.FillWeight = 20.0!
-        Me.OtherIncomeGridViewColumn3.HeaderText = "Amount"
-        Me.OtherIncomeGridViewColumn3.Name = "OtherIncomeGridViewColumn3"
-        '
-        'PictureBox28
-        '
-        Me.PictureBox28.BackgroundImage = CType(resources.GetObject("PictureBox28.BackgroundImage"), System.Drawing.Image)
-        Me.PictureBox28.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox28.Location = New System.Drawing.Point(9, 9)
-        Me.PictureBox28.Name = "PictureBox28"
-        Me.PictureBox28.Size = New System.Drawing.Size(29, 31)
-        Me.PictureBox28.TabIndex = 11
-        Me.PictureBox28.TabStop = False
-        '
-        'AddIncomeButton
-        '
-        Me.AddIncomeButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AddIncomeButton.BackColor = System.Drawing.Color.Transparent
-        Me.AddIncomeButton.BackgroundImage = CType(resources.GetObject("AddIncomeButton.BackgroundImage"), System.Drawing.Image)
-        Me.AddIncomeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.AddIncomeButton.Location = New System.Drawing.Point(195, 52)
-        Me.AddIncomeButton.Name = "AddIncomeButton"
-        Me.AddIncomeButton.Size = New System.Drawing.Size(29, 29)
-        Me.AddIncomeButton.TabIndex = 5
-        Me.AddIncomeButton.UseVisualStyleBackColor = False
-        '
-        'OtherIncomeComboBox
-        '
-        Me.OtherIncomeComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.OtherIncomeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.OtherIncomeComboBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.OtherIncomeComboBox.FormattingEnabled = True
-        Me.OtherIncomeComboBox.Location = New System.Drawing.Point(9, 53)
-        Me.OtherIncomeComboBox.Name = "OtherIncomeComboBox"
-        Me.OtherIncomeComboBox.Size = New System.Drawing.Size(180, 28)
-        Me.OtherIncomeComboBox.TabIndex = 4
+        Me.SplitContainer3.Panel2.Controls.Add(Me.InputsTabControl)
+        Me.SplitContainer3.Size = New System.Drawing.Size(484, 414)
+        Me.SplitContainer3.SplitterDistance = 221
+        Me.SplitContainer3.TabIndex = 0
         '
         'EmployeeDetailsGroupBox
         '
-        Me.EmployeeDetailsGroupBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.AllowanceTextBox)
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.Label201)
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.PhilhealthNumberTextBox)
@@ -1512,9 +526,10 @@ Partial Class BenchmarkPayrollForm
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.BasicPayTextBox)
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.PerDayTextBox)
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.PerHourTextBox)
-        Me.EmployeeDetailsGroupBox.Location = New System.Drawing.Point(430, 20)
+        Me.EmployeeDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeDetailsGroupBox.Location = New System.Drawing.Point(0, 0)
         Me.EmployeeDetailsGroupBox.Name = "EmployeeDetailsGroupBox"
-        Me.EmployeeDetailsGroupBox.Size = New System.Drawing.Size(250, 221)
+        Me.EmployeeDetailsGroupBox.Size = New System.Drawing.Size(482, 219)
         Me.EmployeeDetailsGroupBox.TabIndex = 48
         Me.EmployeeDetailsGroupBox.TabStop = False
         '
@@ -1711,6 +726,1192 @@ Partial Class BenchmarkPayrollForm
         Me.PerHourTextBox.TabIndex = 47
         Me.PerHourTextBox.Text = "0.00"
         '
+        'InputsTabControl
+        '
+        Me.InputsTabControl.Controls.Add(Me.DaysWorkedTabPage)
+        Me.InputsTabControl.Controls.Add(Me.DeductionsTabPage)
+        Me.InputsTabControl.Controls.Add(Me.OtherIncomeTabPage)
+        Me.InputsTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.InputsTabControl.Enabled = False
+        Me.InputsTabControl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.InputsTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.InputsTabControl.Name = "InputsTabControl"
+        Me.InputsTabControl.SelectedIndex = 0
+        Me.InputsTabControl.Size = New System.Drawing.Size(482, 187)
+        Me.InputsTabControl.TabIndex = 49
+        '
+        'DaysWorkedTabPage
+        '
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label207)
+        Me.DaysWorkedTabPage.Controls.Add(Me.ResignedCheckBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label140)
+        Me.DaysWorkedTabPage.Controls.Add(Me.EcolaTextBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.ComputeSalaryButton)
+        Me.DaysWorkedTabPage.Controls.Add(Me.SetOvertimeButton)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label129)
+        Me.DaysWorkedTabPage.Controls.Add(Me.PictureBox27)
+        Me.DaysWorkedTabPage.Controls.Add(Me.LeaveTextBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Panel24)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label77)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label86)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label130)
+        Me.DaysWorkedTabPage.Controls.Add(Me.RegularDaysTextBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.LateTextBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.OvertimeTextBox)
+        Me.DaysWorkedTabPage.Controls.Add(Me.Label131)
+        Me.DaysWorkedTabPage.Location = New System.Drawing.Point(4, 24)
+        Me.DaysWorkedTabPage.Name = "DaysWorkedTabPage"
+        Me.DaysWorkedTabPage.Size = New System.Drawing.Size(474, 159)
+        Me.DaysWorkedTabPage.TabIndex = 2
+        Me.DaysWorkedTabPage.Text = "DAYS WORKED"
+        Me.DaysWorkedTabPage.UseVisualStyleBackColor = True
+        '
+        'Label207
+        '
+        Me.Label207.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label207.AutoSize = True
+        Me.Label207.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label207.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label207.Location = New System.Drawing.Point(431, 92)
+        Me.Label207.Name = "Label207"
+        Me.Label207.Size = New System.Drawing.Size(40, 18)
+        Me.Label207.TabIndex = 48
+        Me.Label207.Text = "HRS"
+        '
+        'ResignedCheckBox
+        '
+        Me.ResignedCheckBox.AutoSize = True
+        Me.ResignedCheckBox.FlatAppearance.BorderSize = 0
+        Me.ResignedCheckBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ResignedCheckBox.ForeColor = System.Drawing.Color.Black
+        Me.ResignedCheckBox.Location = New System.Drawing.Point(17, 205)
+        Me.ResignedCheckBox.Name = "ResignedCheckBox"
+        Me.ResignedCheckBox.Size = New System.Drawing.Size(104, 20)
+        Me.ResignedCheckBox.TabIndex = 18
+        Me.ResignedCheckBox.Text = "RESIGNED"
+        Me.ResignedCheckBox.UseVisualStyleBackColor = True
+        Me.ResignedCheckBox.Visible = False
+        '
+        'Label140
+        '
+        Me.Label140.AutoSize = True
+        Me.Label140.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label140.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label140.Location = New System.Drawing.Point(77, 167)
+        Me.Label140.Name = "Label140"
+        Me.Label140.Size = New System.Drawing.Size(68, 20)
+        Me.Label140.TabIndex = 46
+        Me.Label140.Text = "ECOLA"
+        '
+        'EcolaTextBox
+        '
+        Me.EcolaTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.EcolaTextBox.BackColor = System.Drawing.SystemColors.ButtonHighlight
+        Me.EcolaTextBox.Enabled = False
+        Me.EcolaTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EcolaTextBox.Location = New System.Drawing.Point(155, 166)
+        Me.EcolaTextBox.Name = "EcolaTextBox"
+        Me.EcolaTextBox.ReadOnly = True
+        Me.EcolaTextBox.Size = New System.Drawing.Size(316, 22)
+        Me.EcolaTextBox.TabIndex = 47
+        Me.EcolaTextBox.Text = "0"
+        '
+        'ComputeSalaryButton
+        '
+        Me.ComputeSalaryButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComputeSalaryButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
+        Me.ComputeSalaryButton.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.ComputeSalaryButton.FlatAppearance.BorderSize = 0
+        Me.ComputeSalaryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ComputeSalaryButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComputeSalaryButton.Location = New System.Drawing.Point(346, 230)
+        Me.ComputeSalaryButton.Name = "ComputeSalaryButton"
+        Me.ComputeSalaryButton.Size = New System.Drawing.Size(125, 45)
+        Me.ComputeSalaryButton.TabIndex = 31
+        Me.ComputeSalaryButton.Text = "COMPUTE"
+        Me.ComputeSalaryButton.UseVisualStyleBackColor = False
+        '
+        'SetOvertimeButton
+        '
+        Me.SetOvertimeButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
+        Me.SetOvertimeButton.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.SetOvertimeButton.FlatAppearance.BorderSize = 0
+        Me.SetOvertimeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.SetOvertimeButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SetOvertimeButton.Location = New System.Drawing.Point(10, 230)
+        Me.SetOvertimeButton.Name = "SetOvertimeButton"
+        Me.SetOvertimeButton.Size = New System.Drawing.Size(125, 45)
+        Me.SetOvertimeButton.TabIndex = 23
+        Me.SetOvertimeButton.Text = "SET/REVIEW OVERTIME"
+        Me.SetOvertimeButton.UseVisualStyleBackColor = False
+        '
+        'Label129
+        '
+        Me.Label129.AutoSize = True
+        Me.Label129.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label129.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label129.Location = New System.Drawing.Point(41, 12)
+        Me.Label129.Name = "Label129"
+        Me.Label129.Size = New System.Drawing.Size(160, 24)
+        Me.Label129.TabIndex = 6
+        Me.Label129.Text = "DAYS WORKED"
+        '
+        'PictureBox27
+        '
+        Me.PictureBox27.BackgroundImage = CType(resources.GetObject("PictureBox27.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox27.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.PictureBox27.Location = New System.Drawing.Point(9, 9)
+        Me.PictureBox27.Name = "PictureBox27"
+        Me.PictureBox27.Size = New System.Drawing.Size(29, 31)
+        Me.PictureBox27.TabIndex = 3
+        Me.PictureBox27.TabStop = False
+        '
+        'LeaveTextBox
+        '
+        Me.LeaveTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LeaveTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LeaveTextBox.Location = New System.Drawing.Point(155, 141)
+        Me.LeaveTextBox.Name = "LeaveTextBox"
+        Me.LeaveTextBox.Size = New System.Drawing.Size(316, 22)
+        Me.LeaveTextBox.TabIndex = 29
+        Me.LeaveTextBox.Text = "1"
+        '
+        'Panel24
+        '
+        Me.Panel24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel24.BackColor = System.Drawing.Color.Gray
+        Me.Panel24.Location = New System.Drawing.Point(9, 44)
+        Me.Panel24.Name = "Panel24"
+        Me.Panel24.Size = New System.Drawing.Size(462, 2)
+        Me.Panel24.TabIndex = 7
+        '
+        'Label77
+        '
+        Me.Label77.AutoSize = True
+        Me.Label77.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label77.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label77.Location = New System.Drawing.Point(10, 67)
+        Me.Label77.Name = "Label77"
+        Me.Label77.Size = New System.Drawing.Size(135, 18)
+        Me.Label77.TabIndex = 9
+        Me.Label77.Text = "REGULAR DAYS"
+        '
+        'Label86
+        '
+        Me.Label86.AutoSize = True
+        Me.Label86.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label86.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label86.Location = New System.Drawing.Point(52, 91)
+        Me.Label86.Name = "Label86"
+        Me.Label86.Size = New System.Drawing.Size(93, 18)
+        Me.Label86.TabIndex = 10
+        Me.Label86.Text = "OVERTIME"
+        '
+        'Label130
+        '
+        Me.Label130.AutoSize = True
+        Me.Label130.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label130.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label130.Location = New System.Drawing.Point(97, 116)
+        Me.Label130.Name = "Label130"
+        Me.Label130.Size = New System.Drawing.Size(48, 18)
+        Me.Label130.TabIndex = 13
+        Me.Label130.Text = "LATE"
+        '
+        'RegularDaysTextBox
+        '
+        Me.RegularDaysTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RegularDaysTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RegularDaysTextBox.Location = New System.Drawing.Point(155, 66)
+        Me.RegularDaysTextBox.Name = "RegularDaysTextBox"
+        Me.RegularDaysTextBox.Size = New System.Drawing.Size(316, 22)
+        Me.RegularDaysTextBox.TabIndex = 25
+        '
+        'LateTextBox
+        '
+        Me.LateTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LateTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LateTextBox.Location = New System.Drawing.Point(155, 116)
+        Me.LateTextBox.Name = "LateTextBox"
+        Me.LateTextBox.Size = New System.Drawing.Size(316, 22)
+        Me.LateTextBox.TabIndex = 27
+        '
+        'OvertimeTextBox
+        '
+        Me.OvertimeTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OvertimeTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight
+        Me.OvertimeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OvertimeTextBox.Location = New System.Drawing.Point(155, 91)
+        Me.OvertimeTextBox.Name = "OvertimeTextBox"
+        Me.OvertimeTextBox.ReadOnly = True
+        Me.OvertimeTextBox.Size = New System.Drawing.Size(270, 22)
+        Me.OvertimeTextBox.TabIndex = 26
+        '
+        'Label131
+        '
+        Me.Label131.AutoSize = True
+        Me.Label131.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label131.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label131.Location = New System.Drawing.Point(93, 141)
+        Me.Label131.Name = "Label131"
+        Me.Label131.Size = New System.Drawing.Size(52, 18)
+        Me.Label131.TabIndex = 14
+        Me.Label131.Text = "SL/VL"
+        '
+        'DeductionsTabPage
+        '
+        Me.DeductionsTabPage.Controls.Add(Me.RemoveDeductionButton)
+        Me.DeductionsTabPage.Controls.Add(Me.TotalDeductionsLabel)
+        Me.DeductionsTabPage.Controls.Add(Me.Label97)
+        Me.DeductionsTabPage.Controls.Add(Me.Panel13)
+        Me.DeductionsTabPage.Controls.Add(Me.Label12)
+        Me.DeductionsTabPage.Controls.Add(Me.DeductionsGridView)
+        Me.DeductionsTabPage.Controls.Add(Me.PictureBox23)
+        Me.DeductionsTabPage.Controls.Add(Me.AddDeductionButton)
+        Me.DeductionsTabPage.Controls.Add(Me.DeductionComboBox)
+        Me.DeductionsTabPage.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DeductionsTabPage.Location = New System.Drawing.Point(4, 24)
+        Me.DeductionsTabPage.Name = "DeductionsTabPage"
+        Me.DeductionsTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.DeductionsTabPage.Size = New System.Drawing.Size(474, 492)
+        Me.DeductionsTabPage.TabIndex = 0
+        Me.DeductionsTabPage.Text = "DEDUCTIONS"
+        Me.DeductionsTabPage.UseVisualStyleBackColor = True
+        '
+        'RemoveDeductionButton
+        '
+        Me.RemoveDeductionButton.BackColor = System.Drawing.Color.Transparent
+        Me.RemoveDeductionButton.BackgroundImage = CType(resources.GetObject("RemoveDeductionButton.BackgroundImage"), System.Drawing.Image)
+        Me.RemoveDeductionButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.RemoveDeductionButton.Location = New System.Drawing.Point(225, 52)
+        Me.RemoveDeductionButton.Name = "RemoveDeductionButton"
+        Me.RemoveDeductionButton.Size = New System.Drawing.Size(29, 29)
+        Me.RemoveDeductionButton.TabIndex = 29
+        Me.RemoveDeductionButton.UseVisualStyleBackColor = False
+        '
+        'TotalDeductionsLabel
+        '
+        Me.TotalDeductionsLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalDeductionsLabel.Location = New System.Drawing.Point(316, 261)
+        Me.TotalDeductionsLabel.Name = "TotalDeductionsLabel"
+        Me.TotalDeductionsLabel.Size = New System.Drawing.Size(152, 20)
+        Me.TotalDeductionsLabel.TabIndex = 28
+        Me.TotalDeductionsLabel.Text = "00.00"
+        Me.TotalDeductionsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label97
+        '
+        Me.Label97.AutoSize = True
+        Me.Label97.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label97.Location = New System.Drawing.Point(4, 261)
+        Me.Label97.Name = "Label97"
+        Me.Label97.Size = New System.Drawing.Size(69, 20)
+        Me.Label97.TabIndex = 27
+        Me.Label97.Text = "TOTAL:"
+        '
+        'Panel13
+        '
+        Me.Panel13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel13.BackColor = System.Drawing.Color.Gray
+        Me.Panel13.Location = New System.Drawing.Point(9, 44)
+        Me.Panel13.Name = "Panel13"
+        Me.Panel13.Size = New System.Drawing.Size(459, 2)
+        Me.Panel13.TabIndex = 10
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label12.Location = New System.Drawing.Point(41, 12)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(142, 24)
+        Me.Label12.TabIndex = 9
+        Me.Label12.Text = "DEDUCTIONS"
+        '
+        'DeductionsGridView
+        '
+        Me.DeductionsGridView.AllowUserToAddRows = False
+        Me.DeductionsGridView.AllowUserToDeleteRows = False
+        Me.DeductionsGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeductionsGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        Me.DeductionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.DeductionsGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DeductionsGridViewColumn1, Me.DeductionsGridViewColumn2, Me.DeductionsGridViewColumn3})
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DeductionsGridView.DefaultCellStyle = DataGridViewCellStyle14
+        Me.DeductionsGridView.Location = New System.Drawing.Point(9, 85)
+        Me.DeductionsGridView.Name = "DeductionsGridView"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeductionsGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
+        Me.DeductionsGridView.RowHeadersVisible = False
+        Me.DeductionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DeductionsGridView.Size = New System.Drawing.Size(459, 173)
+        Me.DeductionsGridView.TabIndex = 24
+        '
+        'DeductionsGridViewColumn1
+        '
+        Me.DeductionsGridViewColumn1.DataPropertyName = "Code"
+        Me.DeductionsGridViewColumn1.FillWeight = 15.0!
+        Me.DeductionsGridViewColumn1.HeaderText = "CODE"
+        Me.DeductionsGridViewColumn1.Name = "DeductionsGridViewColumn1"
+        Me.DeductionsGridViewColumn1.ReadOnly = True
+        '
+        'DeductionsGridViewColumn2
+        '
+        Me.DeductionsGridViewColumn2.DataPropertyName = "Description"
+        Me.DeductionsGridViewColumn2.FillWeight = 65.0!
+        Me.DeductionsGridViewColumn2.HeaderText = "Description"
+        Me.DeductionsGridViewColumn2.Name = "DeductionsGridViewColumn2"
+        Me.DeductionsGridViewColumn2.ReadOnly = True
+        '
+        'DeductionsGridViewColumn3
+        '
+        Me.DeductionsGridViewColumn3.DataPropertyName = "Amount"
+        DataGridViewCellStyle13.Format = "N2"
+        DataGridViewCellStyle13.NullValue = Nothing
+        Me.DeductionsGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle13
+        Me.DeductionsGridViewColumn3.FillWeight = 20.0!
+        Me.DeductionsGridViewColumn3.HeaderText = "Amount"
+        Me.DeductionsGridViewColumn3.Name = "DeductionsGridViewColumn3"
+        '
+        'PictureBox23
+        '
+        Me.PictureBox23.BackgroundImage = CType(resources.GetObject("PictureBox23.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox23.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.PictureBox23.Location = New System.Drawing.Point(9, 9)
+        Me.PictureBox23.Name = "PictureBox23"
+        Me.PictureBox23.Size = New System.Drawing.Size(29, 31)
+        Me.PictureBox23.TabIndex = 8
+        Me.PictureBox23.TabStop = False
+        '
+        'AddDeductionButton
+        '
+        Me.AddDeductionButton.BackColor = System.Drawing.Color.Transparent
+        Me.AddDeductionButton.BackgroundImage = CType(resources.GetObject("AddDeductionButton.BackgroundImage"), System.Drawing.Image)
+        Me.AddDeductionButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.AddDeductionButton.Location = New System.Drawing.Point(195, 52)
+        Me.AddDeductionButton.Name = "AddDeductionButton"
+        Me.AddDeductionButton.Size = New System.Drawing.Size(29, 29)
+        Me.AddDeductionButton.TabIndex = 2
+        Me.AddDeductionButton.UseVisualStyleBackColor = False
+        '
+        'DeductionComboBox
+        '
+        Me.DeductionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.DeductionComboBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DeductionComboBox.FormattingEnabled = True
+        Me.DeductionComboBox.Location = New System.Drawing.Point(9, 53)
+        Me.DeductionComboBox.Name = "DeductionComboBox"
+        Me.DeductionComboBox.Size = New System.Drawing.Size(180, 28)
+        Me.DeductionComboBox.TabIndex = 1
+        '
+        'OtherIncomeTabPage
+        '
+        Me.OtherIncomeTabPage.Controls.Add(Me.RemoveIncomeButton)
+        Me.OtherIncomeTabPage.Controls.Add(Me.TotalOtherIncomeLabel)
+        Me.OtherIncomeTabPage.Controls.Add(Me.Label40)
+        Me.OtherIncomeTabPage.Controls.Add(Me.Panel14)
+        Me.OtherIncomeTabPage.Controls.Add(Me.Label37)
+        Me.OtherIncomeTabPage.Controls.Add(Me.OtherIncomeGridView)
+        Me.OtherIncomeTabPage.Controls.Add(Me.PictureBox28)
+        Me.OtherIncomeTabPage.Controls.Add(Me.AddIncomeButton)
+        Me.OtherIncomeTabPage.Controls.Add(Me.OtherIncomeComboBox)
+        Me.OtherIncomeTabPage.Location = New System.Drawing.Point(4, 24)
+        Me.OtherIncomeTabPage.Name = "OtherIncomeTabPage"
+        Me.OtherIncomeTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.OtherIncomeTabPage.Size = New System.Drawing.Size(474, 492)
+        Me.OtherIncomeTabPage.TabIndex = 1
+        Me.OtherIncomeTabPage.Text = "OTHER INCOME"
+        Me.OtherIncomeTabPage.UseVisualStyleBackColor = True
+        '
+        'RemoveIncomeButton
+        '
+        Me.RemoveIncomeButton.BackColor = System.Drawing.Color.Transparent
+        Me.RemoveIncomeButton.BackgroundImage = CType(resources.GetObject("RemoveIncomeButton.BackgroundImage"), System.Drawing.Image)
+        Me.RemoveIncomeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.RemoveIncomeButton.Location = New System.Drawing.Point(225, 52)
+        Me.RemoveIncomeButton.Name = "RemoveIncomeButton"
+        Me.RemoveIncomeButton.Size = New System.Drawing.Size(29, 29)
+        Me.RemoveIncomeButton.TabIndex = 32
+        Me.RemoveIncomeButton.UseVisualStyleBackColor = False
+        '
+        'TotalOtherIncomeLabel
+        '
+        Me.TotalOtherIncomeLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalOtherIncomeLabel.Location = New System.Drawing.Point(316, 261)
+        Me.TotalOtherIncomeLabel.Name = "TotalOtherIncomeLabel"
+        Me.TotalOtherIncomeLabel.Size = New System.Drawing.Size(152, 20)
+        Me.TotalOtherIncomeLabel.TabIndex = 30
+        Me.TotalOtherIncomeLabel.Text = "00.00"
+        Me.TotalOtherIncomeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label40.Location = New System.Drawing.Point(4, 261)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(69, 20)
+        Me.Label40.TabIndex = 31
+        Me.Label40.Text = "TOTAL:"
+        '
+        'Panel14
+        '
+        Me.Panel14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel14.BackColor = System.Drawing.Color.Gray
+        Me.Panel14.Location = New System.Drawing.Point(9, 44)
+        Me.Panel14.Name = "Panel14"
+        Me.Panel14.Size = New System.Drawing.Size(459, 2)
+        Me.Panel14.TabIndex = 13
+        '
+        'Label37
+        '
+        Me.Label37.AutoSize = True
+        Me.Label37.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label37.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label37.Location = New System.Drawing.Point(41, 12)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(169, 24)
+        Me.Label37.TabIndex = 12
+        Me.Label37.Text = "OTHER INCOME"
+        '
+        'OtherIncomeGridView
+        '
+        Me.OtherIncomeGridView.AllowUserToAddRows = False
+        Me.OtherIncomeGridView.AllowUserToDeleteRows = False
+        Me.OtherIncomeGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.OtherIncomeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.OtherIncomeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.OtherIncomeGridViewColumn1, Me.OtherIncomeGridViewColumn2, Me.OtherIncomeGridViewColumn3})
+        Me.OtherIncomeGridView.Location = New System.Drawing.Point(9, 85)
+        Me.OtherIncomeGridView.Name = "OtherIncomeGridView"
+        Me.OtherIncomeGridView.RowHeadersVisible = False
+        Me.OtherIncomeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.OtherIncomeGridView.Size = New System.Drawing.Size(459, 173)
+        Me.OtherIncomeGridView.TabIndex = 25
+        '
+        'OtherIncomeGridViewColumn1
+        '
+        Me.OtherIncomeGridViewColumn1.DataPropertyName = "Code"
+        Me.OtherIncomeGridViewColumn1.FillWeight = 15.0!
+        Me.OtherIncomeGridViewColumn1.HeaderText = "CODE"
+        Me.OtherIncomeGridViewColumn1.Name = "OtherIncomeGridViewColumn1"
+        '
+        'OtherIncomeGridViewColumn2
+        '
+        Me.OtherIncomeGridViewColumn2.DataPropertyName = "Description"
+        Me.OtherIncomeGridViewColumn2.FillWeight = 65.0!
+        Me.OtherIncomeGridViewColumn2.HeaderText = "Description"
+        Me.OtherIncomeGridViewColumn2.Name = "OtherIncomeGridViewColumn2"
+        '
+        'OtherIncomeGridViewColumn3
+        '
+        Me.OtherIncomeGridViewColumn3.DataPropertyName = "Amount"
+        DataGridViewCellStyle16.Format = "N2"
+        DataGridViewCellStyle16.NullValue = Nothing
+        Me.OtherIncomeGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle16
+        Me.OtherIncomeGridViewColumn3.FillWeight = 20.0!
+        Me.OtherIncomeGridViewColumn3.HeaderText = "Amount"
+        Me.OtherIncomeGridViewColumn3.Name = "OtherIncomeGridViewColumn3"
+        '
+        'PictureBox28
+        '
+        Me.PictureBox28.BackgroundImage = CType(resources.GetObject("PictureBox28.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox28.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.PictureBox28.Location = New System.Drawing.Point(9, 9)
+        Me.PictureBox28.Name = "PictureBox28"
+        Me.PictureBox28.Size = New System.Drawing.Size(29, 31)
+        Me.PictureBox28.TabIndex = 11
+        Me.PictureBox28.TabStop = False
+        '
+        'AddIncomeButton
+        '
+        Me.AddIncomeButton.BackColor = System.Drawing.Color.Transparent
+        Me.AddIncomeButton.BackgroundImage = CType(resources.GetObject("AddIncomeButton.BackgroundImage"), System.Drawing.Image)
+        Me.AddIncomeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.AddIncomeButton.Location = New System.Drawing.Point(195, 52)
+        Me.AddIncomeButton.Name = "AddIncomeButton"
+        Me.AddIncomeButton.Size = New System.Drawing.Size(29, 29)
+        Me.AddIncomeButton.TabIndex = 5
+        Me.AddIncomeButton.UseVisualStyleBackColor = False
+        '
+        'OtherIncomeComboBox
+        '
+        Me.OtherIncomeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.OtherIncomeComboBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OtherIncomeComboBox.FormattingEnabled = True
+        Me.OtherIncomeComboBox.Location = New System.Drawing.Point(9, 53)
+        Me.OtherIncomeComboBox.Name = "OtherIncomeComboBox"
+        Me.OtherIncomeComboBox.Size = New System.Drawing.Size(180, 28)
+        Me.OtherIncomeComboBox.TabIndex = 4
+        '
+        'SummaryGroupBox
+        '
+        Me.SummaryGroupBox.Controls.Add(Me.Panel7)
+        Me.SummaryGroupBox.Controls.Add(Me.Panel9)
+        Me.SummaryGroupBox.Controls.Add(Me.Panel8)
+        Me.SummaryGroupBox.Controls.Add(Me.Panel6)
+        Me.SummaryGroupBox.Controls.Add(Me.Panel4)
+        Me.SummaryGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SummaryGroupBox.Location = New System.Drawing.Point(0, 0)
+        Me.SummaryGroupBox.Name = "SummaryGroupBox"
+        Me.SummaryGroupBox.Size = New System.Drawing.Size(422, 412)
+        Me.SummaryGroupBox.TabIndex = 50
+        Me.SummaryGroupBox.TabStop = False
+        '
+        'Panel7
+        '
+        Me.Panel7.AutoScroll = True
+        Me.Panel7.Controls.Add(Me.EcolaAmountTextBox)
+        Me.Panel7.Controls.Add(Me.Label96)
+        Me.Panel7.Controls.Add(Me.NetPayTextBox)
+        Me.Panel7.Controls.Add(Me.Label187)
+        Me.Panel7.Controls.Add(Me.TotalDeductionTextBox)
+        Me.Panel7.Controls.Add(Me.TotalLeaveTextBox)
+        Me.Panel7.Controls.Add(Me.Label133)
+        Me.Panel7.Controls.Add(Me.Label169)
+        Me.Panel7.Controls.Add(Me.Label134)
+        Me.Panel7.Controls.Add(Me.Label148)
+        Me.Panel7.Controls.Add(Me.TotalOtherIncomeTextBox)
+        Me.Panel7.Controls.Add(Me.Panel20)
+        Me.Panel7.Controls.Add(Me.Label141)
+        Me.Panel7.Controls.Add(Me.Label147)
+        Me.Panel7.Controls.Add(Me.TotalOvertimeTextBox)
+        Me.Panel7.Controls.Add(Me.LeaveBalanceTextBox)
+        Me.Panel7.Controls.Add(Me.Label142)
+        Me.Panel7.Controls.Add(Me.Label146)
+        Me.Panel7.Controls.Add(Me.GrossPayLabel)
+        Me.Panel7.Controls.Add(Me.ThirteenthMonthPayTextBox)
+        Me.Panel7.Controls.Add(Me.GrossPayTextBox)
+        Me.Panel7.Controls.Add(Me.Label144)
+        Me.Panel7.Controls.Add(Me.Panel16)
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel7.Location = New System.Drawing.Point(3, 339)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(416, 70)
+        Me.Panel7.TabIndex = 69
+        '
+        'EcolaAmountTextBox
+        '
+        Me.EcolaAmountTextBox.BackColor = System.Drawing.Color.White
+        Me.EcolaAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EcolaAmountTextBox.Location = New System.Drawing.Point(150, 29)
+        Me.EcolaAmountTextBox.Name = "EcolaAmountTextBox"
+        Me.EcolaAmountTextBox.ReadOnly = True
+        Me.EcolaAmountTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.EcolaAmountTextBox.TabIndex = 38
+        '
+        'Label96
+        '
+        Me.Label96.AutoSize = True
+        Me.Label96.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label96.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label96.Location = New System.Drawing.Point(49, 180)
+        Me.Label96.Name = "Label96"
+        Me.Label96.Size = New System.Drawing.Size(96, 16)
+        Me.Label96.TabIndex = 30
+        Me.Label96.Text = "DEDUCTION"
+        '
+        'NetPayTextBox
+        '
+        Me.NetPayTextBox.BackColor = System.Drawing.Color.White
+        Me.NetPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NetPayTextBox.Location = New System.Drawing.Point(150, 254)
+        Me.NetPayTextBox.Name = "NetPayTextBox"
+        Me.NetPayTextBox.ReadOnly = True
+        Me.NetPayTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.NetPayTextBox.TabIndex = 40
+        '
+        'Label187
+        '
+        Me.Label187.AutoSize = True
+        Me.Label187.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label187.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label187.Location = New System.Drawing.Point(258, 80)
+        Me.Label187.Name = "Label187"
+        Me.Label187.Size = New System.Drawing.Size(53, 16)
+        Me.Label187.TabIndex = 65
+        Me.Label187.Text = "DAY/S"
+        '
+        'TotalDeductionTextBox
+        '
+        Me.TotalDeductionTextBox.BackColor = System.Drawing.Color.White
+        Me.TotalDeductionTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalDeductionTextBox.Location = New System.Drawing.Point(150, 179)
+        Me.TotalDeductionTextBox.Name = "TotalDeductionTextBox"
+        Me.TotalDeductionTextBox.ReadOnly = True
+        Me.TotalDeductionTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.TotalDeductionTextBox.TabIndex = 39
+        '
+        'TotalLeaveTextBox
+        '
+        Me.TotalLeaveTextBox.BackColor = System.Drawing.Color.White
+        Me.TotalLeaveTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalLeaveTextBox.Location = New System.Drawing.Point(150, 154)
+        Me.TotalLeaveTextBox.Name = "TotalLeaveTextBox"
+        Me.TotalLeaveTextBox.ReadOnly = True
+        Me.TotalLeaveTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.TotalLeaveTextBox.TabIndex = 64
+        '
+        'Label133
+        '
+        Me.Label133.AutoSize = True
+        Me.Label133.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label133.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label133.Location = New System.Drawing.Point(72, 255)
+        Me.Label133.Name = "Label133"
+        Me.Label133.Size = New System.Drawing.Size(72, 16)
+        Me.Label133.TabIndex = 34
+        Me.Label133.Text = "NET PAY"
+        '
+        'Label169
+        '
+        Me.Label169.AutoSize = True
+        Me.Label169.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label169.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label169.Location = New System.Drawing.Point(98, 155)
+        Me.Label169.Name = "Label169"
+        Me.Label169.Size = New System.Drawing.Size(48, 16)
+        Me.Label169.TabIndex = 63
+        Me.Label169.Text = "SL/VL"
+        '
+        'Label134
+        '
+        Me.Label134.AutoSize = True
+        Me.Label134.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label134.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label134.Location = New System.Drawing.Point(90, 30)
+        Me.Label134.Name = "Label134"
+        Me.Label134.Size = New System.Drawing.Size(56, 16)
+        Me.Label134.TabIndex = 35
+        Me.Label134.Text = "ECOLA"
+        '
+        'Label148
+        '
+        Me.Label148.AutoSize = True
+        Me.Label148.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label148.ForeColor = System.Drawing.Color.Silver
+        Me.Label148.Location = New System.Drawing.Point(140, 104)
+        Me.Label148.Name = "Label148"
+        Me.Label148.Size = New System.Drawing.Size(66, 16)
+        Me.Label148.TabIndex = 62
+        Me.Label148.Text = "TOTALS"
+        '
+        'TotalOtherIncomeTextBox
+        '
+        Me.TotalOtherIncomeTextBox.BackColor = System.Drawing.Color.White
+        Me.TotalOtherIncomeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalOtherIncomeTextBox.Location = New System.Drawing.Point(150, 204)
+        Me.TotalOtherIncomeTextBox.Name = "TotalOtherIncomeTextBox"
+        Me.TotalOtherIncomeTextBox.ReadOnly = True
+        Me.TotalOtherIncomeTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.TotalOtherIncomeTextBox.TabIndex = 46
+        '
+        'Panel20
+        '
+        Me.Panel20.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel20.BackColor = System.Drawing.Color.Silver
+        Me.Panel20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.Panel20.Location = New System.Drawing.Point(0, 112)
+        Me.Panel20.Name = "Panel20"
+        Me.Panel20.Size = New System.Drawing.Size(399, 1)
+        Me.Panel20.TabIndex = 61
+        '
+        'Label141
+        '
+        Me.Label141.AutoSize = True
+        Me.Label141.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label141.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label141.Location = New System.Drawing.Point(23, 205)
+        Me.Label141.Name = "Label141"
+        Me.Label141.Size = New System.Drawing.Size(122, 16)
+        Me.Label141.TabIndex = 45
+        Me.Label141.Text = "OTHER INCOME"
+        '
+        'Label147
+        '
+        Me.Label147.AutoSize = True
+        Me.Label147.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label147.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label147.Location = New System.Drawing.Point(25, 80)
+        Me.Label147.Name = "Label147"
+        Me.Label147.Size = New System.Drawing.Size(121, 16)
+        Me.Label147.TabIndex = 59
+        Me.Label147.Text = "SL/VL BALANCE"
+        '
+        'TotalOvertimeTextBox
+        '
+        Me.TotalOvertimeTextBox.BackColor = System.Drawing.Color.White
+        Me.TotalOvertimeTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TotalOvertimeTextBox.Location = New System.Drawing.Point(150, 229)
+        Me.TotalOvertimeTextBox.Name = "TotalOvertimeTextBox"
+        Me.TotalOvertimeTextBox.ReadOnly = True
+        Me.TotalOvertimeTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.TotalOvertimeTextBox.TabIndex = 48
+        '
+        'LeaveBalanceTextBox
+        '
+        Me.LeaveBalanceTextBox.BackColor = System.Drawing.Color.White
+        Me.LeaveBalanceTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LeaveBalanceTextBox.Location = New System.Drawing.Point(150, 79)
+        Me.LeaveBalanceTextBox.Name = "LeaveBalanceTextBox"
+        Me.LeaveBalanceTextBox.ReadOnly = True
+        Me.LeaveBalanceTextBox.Size = New System.Drawing.Size(104, 21)
+        Me.LeaveBalanceTextBox.TabIndex = 60
+        '
+        'Label142
+        '
+        Me.Label142.AutoSize = True
+        Me.Label142.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label142.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label142.Location = New System.Drawing.Point(60, 230)
+        Me.Label142.Name = "Label142"
+        Me.Label142.Size = New System.Drawing.Size(85, 16)
+        Me.Label142.TabIndex = 47
+        Me.Label142.Text = "OVERTIME"
+        '
+        'Label146
+        '
+        Me.Label146.AutoSize = True
+        Me.Label146.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label146.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label146.Location = New System.Drawing.Point(10, 55)
+        Me.Label146.Name = "Label146"
+        Me.Label146.Size = New System.Drawing.Size(137, 16)
+        Me.Label146.TabIndex = 57
+        Me.Label146.Text = "13TH MONTH PAY"
+        '
+        'GrossPayLabel
+        '
+        Me.GrossPayLabel.AutoSize = True
+        Me.GrossPayLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GrossPayLabel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.GrossPayLabel.Location = New System.Drawing.Point(52, 130)
+        Me.GrossPayLabel.Name = "GrossPayLabel"
+        Me.GrossPayLabel.Size = New System.Drawing.Size(94, 16)
+        Me.GrossPayLabel.TabIndex = 49
+        Me.GrossPayLabel.Text = "GROSS PAY"
+        '
+        'ThirteenthMonthPayTextBox
+        '
+        Me.ThirteenthMonthPayTextBox.BackColor = System.Drawing.Color.White
+        Me.ThirteenthMonthPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ThirteenthMonthPayTextBox.Location = New System.Drawing.Point(150, 54)
+        Me.ThirteenthMonthPayTextBox.Name = "ThirteenthMonthPayTextBox"
+        Me.ThirteenthMonthPayTextBox.ReadOnly = True
+        Me.ThirteenthMonthPayTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.ThirteenthMonthPayTextBox.TabIndex = 58
+        '
+        'GrossPayTextBox
+        '
+        Me.GrossPayTextBox.BackColor = System.Drawing.Color.White
+        Me.GrossPayTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GrossPayTextBox.Location = New System.Drawing.Point(150, 129)
+        Me.GrossPayTextBox.Name = "GrossPayTextBox"
+        Me.GrossPayTextBox.ReadOnly = True
+        Me.GrossPayTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.GrossPayTextBox.TabIndex = 50
+        '
+        'Label144
+        '
+        Me.Label144.AutoSize = True
+        Me.Label144.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label144.ForeColor = System.Drawing.Color.Silver
+        Me.Label144.Location = New System.Drawing.Point(105, 4)
+        Me.Label144.Name = "Label144"
+        Me.Label144.Size = New System.Drawing.Size(132, 16)
+        Me.Label144.TabIndex = 54
+        Me.Label144.Text = "OTHER INCOMES"
+        '
+        'Panel16
+        '
+        Me.Panel16.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel16.BackColor = System.Drawing.Color.Silver
+        Me.Panel16.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.Panel16.Location = New System.Drawing.Point(0, 12)
+        Me.Panel16.Name = "Panel16"
+        Me.Panel16.Size = New System.Drawing.Size(399, 1)
+        Me.Panel16.TabIndex = 53
+        '
+        'Panel9
+        '
+        Me.Panel9.Controls.Add(Me.PagibigCalamityLoanTextBox)
+        Me.Panel9.Controls.Add(Me.Label3)
+        Me.Panel9.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel9.Location = New System.Drawing.Point(3, 314)
+        Me.Panel9.Name = "Panel9"
+        Me.Panel9.Size = New System.Drawing.Size(416, 25)
+        Me.Panel9.TabIndex = 71
+        '
+        'PagibigCalamityLoanTextBox
+        '
+        Me.PagibigCalamityLoanTextBox.BackColor = System.Drawing.Color.White
+        Me.PagibigCalamityLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PagibigCalamityLoanTextBox.Location = New System.Drawing.Point(150, 2)
+        Me.PagibigCalamityLoanTextBox.Name = "PagibigCalamityLoanTextBox"
+        Me.PagibigCalamityLoanTextBox.ReadOnly = True
+        Me.PagibigCalamityLoanTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.PagibigCalamityLoanTextBox.TabIndex = 44
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(3, 3)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(142, 16)
+        Me.Label3.TabIndex = 45
+        Me.Label3.Text = "PAGIBIG Cal. LOAN"
+        '
+        'Panel8
+        '
+        Me.Panel8.Controls.Add(Me.SssEmergencyLoanTextBox)
+        Me.Panel8.Controls.Add(Me.Label2)
+        Me.Panel8.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel8.Location = New System.Drawing.Point(3, 289)
+        Me.Panel8.Name = "Panel8"
+        Me.Panel8.Size = New System.Drawing.Size(416, 25)
+        Me.Panel8.TabIndex = 70
+        '
+        'SssEmergencyLoanTextBox
+        '
+        Me.SssEmergencyLoanTextBox.BackColor = System.Drawing.Color.White
+        Me.SssEmergencyLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SssEmergencyLoanTextBox.Location = New System.Drawing.Point(150, 2)
+        Me.SssEmergencyLoanTextBox.Name = "SssEmergencyLoanTextBox"
+        Me.SssEmergencyLoanTextBox.ReadOnly = True
+        Me.SssEmergencyLoanTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.SssEmergencyLoanTextBox.TabIndex = 44
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(34, 3)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(111, 16)
+        Me.Label2.TabIndex = 45
+        Me.Label2.Text = "SSS Em. LOAN"
+        '
+        'Panel6
+        '
+        Me.Panel6.Controls.Add(Me.SssCalamityLoanTextBox)
+        Me.Panel6.Controls.Add(Me.Label1)
+        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel6.Location = New System.Drawing.Point(3, 264)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(416, 25)
+        Me.Panel6.TabIndex = 68
+        '
+        'SssCalamityLoanTextBox
+        '
+        Me.SssCalamityLoanTextBox.BackColor = System.Drawing.Color.White
+        Me.SssCalamityLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SssCalamityLoanTextBox.Location = New System.Drawing.Point(150, 2)
+        Me.SssCalamityLoanTextBox.Name = "SssCalamityLoanTextBox"
+        Me.SssCalamityLoanTextBox.ReadOnly = True
+        Me.SssCalamityLoanTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.SssCalamityLoanTextBox.TabIndex = 42
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label1.Location = New System.Drawing.Point(33, 3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(112, 16)
+        Me.Label1.TabIndex = 43
+        Me.Label1.Text = "SSS Cal. LOAN"
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.SssLoanTextBox)
+        Me.Panel4.Controls.Add(Me.ResetPayrollButton)
+        Me.Panel4.Controls.Add(Me.Label92)
+        Me.Panel4.Controls.Add(Me.Label91)
+        Me.Panel4.Controls.Add(Me.SssAmountTextBox)
+        Me.Panel4.Controls.Add(Me.SavePayrollButton)
+        Me.Panel4.Controls.Add(Me.PhilhealthAmountTextBox)
+        Me.Panel4.Controls.Add(Me.Label88)
+        Me.Panel4.Controls.Add(Me.BasicPaySummaryTextBox)
+        Me.Panel4.Controls.Add(Me.PictureBox33)
+        Me.Panel4.Controls.Add(Me.Label116)
+        Me.Panel4.Controls.Add(Me.Panel5)
+        Me.Panel4.Controls.Add(Me.WithholdingTaxTextBox)
+        Me.Panel4.Controls.Add(Me.Label135)
+        Me.Panel4.Controls.Add(Me.Label143)
+        Me.Panel4.Controls.Add(Me.PagibigAmountTextBox)
+        Me.Panel4.Controls.Add(Me.Panel11)
+        Me.Panel4.Controls.Add(Me.Label136)
+        Me.Panel4.Controls.Add(Me.Label138)
+        Me.Panel4.Controls.Add(Me.PagibigLoanTextBox)
+        Me.Panel4.Controls.Add(Me.Label137)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel4.Location = New System.Drawing.Point(3, 16)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(416, 248)
+        Me.Panel4.TabIndex = 67
+        '
+        'SssLoanTextBox
+        '
+        Me.SssLoanTextBox.BackColor = System.Drawing.Color.White
+        Me.SssLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SssLoanTextBox.Location = New System.Drawing.Point(150, 225)
+        Me.SssLoanTextBox.Name = "SssLoanTextBox"
+        Me.SssLoanTextBox.ReadOnly = True
+        Me.SssLoanTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.SssLoanTextBox.TabIndex = 37
+        '
+        'ResetPayrollButton
+        '
+        Me.ResetPayrollButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ResetPayrollButton.BackColor = System.Drawing.Color.Crimson
+        Me.ResetPayrollButton.FlatAppearance.BorderSize = 0
+        Me.ResetPayrollButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ResetPayrollButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ResetPayrollButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight
+        Me.ResetPayrollButton.Location = New System.Drawing.Point(377, 15)
+        Me.ResetPayrollButton.Name = "ResetPayrollButton"
+        Me.ResetPayrollButton.Size = New System.Drawing.Size(31, 26)
+        Me.ResetPayrollButton.TabIndex = 66
+        Me.ResetPayrollButton.Text = "X"
+        Me.ResetPayrollButton.UseVisualStyleBackColor = False
+        '
+        'Label92
+        '
+        Me.Label92.AutoSize = True
+        Me.Label92.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label92.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label92.Location = New System.Drawing.Point(108, 126)
+        Me.Label92.Name = "Label92"
+        Me.Label92.Size = New System.Drawing.Size(37, 16)
+        Me.Label92.TabIndex = 29
+        Me.Label92.Text = "SSS"
+        '
+        'Label91
+        '
+        Me.Label91.AutoSize = True
+        Me.Label91.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label91.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label91.Location = New System.Drawing.Point(44, 101)
+        Me.Label91.Name = "Label91"
+        Me.Label91.Size = New System.Drawing.Size(100, 16)
+        Me.Label91.TabIndex = 28
+        Me.Label91.Text = "PHILHEALTH"
+        '
+        'SssAmountTextBox
+        '
+        Me.SssAmountTextBox.BackColor = System.Drawing.Color.White
+        Me.SssAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SssAmountTextBox.Location = New System.Drawing.Point(150, 125)
+        Me.SssAmountTextBox.Name = "SssAmountTextBox"
+        Me.SssAmountTextBox.ReadOnly = True
+        Me.SssAmountTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.SssAmountTextBox.TabIndex = 33
+        '
+        'SavePayrollButton
+        '
+        Me.SavePayrollButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SavePayrollButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(113, Byte), Integer), CType(CType(202, Byte), Integer), CType(CType(209, Byte), Integer))
+        Me.SavePayrollButton.FlatAppearance.BorderSize = 0
+        Me.SavePayrollButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.SavePayrollButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SavePayrollButton.Location = New System.Drawing.Point(277, 15)
+        Me.SavePayrollButton.Name = "SavePayrollButton"
+        Me.SavePayrollButton.Size = New System.Drawing.Size(100, 26)
+        Me.SavePayrollButton.TabIndex = 33
+        Me.SavePayrollButton.Text = "SAVE ALL"
+        Me.SavePayrollButton.UseVisualStyleBackColor = False
+        '
+        'PhilhealthAmountTextBox
+        '
+        Me.PhilhealthAmountTextBox.BackColor = System.Drawing.Color.White
+        Me.PhilhealthAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PhilhealthAmountTextBox.Location = New System.Drawing.Point(150, 100)
+        Me.PhilhealthAmountTextBox.Name = "PhilhealthAmountTextBox"
+        Me.PhilhealthAmountTextBox.ReadOnly = True
+        Me.PhilhealthAmountTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.PhilhealthAmountTextBox.TabIndex = 32
+        '
+        'Label88
+        '
+        Me.Label88.AutoSize = True
+        Me.Label88.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label88.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label88.Location = New System.Drawing.Point(60, 57)
+        Me.Label88.Name = "Label88"
+        Me.Label88.Size = New System.Drawing.Size(85, 16)
+        Me.Label88.TabIndex = 20
+        Me.Label88.Text = "BASIC PAY"
+        '
+        'BasicPaySummaryTextBox
+        '
+        Me.BasicPaySummaryTextBox.BackColor = System.Drawing.Color.White
+        Me.BasicPaySummaryTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BasicPaySummaryTextBox.Location = New System.Drawing.Point(150, 55)
+        Me.BasicPaySummaryTextBox.Name = "BasicPaySummaryTextBox"
+        Me.BasicPaySummaryTextBox.ReadOnly = True
+        Me.BasicPaySummaryTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.BasicPaySummaryTextBox.TabIndex = 31
+        '
+        'PictureBox33
+        '
+        Me.PictureBox33.BackgroundImage = CType(resources.GetObject("PictureBox33.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox33.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.PictureBox33.Location = New System.Drawing.Point(8, 12)
+        Me.PictureBox33.Name = "PictureBox33"
+        Me.PictureBox33.Size = New System.Drawing.Size(29, 31)
+        Me.PictureBox33.TabIndex = 3
+        Me.PictureBox33.TabStop = False
+        '
+        'Label116
+        '
+        Me.Label116.AutoSize = True
+        Me.Label116.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label116.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label116.Location = New System.Drawing.Point(40, 15)
+        Me.Label116.Name = "Label116"
+        Me.Label116.Size = New System.Drawing.Size(112, 24)
+        Me.Label116.TabIndex = 6
+        Me.Label116.Text = "SUMMARY"
+        '
+        'Panel5
+        '
+        Me.Panel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel5.BackColor = System.Drawing.Color.Gray
+        Me.Panel5.Location = New System.Drawing.Point(0, 47)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(416, 2)
+        Me.Panel5.TabIndex = 7
+        '
+        'WithholdingTaxTextBox
+        '
+        Me.WithholdingTaxTextBox.BackColor = System.Drawing.Color.White
+        Me.WithholdingTaxTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WithholdingTaxTextBox.Location = New System.Drawing.Point(150, 175)
+        Me.WithholdingTaxTextBox.Name = "WithholdingTaxTextBox"
+        Me.WithholdingTaxTextBox.ReadOnly = True
+        Me.WithholdingTaxTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.WithholdingTaxTextBox.TabIndex = 35
+        '
+        'Label135
+        '
+        Me.Label135.AutoSize = True
+        Me.Label135.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label135.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label135.Location = New System.Drawing.Point(109, 176)
+        Me.Label135.Name = "Label135"
+        Me.Label135.Size = New System.Drawing.Size(36, 16)
+        Me.Label135.TabIndex = 37
+        Me.Label135.Text = "TAX"
+        '
+        'Label143
+        '
+        Me.Label143.AutoSize = True
+        Me.Label143.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label143.ForeColor = System.Drawing.Color.Silver
+        Me.Label143.Location = New System.Drawing.Point(120, 80)
+        Me.Label143.Name = "Label143"
+        Me.Label143.Size = New System.Drawing.Size(106, 16)
+        Me.Label143.TabIndex = 52
+        Me.Label143.Text = "DEDUCTIONS"
+        '
+        'PagibigAmountTextBox
+        '
+        Me.PagibigAmountTextBox.BackColor = System.Drawing.Color.White
+        Me.PagibigAmountTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PagibigAmountTextBox.Location = New System.Drawing.Point(150, 150)
+        Me.PagibigAmountTextBox.Name = "PagibigAmountTextBox"
+        Me.PagibigAmountTextBox.ReadOnly = True
+        Me.PagibigAmountTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.PagibigAmountTextBox.TabIndex = 34
+        '
+        'Panel11
+        '
+        Me.Panel11.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel11.BackColor = System.Drawing.Color.Silver
+        Me.Panel11.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.Panel11.Location = New System.Drawing.Point(0, 88)
+        Me.Panel11.Name = "Panel11"
+        Me.Panel11.Size = New System.Drawing.Size(416, 1)
+        Me.Panel11.TabIndex = 51
+        '
+        'Label136
+        '
+        Me.Label136.AutoSize = True
+        Me.Label136.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label136.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label136.Location = New System.Drawing.Point(78, 151)
+        Me.Label136.Name = "Label136"
+        Me.Label136.Size = New System.Drawing.Size(67, 16)
+        Me.Label136.TabIndex = 39
+        Me.Label136.Text = "PAGIBIG"
+        '
+        'Label138
+        '
+        Me.Label138.AutoSize = True
+        Me.Label138.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label138.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label138.Location = New System.Drawing.Point(33, 226)
+        Me.Label138.Name = "Label138"
+        Me.Label138.Size = New System.Drawing.Size(112, 16)
+        Me.Label138.TabIndex = 41
+        Me.Label138.Text = "SSS Sal. LOAN"
+        '
+        'PagibigLoanTextBox
+        '
+        Me.PagibigLoanTextBox.BackColor = System.Drawing.Color.White
+        Me.PagibigLoanTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.999999!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PagibigLoanTextBox.Location = New System.Drawing.Point(150, 200)
+        Me.PagibigLoanTextBox.Name = "PagibigLoanTextBox"
+        Me.PagibigLoanTextBox.ReadOnly = True
+        Me.PagibigLoanTextBox.Size = New System.Drawing.Size(160, 21)
+        Me.PagibigLoanTextBox.TabIndex = 36
+        '
+        'Label137
+        '
+        Me.Label137.AutoSize = True
+        Me.Label137.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.749999!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label137.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Label137.Location = New System.Drawing.Point(3, 201)
+        Me.Label137.Name = "Label137"
+        Me.Label137.Size = New System.Drawing.Size(142, 16)
+        Me.Label137.TabIndex = 43
+        Me.Label137.Text = "PAGIBIG Sal. LOAN"
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
@@ -1747,9 +1948,9 @@ Partial Class BenchmarkPayrollForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "Amount"
-        DataGridViewCellStyle8.Format = "N2"
-        DataGridViewCellStyle8.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle17.Format = "N2"
+        DataGridViewCellStyle17.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn5.FillWeight = 20.0!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
@@ -1774,9 +1975,9 @@ Partial Class BenchmarkPayrollForm
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "Amount"
-        DataGridViewCellStyle9.Format = "N2"
-        DataGridViewCellStyle9.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle18.Format = "N2"
+        DataGridViewCellStyle18.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn8.FillWeight = 20.0!
         Me.DataGridViewTextBoxColumn8.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
@@ -1787,7 +1988,7 @@ Partial Class BenchmarkPayrollForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1167, 542)
+        Me.ClientSize = New System.Drawing.Size(1266, 542)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel21)
         Me.Controls.Add(Me.Panel1)
@@ -1804,9 +2005,20 @@ Partial Class BenchmarkPayrollForm
         CType(Me.EmployeesGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox18, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
-        Me.SummaryGroupBox.ResumeLayout(False)
-        Me.SummaryGroupBox.PerformLayout()
-        CType(Me.PictureBox33, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer2.ResumeLayout(False)
+        Me.SplitContainer3.Panel1.ResumeLayout(False)
+        Me.SplitContainer3.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer3.ResumeLayout(False)
+        Me.EmployeeDetailsGroupBox.ResumeLayout(False)
+        Me.EmployeeDetailsGroupBox.PerformLayout()
         Me.InputsTabControl.ResumeLayout(False)
         Me.DaysWorkedTabPage.ResumeLayout(False)
         Me.DaysWorkedTabPage.PerformLayout()
@@ -1819,8 +2031,18 @@ Partial Class BenchmarkPayrollForm
         Me.OtherIncomeTabPage.PerformLayout()
         CType(Me.OtherIncomeGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox28, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.EmployeeDetailsGroupBox.ResumeLayout(False)
-        Me.EmployeeDetailsGroupBox.PerformLayout()
+        Me.SummaryGroupBox.ResumeLayout(False)
+        Me.Panel7.ResumeLayout(False)
+        Me.Panel7.PerformLayout()
+        Me.Panel9.ResumeLayout(False)
+        Me.Panel9.PerformLayout()
+        Me.Panel8.ResumeLayout(False)
+        Me.Panel8.PerformLayout()
+        Me.Panel6.ResumeLayout(False)
+        Me.Panel6.PerformLayout()
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout()
+        CType(Me.PictureBox33, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1897,7 +2119,6 @@ Partial Class BenchmarkPayrollForm
     Friend WithEvents PictureBox28 As PictureBox
     Friend WithEvents AddIncomeButton As Button
     Friend WithEvents OtherIncomeComboBox As ComboBox
-    Friend WithEvents SummaryGroupBox As GroupBox
     Friend WithEvents ResetPayrollButton As Button
     Friend WithEvents Label187 As Label
     Friend WithEvents TotalLeaveTextBox As TextBox
@@ -1959,4 +2180,19 @@ Partial Class BenchmarkPayrollForm
     Friend WithEvents DeductionsGridViewColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DeductionsGridViewColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents RefreshFormButton As Button
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents Panel6 As Panel
+    Friend WithEvents Panel7 As Panel
+    Friend WithEvents Panel8 As Panel
+    Friend WithEvents Panel9 As Panel
+    Friend WithEvents SssCalamityLoanTextBox As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents SssEmergencyLoanTextBox As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents PagibigCalamityLoanTextBox As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents SplitContainer2 As SplitContainer
+    Friend WithEvents SplitContainer3 As SplitContainer
+    Friend WithEvents SummaryGroupBox As GroupBox
 End Class

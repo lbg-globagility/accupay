@@ -9,7 +9,7 @@ namespace AccuPay.Core.Interfaces
     {
         Task BatchApply(IReadOnlyCollection<LoanImportModel> validRecords, int organizationId, int currentlyLoggedInUserId);
 
-        Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId, int pagibigLoanId, int ssLoanId);
+        Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId, int pagibigLoanId, int ssLoanId, int[] otherGovtLoanIds);
 
         Task<ICollection<Loan>> GetCurrentPayrollLoansAsync(int organizationId, PayPeriod payPeriod, IReadOnlyCollection<Paystub> paystubs);
     }

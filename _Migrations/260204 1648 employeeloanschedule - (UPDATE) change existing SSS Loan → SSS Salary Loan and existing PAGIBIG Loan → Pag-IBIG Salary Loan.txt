@@ -1,0 +1,12 @@
+
+UPDATE employeeloanschedule els
+INNER JOIN product p ON p.RowID=els.LoanTypeID AND p.OrganizationID=els.OrganizationID AND p.PartNo IN ('PAGIBIG Loan')
+INNER JOIN product pp ON pp.OrganizationID=p.OrganizationID AND pp.CategoryID=p.CategoryID AND pp.PartNo='Pag-IBIG Salary Loan'
+SET els.LoanTypeID=pp.RowID
+WHERE els.RowID IS NOT NULL AND pp.RowID IS NOT NULL;
+
+UPDATE employeeloanschedule els
+INNER JOIN product p ON p.RowID=els.LoanTypeID AND p.OrganizationID=els.OrganizationID AND p.PartNo IN ('SSS Loan')
+INNER JOIN product pp ON pp.OrganizationID=p.OrganizationID AND pp.CategoryID=p.CategoryID AND pp.PartNo='SSS Salary Loan'
+SET els.LoanTypeID=pp.RowID
+WHERE els.RowID IS NOT NULL AND pp.RowID IS NOT NULL;

@@ -74,5 +74,11 @@ namespace AccuPay.Core.Entities
         public bool IsSssLoan => PartNo.Trim().ToUpper() == ProductConstant.SSS_LOAN.ToUpper();
 
         public bool IsThirteenthMonthPay => AllocateBelowSafetyFlag == '1';
+
+        public bool IsSssSalaryLoan => PartNo.Trim().ToUpper() == ProductConstant.SSS_SALARY_LOAN.ToUpper();
+        public bool IsSssCalamityLoan => PartNo.Trim().ToUpper() == ProductConstant.SSS_CALAMITY_LOAN.ToUpper();
+        public bool IsSssEmergencyLoan => PartNo.Trim().ToUpper() == ProductConstant.SSS_EMERGENCY_LOAN.ToUpper();
+        public bool IsPagIbigSalaryLoan => PartNo.Trim().ToUpper() == ProductConstant.PAG_IBIG_SALARY_LOAN.ToUpper();
+        public bool IsPagIbigCalamityLoan => PartNo.Trim().ToUpper() == ProductConstant.PAG_IBIG_CALAMITY_LOAN.ToUpper();
     }
 }

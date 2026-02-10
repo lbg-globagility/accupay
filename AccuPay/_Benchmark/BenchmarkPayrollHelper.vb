@@ -13,8 +13,8 @@ Namespace Benchmark
         Private _loanService As ILoanDataService
         Private _productRepository As IProductRepository
 
-        Private _pagibigLoanId As Integer
-        Private _sssLoanId As Integer
+        Private _pagibigSalaryLoanId As Integer
+        Private _sssSalaryLoanId As Integer
 
 #Region "Read-only Properties"
 
@@ -110,11 +110,18 @@ Namespace Benchmark
         ''' Makes sure that Accupay does not have unneccesary data for benchmark.
         ''' </summary>
         Public Async Function CleanEmployee(employeeId As Integer) As Task
+            Dim originalSupportedLoanIds = New Integer() {_pagibigSalaryLoanId, _sssSalaryLoanId}
+
+            Dim otherGovermentLoanIds = (Await _productRepository.GetBenchmarkLoanTypesAsync(z_OrganizationID)).
+                Where(Function(t) Not originalSupportedLoanIds.Contains(t.RowID.Value)).
+                Select(Function(t) If(t.RowID, 0)).
+                ToArray()
 
             Await _loanService.DeleteAllLoansExceptGovernmentLoansAsync(
                     employeeId:=employeeId,
-                    pagibigLoanId:=_pagibigLoanId,
-                    ssLoanId:=_sssLoanId)
+                    pagibigLoanId:=_pagibigSalaryLoanId,
+                    ssLoanId:=_sssSalaryLoanId,
+                    otherGovtLoanIds:=otherGovermentLoanIds)
 
         End Function
 
@@ -133,12 +140,12 @@ Namespace Benchmark
 
         Private Async Function InitializeLoanIds(logger As ILog) As Task(Of Boolean)
 
-            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID)
+            Dim govermentLoans = Await _productRepository.GetBenchmarkLoanTypesAsync(z_OrganizationID)
 
-            Dim pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
-            Dim sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
+            Dim pagibigSalaryLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagIbigSalaryLoan)?.RowID
+            Dim sssSalaryLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssSalaryLoan)?.RowID
 
-            If pagibigLoanId Is Nothing OrElse sssLoanId Is Nothing Then
+            If pagibigSalaryLoanId Is Nothing OrElse sssSalaryLoanId Is Nothing Then
 
                 logger.Error("Pagibig or SSS loan Id were not found in the database.")
 
@@ -146,8 +153,8 @@ Namespace Benchmark
 
             End If
 
-            _pagibigLoanId = pagibigLoanId.Value
-            _sssLoanId = sssLoanId.Value
+            _pagibigSalaryLoanId = pagibigSalaryLoanId.Value
+            _sssSalaryLoanId = sssSalaryLoanId.Value
             Return True
 
         End Function

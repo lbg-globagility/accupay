@@ -555,6 +555,15 @@ namespace AccuPay.Infrastructure.Data
                 return string.Empty;
         }
 
+        public async Task<ICollection<Product>> GetBenchmarkLoanTypesAsync(int organizationId)
+        {
+            var governmentLoans = ProductConstant.BENCHMARK_SUPPORTED_LOAN_TYPES;
+
+            return await(await GetLoanTypesBaseQuery(organizationId))
+                .Where(p => governmentLoans.Contains(p.PartNo))
+                .ToListAsync();
+        }
+
         #endregion Private helper methods
     }
 }

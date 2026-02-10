@@ -26,13 +26,15 @@ namespace AccuPay.Infrastructure.Data
         public async Task DeleteAllLoansExceptGovernmentLoansAsync(
             int employeeId,
             int pagibigLoanId,
-            int ssLoanId)
+            int ssLoanId,
+            int[] otherGovtLoanIds)
         {
+            var loanIds = otherGovtLoanIds.Concat(new int[] { pagibigLoanId, ssLoanId }).ToArray();
+
             _context.Loans
                 .RemoveRange(_context.Loans
                     .Where(x => x.EmployeeID == employeeId)
-                    .Where(x => x.LoanTypeID != pagibigLoanId)
-                    .Where(x => x.LoanTypeID != ssLoanId));
+                    .Where(x => !loanIds.Contains(x.LoanTypeID ?? 0)));
 
             await _context.SaveChangesAsync();
         }
