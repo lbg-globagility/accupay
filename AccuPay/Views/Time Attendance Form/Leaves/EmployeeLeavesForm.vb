@@ -8,6 +8,7 @@ Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Repositories
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -29,6 +30,7 @@ Public Class EmployeeLeavesForm
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
     Private ReadOnly _leaveResetRepository As ILeaveResetRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
     Private _currentRolePermission As RolePermission
 
     Sub New()
@@ -51,6 +53,7 @@ Public Class EmployeeLeavesForm
 
         _leaveResetRepository = MainServiceProvider.GetRequiredService(Of ILeaveResetRepository)
 
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -68,7 +71,8 @@ Public Class EmployeeLeavesForm
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
         Dim leaveResetPolicy = Await _leaveResetRepository.GetLeaveResetPolicyAsync()
-        ResetLeaveToolStripButton.Visible = leaveResetPolicy.IsLeaveResetEnable
+        ResetLeaveToolStripButton.Visible = Not (Await _organizationRepository.GetAllAsync()).Any(Function(t) t.Name.Contains("Asia Cargo")) AndAlso
+            leaveResetPolicy.IsLeaveResetEnable
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
