@@ -31,6 +31,9 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<LeaveLedger>> GetAllByEmployee(int? employeeId)
         {
             return await _context.LeaveLedgers
+                .Include(t => t.Product)
+                .Include(t => t.LeaveTransactions)
+                    .ThenInclude(lt => lt.PayPeriod)
                 .Where(t => t.EmployeeID == employeeId)
                 .ToListAsync();
         }

@@ -56,9 +56,63 @@ namespace AccuPay.Infrastructure.Data
 
         public override async Task<Leave> SaveAsync(Leave leave, int changedByUserId)
         {
+            await ScrutinizeExceedAllowableLeaveAsync(leave);
+
             await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
             return leave;
+        }
+
+        private async Task ScrutinizeExceedAllowableLeaveAsync(Leave leave)
+        {
+            var leaveLedgers = (await _leaveLedgerRepository.GetAllByEmployee(leave.EmployeeID))
+                .Where(t => t.Product?.PartNo == leave.LeaveType);
+
+            if (!(leaveLedgers?.Any() ?? false)) return; // for Leave w/o pay
+
+            var leaveTransactions = new List<LeaveTransaction>();
+            foreach (var ledger in leaveLedgers)
+                leaveTransactions.AddRange(ledger.LeaveTransactions);
+
+            var latestCreditTransaction = leaveTransactions
+                .Where(t => t.IsCredit)
+                .OrderByDescending(t => t.TransactionDate)
+                .FirstOrDefault();
+
+            if (latestCreditTransaction == null) return; // for Leave w/o pay
+
+            var latestLeaves = (await _leaveRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                    employeeIds: new int[] { leave.EmployeeID.Value },
+                    datePeriod: new TimePeriod(latestCreditTransaction.TransactionDate.Date, latestCreditTransaction.TransactionDate.Date.AddYears(1).AddDays(-1))))?
+                .Where(t => t.IsApproved)?
+                .Where(t => t.LeaveType == leave.LeaveType)?
+                .ToList();
+
+            var latestLeaveShiftScheds = await _shiftRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                employeeId: leave.EmployeeID.Value,
+                datePeriod: new TimePeriod(latestCreditTransaction.TransactionDate.Date, latestCreditTransaction.TransactionDate.Date.AddYears(1).AddDays(-1)));
+
+            var latestTotalFiledLeaveHours = 0M;
+
+            foreach (var latestLeave in latestLeaves)
+            {
+                var shiftSched = latestLeaveShiftScheds.FirstOrDefault(t => t.DateSched.Date == latestLeave.StartDate.Date);
+
+                latestTotalFiledLeaveHours += shiftSched?.WorkHours ?? 0;
+            }
+
+            var thisLeaveShiftSched = (await _shiftRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                employeeId: leave.EmployeeID.Value,
+                datePeriod: new TimePeriod(leave.StartDate.Date, leave.StartDate.Date)))
+                .FirstOrDefault();
+
+            var thisLeaveHours = leave.IsBasedOnShiftSched ?
+                thisLeaveShiftSched.WorkHours :
+                (decimal)(leave.EndTimeFull.Value - leave.StartTimeFull.Value).TotalHours;
+
+            var isExceed = latestCreditTransaction.Amount < latestTotalFiledLeaveHours + thisLeaveHours;
+            if (isExceed)
+                throw new BusinessLogicException("Employee exceeded the allowable leave hours.");
         }
 
         public override async Task SaveManyAsync(List<Leave> leaves, int changedByUserId)

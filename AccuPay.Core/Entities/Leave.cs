@@ -115,5 +115,11 @@ namespace AccuPay.Core.Entities
             // Means no error
             return null;
         }
+
+        [NotMapped]
+        public bool IsBasedOnShiftSched => StartTime == null && EndTime == null;
+
+        [NotMapped]
+        public bool IsApproved => Status == StatusApproved;
     }
 }
