@@ -3199,6 +3199,12 @@ Public Class EmployeeForm
     Dim indentifyGender As Dictionary(Of Gender, String) =
         New Dictionary(Of Gender, String) From {{Gender.Male, Gender.Male.ToString()}, {Gender.Female, Gender.Female.ToString()}}
 
+    Private Sub tsbtnSingleParentBenefit_Click(sender As Object, e As EventArgs) Handles tsbtnSingleParentBenefit.Click
+        Dim form = New ApplySoloParentBenefitForm(z_OrganizationID)
+        form.ShowDialog()
+
+    End Sub
+
     Private Async Function LoadSalutation(gender As Gender) As Task
         Dim genderList = {"Neutral", indentifyGender(gender)}
 

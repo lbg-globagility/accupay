@@ -475,6 +475,18 @@
     <Compile Include="Reports\Reports\Providers\BankFileSimpleExcelReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
+    <Compile Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.Designer.vb">
+      <DependentUpon>ApplySoloParentBenefitForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.Designer.vb">
+      <DependentUpon>EditSoloParentBenefitForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </Compile>
@@ -1732,6 +1744,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.resx">
       <DependentUpon>BankFileTextFormatSecurityBankForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.resx">
+      <DependentUpon>ApplySoloParentBenefitForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.resx">
+      <DependentUpon>EditSoloParentBenefitForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>

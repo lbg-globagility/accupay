@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Namespace Global.AccuPay.Desktop.Helpers
 
@@ -9,6 +9,23 @@ Namespace Global.AccuPay.Desktop.Helpers
             Dim browsedFile = New OpenFileDialog With {
                 .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+            }
+
+            If browsedFile.ShowDialog() = DialogResult.OK Then
+
+                Return BrowseFileOutPut.Success(browsedFile.FileName)
+            Else
+
+                Return BrowseFileOutPut.Failed()
+
+            End If
+
+        End Function
+
+        Public Shared Function BrowseFile(filter As String) As BrowseFileOutPut
+
+            Dim browsedFile = New OpenFileDialog With {
+                .Filter = filter
             }
 
             If browsedFile.ShowDialog() = DialogResult.OK Then

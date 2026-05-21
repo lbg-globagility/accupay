@@ -104,7 +104,18 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.ProductID == leaveTypeId)
                 .FirstOrDefaultAsync();
 
-            if (ledger == null) return;
+            if (ledger == null)
+            {
+                ledger = new LeaveLedger
+                {
+                    EmployeeID = employeeId,
+                    ProductID = leaveTypeId,
+                    OrganizationID = organizationId,
+                    CreatedBy = userId,
+                };
+
+                await CreateAsync(ledger);
+            }
 
             var newTransaction = LeaveTransaction.NewLeaveTransaction(userId: userId,
                 organizationId: organizationId,
@@ -152,6 +163,15 @@ namespace AccuPay.Infrastructure.Data
             {
                 _context.Entry(leaveTransaction).State = EntityState.Deleted;
             }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(LeaveLedger leaveLedger)
+        {
+            if (leaveLedger == null) return;
+
+            await _context.LeaveLedgers.AddAsync(leaveLedger);
 
             await _context.SaveChangesAsync();
         }
