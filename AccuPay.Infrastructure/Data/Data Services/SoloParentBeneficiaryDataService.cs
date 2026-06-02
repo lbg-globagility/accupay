@@ -30,6 +30,12 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<SoloParentBeneficiary>> GetAllByOrganizationIdAsync(int orgId)
             => await _soloParentBeneficiaryRepository.GetAllByOrganizationIdAsync(orgId);
 
+        public async Task<SoloParentBeneficiary> GetByEmployeeIdAsync(int employeeId)
+            => await _soloParentBeneficiaryRepository.GetByEmployeeIdAsync(employeeId);
+
+        public async Task<bool> IsEmployeeBeneficiaryAsync(int employeeId)
+            => await _soloParentBeneficiaryRepository.IsEmployeeBeneficiaryAsync(employeeId);
+
         protected override string CreateUserActivitySuffixIdentifier(SoloParentBeneficiary entity) => UserActivityName;
 
         protected override string GetUserActivityName(SoloParentBeneficiary entity) => UserActivityName;

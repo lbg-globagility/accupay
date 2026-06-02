@@ -480,6 +480,7 @@ Public Class TimeEntrySummaryForm
                 ete.VacationLeaveHours,
                 ete.SickLeaveHours,
                 ete.OtherLeaveHours,
+                ete.SoloParentLeaveHours,
                 ete.Leavepayment,
                 ete.SpecialHolidayHours,
                 ete.SpecialHolidayPay,
@@ -598,6 +599,7 @@ Public Class TimeEntrySummaryForm
                     .VacationLeaveHours = reader.GetValue(Of Decimal)("VacationLeaveHours"),
                     .SickLeaveHours = reader.GetValue(Of Decimal)("SickLeaveHours"),
                     .OtherLeaveHours = reader.GetValue(Of Decimal)("OtherLeaveHours"),
+                    .SoloParentLeaveHours = reader.GetValue(Of Decimal)("SoloParentLeaveHours"),
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
                     .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
                     .SpecialHolidayPay = reader.GetValue(Of Decimal)("SpecialHolidayPay"),
@@ -647,6 +649,7 @@ Public Class TimeEntrySummaryForm
                         .VacationLeaveHours += timeEntry.VacationLeaveHours
                         .SickLeaveHours += timeEntry.SickLeaveHours
                         .OtherLeaveHours += timeEntry.OtherLeaveHours
+                        .SoloParentLeaveHours += timeEntry.SoloParentLeaveHours
                         .LeavePay += timeEntry.LeavePay
                         .LateHours += timeEntry.LateHours
                         .LateAmount += timeEntry.LateAmount
@@ -1288,6 +1291,7 @@ Public Class TimeEntrySummaryForm
         Public Property VacationLeaveHours As Decimal
         Public Property SickLeaveHours As Decimal
         Public Property OtherLeaveHours As Decimal
+        Public Property SoloParentLeaveHours As Decimal
         Public Property LeavePay As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal
@@ -1408,7 +1412,7 @@ Public Class TimeEntrySummaryForm
 
         Public ReadOnly Property LeaveHours As Decimal
             Get
-                Return VacationLeaveHours + SickLeaveHours + OtherLeaveHours
+                Return VacationLeaveHours + SickLeaveHours + OtherLeaveHours + SoloParentLeaveHours
             End Get
         End Property
 

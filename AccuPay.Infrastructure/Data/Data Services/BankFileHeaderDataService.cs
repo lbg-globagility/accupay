@@ -12,14 +12,11 @@ namespace AccuPay.Infrastructure.Data
         public BankFileHeaderDataService(IBankFileHeaderRepository bankFileHeaderRepository,
             IPayPeriodRepository payPeriodRepository,
             PayrollContext context,
-            IPolicyHelper policy,
-            string entityName,
-            string entityNamePlural = null) : base(bankFileHeaderRepository,
+            IPolicyHelper policy) : base(bankFileHeaderRepository,
                 payPeriodRepository,
                 context,
                 policy,
-                entityName: ENTITY_NAME,
-                entityNamePlural: $"{ENTITY_NAME}s")
+                entityName: ENTITY_NAME)
         {
             _bankFileHeaderRepository = bankFileHeaderRepository;
         }

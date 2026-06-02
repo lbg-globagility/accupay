@@ -14,6 +14,7 @@ Public Class EditSoloParentBenefitForm
     Private ReadOnly _soloParentBeneficiaryDto As SoloParentBeneficiaryDto
     Private _soloParentBeneficiary As SoloParentBeneficiary
     Private ReadOnly _employee As Employee
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Public Sub New(userId As Integer, orgId As Integer, soloParentBeneficiaryDto As SoloParentBeneficiaryDto)
         _userId = userId
@@ -21,6 +22,7 @@ Public Class EditSoloParentBenefitForm
         _soloParentBeneficiaryDto = soloParentBeneficiaryDto
         _soloParentBeneficiary = _soloParentBeneficiaryDto.SoloParentBeneficiary
         _employee = _soloParentBeneficiaryDto.Employee
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)()
 
         InitializeComponent()
 
@@ -54,16 +56,25 @@ Public Class EditSoloParentBenefitForm
                             userId:=_userId)
                         Dim leaveTypeId = If(leaveType.RowID, 0)
 
-                        Dim tasks = Task.WhenAll(
-                            soloParentBeneficiaryDataService.SaveManyAsync(
-                                entities:=New List(Of SoloParentBeneficiary) From {_soloParentBeneficiary},
-                                currentlyLoggedInUserId:=_userId),
+                        Dim transactionDate = If(Await _payPeriodRepository.GetCurrentOpenAsync(_orgId),
+                            Await _payPeriodRepository.GetMostRecentAsync(_orgId))
+
+                        Dim initialLeaveLedgerTask = If(_soloParentBeneficiary.IsNewEntity,
                             leaveLedgerRepository.CreateBeginningBalanceAsync(
                                 employeeId:=If(_employee.RowID, 0),
                                 leaveTypeId:=leaveTypeId,
                                 organizationId:=_orgId,
                                 userId:=_userId,
-                                balance:=_soloParentBeneficiary.LEAVE_HOURS)
+                                balance:=_soloParentBeneficiary.LEAVE_HOURS,
+                                description:="Granted Solo Parent Benefit",
+                                transactionDate:=transactionDate.PayFromDate),
+                            Task.CompletedTask)
+
+                        Dim tasks = Task.WhenAll(
+                            soloParentBeneficiaryDataService.SaveManyAsync(
+                                entities:=New List(Of SoloParentBeneficiary) From {_soloParentBeneficiary},
+                                currentlyLoggedInUserId:=_userId),
+                            initialLeaveLedgerTask
                         )
 
                         Await tasks.
@@ -127,11 +138,14 @@ Public Class EditSoloParentBenefitForm
                         Dim leaveLedgers = Await leaveLedgerRepository.GetAllByEmployee(_employee.RowID)
                         Dim leaveLedger = leaveLedgers.FirstOrDefault(Function(l) Equals(l.ProductID, leaveType.RowID))
 
+                        Dim transactionDate = If(Await _payPeriodRepository.GetCurrentOpenAsync(_orgId),
+                            Await _payPeriodRepository.GetMostRecentAsync(_orgId))
+
                         Dim lt = LeaveTransaction.NewLeaveTransaction(userId:=_userId,
                             organizationId:=_orgId,
                             employeeId:=_employee.RowID,
                             leaveLedgerId:=leaveLedger.RowID,
-                            transactionDate:=Date.Now(),
+                            transactionDate:=transactionDate.PayToDate,
                             type:=LeaveTransactionType.Credit,
                             amount:=0,
                             balance:=0,

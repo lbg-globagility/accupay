@@ -19,5 +19,13 @@ namespace AccuPay.Infrastructure.Data
                 .Include(spb => spb.Employee)
                 .Where(spb => spb.OrganizationID == orgId)
                 .ToListAsync();
+
+        public async Task<SoloParentBeneficiary> GetByEmployeeIdAsync(int employeeId)
+            => await _context.SoloParentBeneficiaries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(spb => spb.EmployeeId == employeeId);
+
+        public async Task<bool> IsEmployeeBeneficiaryAsync(int employeeId)
+            => await GetByEmployeeIdAsync(employeeId) != null;
     }
 }

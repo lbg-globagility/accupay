@@ -20,6 +20,7 @@ Namespace Global.AccuPay
         Private _leaveLedgerRepository As ILeaveLedgerRepository
 
         Private _productRepository As IProductRepository
+        Private ReadOnly _soloParentBeneficiaryDataService As ISoloParentBeneficiaryDataService
 
         Public Sub New(employee As Employee)
             InitializeComponent()
@@ -27,6 +28,7 @@ Namespace Global.AccuPay
 
             _leaveLedgerRepository = MainServiceProvider.GetRequiredService(Of ILeaveLedgerRepository)
             _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
+            _soloParentBeneficiaryDataService = MainServiceProvider.GetRequiredService(Of ISoloParentBeneficiaryDataService)
         End Sub
 
         Private Async Sub ViewLeaveLedgerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -39,6 +41,8 @@ Namespace Global.AccuPay
 
                 Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE}
                 _leaveTypes = _leaveTypes.Where(Function(l) trackedLeaves.Contains(l.PartNo)).ToList()
+
+                If (Await _soloParentBeneficiaryDataService.IsEmployeeBeneficiaryAsync(_employee.RowID.Value)) Then _leaveTypes.Add(Await _productRepository.GetOrCreateLeaveTypeAsync(ProductConstant.SOLO_PARENT_LEAVE, z_OrganizationID, z_User))
 
                 ViewLeaveLedgerTypeSelector.LeaveTypes = _leaveTypes
 

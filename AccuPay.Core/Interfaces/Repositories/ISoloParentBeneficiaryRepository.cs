@@ -7,5 +7,9 @@ namespace AccuPay.Core.Interfaces
     public interface ISoloParentBeneficiaryRepository : ISavableRepository<SoloParentBeneficiary>
     {
         Task<ICollection<SoloParentBeneficiary>> GetAllByOrganizationIdAsync(int orgId);
+
+        Task<SoloParentBeneficiary> GetByEmployeeIdAsync(int employeeId);
+
+        Task<bool> IsEmployeeBeneficiaryAsync(int employeeId);
     }
 }

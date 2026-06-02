@@ -181,7 +181,6 @@ namespace AccuPay.Core.IntegrationTests
 
             services.AddScoped<IAttachmentDataService, AttachmentDataService>();
             services.AddScoped<IAwardDataService, AwardDataService>();
-            services.AddScoped<IBankFileHeaderDataService, BankFileHeaderDataService>();
             services.AddScoped<IBonusDataService, BonusDataService>();
             services.AddScoped<ICertificationDataService, CertificationDataService>();
             services.AddScoped<IDisciplinaryActionDataService, DisciplinaryActionDataService>();

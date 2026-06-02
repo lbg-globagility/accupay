@@ -43,6 +43,7 @@ namespace AccuPay.Infrastructure.Data
             return await _context.LeaveTransactions
                 .Where(t => t.LeaveLedgerID == leaveLedgerId)
                 .OrderByDescending(t => t.TransactionDate)
+                    .ThenByDescending(t => t.Created)
                 .ToListAsync();
         }
 

@@ -15,6 +15,7 @@ using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Core.Services.LeaveBalanceReset;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Data.Data_Services;
+using AccuPay.Infrastructure.Data.Reports;
 using AccuPay.Infrastructure.Data.Repositories;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
@@ -40,6 +41,7 @@ namespace AccuPay.Web
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<IBreakTimeBracketRepository, BreakTimeBracketRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
+            services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICertificationRepository, CertificationRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
@@ -165,6 +167,7 @@ namespace AccuPay.Web
             services.AddScoped<ICostCenterReportBuilder, CostCenterReportBuilder>();
 
             services.AddScoped<IAttachmentDataService, AttachmentDataService>();
+            services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
             services.AddScoped<IAwardDataService, AwardDataService>();
             services.AddScoped<IBonusDataService, BonusDataService>();
             services.AddScoped<ICertificationDataService, CertificationDataService>();
@@ -180,6 +183,7 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
+            services.AddScoped<ListOfValueCollection>();
 
             return services;
         }
