@@ -1,4 +1,5 @@
 Option Strict On
+Imports System.IO
 
 Namespace Global.AccuPay.Desktop.Helpers
 
@@ -22,20 +23,41 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         End Function
 
-        Public Shared Function BrowseFile(filter As String) As BrowseFileOutPut
+        Public Shared Function BrowseFile(filter As String, Optional maxMediumBlobBytes As Long = 16777215) As BrowseFileOutPut
 
-            Dim browsedFile = New OpenFileDialog With {
-                .Filter = filter
-            }
+            Using browsedFile = New OpenFileDialog()
 
-            If browsedFile.ShowDialog() = DialogResult.OK Then
+                With browsedFile
+                    .Filter = filter
 
-                Return BrowseFileOutPut.Success(browsedFile.FileName)
-            Else
+                    If .ShowDialog() = DialogResult.OK Then
 
-                Return BrowseFileOutPut.Failed()
+                        Dim fileInfo As New FileInfo(.FileName)
 
-            End If
+                        If fileInfo.Length > maxMediumBlobBytes Then
+                            Dim fileSizeMB As Double = fileInfo.Length / 1024.0 / 1024.0
+
+                            MessageBox.Show(
+                                $"The selected file is too large.{vbCrLf}{vbCrLf}" &
+                                $"File size: {fileSizeMB:F2} MB{vbCrLf}" &
+                                $"Maximum allowed: 16.00 MB (16,777,215 bytes)",
+                                "File Too Large",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
+
+                            Return BrowseFileOutPut.Failed()
+                        End If
+
+                        Return BrowseFileOutPut.Success(.FileName)
+
+                    Else
+                        Return BrowseFileOutPut.Failed()
+
+                    End If
+
+                End With
+
+            End Using
 
         End Function
 
