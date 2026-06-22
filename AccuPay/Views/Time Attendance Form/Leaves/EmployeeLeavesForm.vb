@@ -31,6 +31,7 @@ Public Class EmployeeLeavesForm
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
     Private ReadOnly _leaveResetRepository As ILeaveResetRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _soloParentBeneficiaryDataService As ISoloParentBeneficiaryDataService
     Private _currentRolePermission As RolePermission
 
     Sub New()
@@ -54,6 +55,9 @@ Public Class EmployeeLeavesForm
         _leaveResetRepository = MainServiceProvider.GetRequiredService(Of ILeaveResetRepository)
 
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _soloParentBeneficiaryDataService = MainServiceProvider.GetRequiredService(Of ISoloParentBeneficiaryDataService)
+
     End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -320,7 +324,22 @@ Public Class EmployeeLeavesForm
             GetSickLeaveBalance(currentEmployee.RowID.Value)).
             ToString()
 
+        Panel6.Visible = False
+        SoloParentLeaveBalanceTextBox.Clear()
+
+        Dim isSoloParentBeneficiary = Await _soloParentBeneficiaryDataService.IsEmployeeBeneficiaryAsync(currentEmployee.RowID.Value)
+
+        Panel6.Visible = isSoloParentBeneficiary
+
+        If isSoloParentBeneficiary Then
+            SoloParentLeaveBalanceTextBox.Text = $"{(Await _employeeRepository.
+                GetSoloParentLeaveBalanceAsync(currentEmployee.RowID.Value)).
+                ToString()} / {SoloParentBeneficiary.DEFAULT_LEAVE_HOURS:N2}"
+
+        End If
+
         Await LoadLeaves(currentEmployee)
+
     End Function
 
     Private Function GetSelectedLeave() As Leave

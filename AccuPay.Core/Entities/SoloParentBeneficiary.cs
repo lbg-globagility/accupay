@@ -22,9 +22,11 @@ namespace AccuPay.Core.Entities
 
     public partial class SoloParentBeneficiary
     {
-        public static decimal LEAVE_HOURS =
+        private const decimal LEAVE_HOURS =
             7 // daily working hours
             * 8; // number of working hours in a day
+
+        public static decimal DEFAULT_LEAVE_HOURS = LEAVE_HOURS;
 
         [ForeignKey("EmployeeId")]
         public virtual Employee Employee { get; set; }

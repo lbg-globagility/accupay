@@ -65,7 +65,7 @@ Public Class EditSoloParentBenefitForm
                                 leaveTypeId:=leaveTypeId,
                                 organizationId:=_orgId,
                                 userId:=_userId,
-                                balance:=_soloParentBeneficiary.LEAVE_HOURS,
+                                balance:=_soloParentBeneficiary.DEFAULT_LEAVE_HOURS,
                                 description:="Granted Solo Parent Benefit",
                                 transactionDate:=transactionDate.PayFromDate),
                             Task.CompletedTask)

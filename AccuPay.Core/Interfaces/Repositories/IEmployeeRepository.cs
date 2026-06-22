@@ -46,7 +46,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<string>> GetEmploymentStatuses();
 
-        Task<string> GetImagePathByIdAsync(int employeeId);
+        Task<string> GetImagePathByIdAsync(int employeeId); 
 
         Task<PaginatedList<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId);
 
@@ -59,5 +59,7 @@ namespace AccuPay.Core.Interfaces
         Task<decimal> GetVacationLeaveBalance(int employeeId);
 
         Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue);
+
+        Task<decimal> GetSoloParentLeaveBalanceAsync(int employeeId);
     }
 }
