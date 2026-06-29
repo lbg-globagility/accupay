@@ -1,28 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
 {
     [Table("employeetimeattendancelog")]
-    public class TimeAttendanceLog
+    public partial class TimeAttendanceLog : OrganizationalEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
-        public int OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
         public string ImportNumber { get; set; }
 
         public DateTime TimeStamp { get; set; }
@@ -46,5 +29,46 @@ namespace AccuPay.Core.Entities
                 return IsTimeIn == true ? "IN" : "OUT";
             }
         }
+    }
+
+    public partial class TimeAttendanceLog
+    {
+        public TimeAttendanceLog()
+        {
+        }
+
+        public TimeAttendanceLog(int userId,
+            int organizationId,
+            DateTime timeStamp,
+            DateTime workDay,
+            int employeeID,
+            bool? isTimeIn = null,
+            string importNumber = null)
+        {
+            OrganizationID= organizationId;
+            ImportNumber = importNumber;
+            TimeStamp = timeStamp;
+            WorkDay = workDay;
+            EmployeeID = employeeID;
+            IsTimeIn = isTimeIn;
+
+            if (IsNewEntity) CreatedBy = userId;
+            if (!IsNewEntity) LastUpdBy = userId;
+        }
+
+        public static TimeAttendanceLog NewTimeAttendanceLog(int userId,
+            int organizationId,
+            DateTime timeStamp,
+            DateTime workDay,
+            int employeeID,
+            bool? isTimeIn = null,
+            string importNumber = null)
+            => new TimeAttendanceLog(userId: userId,
+                organizationId: organizationId,
+                timeStamp: timeStamp,
+                workDay: workDay,
+                employeeID: employeeID,
+                isTimeIn: isTimeIn,
+                importNumber: importNumber);
     }
 }

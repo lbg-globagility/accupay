@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Interfaces
 {
-    public interface ITimeAttendanceLogRepository
+    public interface ITimeAttendanceLogRepository : ISavableRepository<TimeAttendanceLog>
     {
         Task<ICollection<TimeAttendanceLog>> GetByDateAndEmployeeAsync(DateTime date, int employeeId);
 

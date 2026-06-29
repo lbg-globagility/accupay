@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace AccuPay.Core.Services
 {
-    public class ListOfValueCollection
+    public class ListOfValueCollection : IListOfValueCollection
     {
         private IReadOnlyList<ListOfValue> _values;
 
