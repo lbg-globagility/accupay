@@ -3,3 +3,4 @@
 *.v12.suo
 /.vscode
 UpgradeLog*.htm
+AccuPay.Web/Properties/PublishProfiles/LocalFolderProfile.pubxml
