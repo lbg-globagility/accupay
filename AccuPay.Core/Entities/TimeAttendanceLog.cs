@@ -24,7 +24,7 @@ namespace AccuPay.Core.Entities
             get
             {
                 if (IsTimeIn == null)
-                    return "";
+                    return "Undetermined";
 
                 return IsTimeIn == true ? "IN" : "OUT";
             }

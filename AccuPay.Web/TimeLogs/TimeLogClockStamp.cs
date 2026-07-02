@@ -7,16 +7,19 @@ namespace AccuPay.Web.TimeLogs
     {
         public int EmployeeId { get; set; }
         public string EmployeeNo { get; set; }
-        public DateTime ClockStamp { get; set; }
+        public DateTime? ClockStamp { get; set; } = null;
         public bool StampTag { get; set; }
 
-        public TimeAttendanceLog ToTimeAttendanceLog(int userId, int organizationId)
-            => TimeAttendanceLog.NewTimeAttendanceLog(userId: userId,
+        public TimeAttendanceLog ToTimeAttendanceLog(int userId, int organizationId, int employeeId)
+        {
+            var val = ClockStamp ?? DateTime.UtcNow;
+
+            return TimeAttendanceLog.NewTimeAttendanceLog(userId: userId,
                 organizationId: organizationId,
-                importNumber: EmployeeNo,
-                timeStamp: ClockStamp,
-                workDay: ClockStamp.Date,
-                employeeID: EmployeeId,
+                timeStamp: val,
+                workDay: val.Date,
+                employeeID: employeeId,
                 isTimeIn: StampTag);
+        }
     }
 }

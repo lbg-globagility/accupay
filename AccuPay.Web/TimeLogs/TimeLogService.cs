@@ -138,7 +138,9 @@ namespace AccuPay.Web.TimeLogs
 
         internal async Task ClockStampAsync(TimeLogClockStamp clockStamp)
         {
-            var timeAttendanceLog = clockStamp.ToTimeAttendanceLog(_currentUser.UserId, _currentUser.OrganizationId);
+            var timeAttendanceLog = clockStamp.ToTimeAttendanceLog(userId: _currentUser.UserId,
+                organizationId: _currentUser.OrganizationId,
+                employeeId: _currentUser.EmployeeId ?? clockStamp.EmployeeId);
 
             await _timeAttendanceLogDataService.SaveAsync(entity: timeAttendanceLog,
                 _currentUser.UserId);
