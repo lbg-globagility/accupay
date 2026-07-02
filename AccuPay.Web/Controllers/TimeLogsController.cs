@@ -49,5 +49,14 @@ namespace AccuPay.Web.Controllers
             else
                 return result;
         }
+
+        [HttpPost("clock-stamp")]
+        [Permission(PermissionTypes.TimeLogCreate)]
+        public async Task<ActionResult> ClockStamp([FromBody] TimeLogClockStamp clockStamp)
+        {
+            await _service.ClockStampAsync(clockStamp);
+
+            return Ok();
+        }
     }
 }

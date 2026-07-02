@@ -4,6 +4,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
@@ -21,17 +22,20 @@ namespace AccuPay.Web.TimeLogs
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
         private readonly ITimeLogRepository _repository;
+        private readonly ITimeAttendanceLogDataService _timeAttendanceLogDataService;
 
         public TimeLogService(
             ITimeLogDataService service,
             ITimeLogImportParser importParser,
             ICurrentUser currentUser,
-            ITimeLogRepository repository)
+            ITimeLogRepository repository,
+            ITimeAttendanceLogDataService timeAttendanceLogDataService)
         {
             _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
+            _timeAttendanceLogDataService = timeAttendanceLogDataService;
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
@@ -130,6 +134,16 @@ namespace AccuPay.Web.TimeLogs
                 InvalidRecords = invalidDtos,
                 GeneratedTimeLogs = timeLogs
             };
+        }
+
+        internal async Task ClockStampAsync(TimeLogClockStamp clockStamp)
+        {
+            var timeAttendanceLog = clockStamp.ToTimeAttendanceLog(userId: _currentUser.UserId,
+                organizationId: _currentUser.OrganizationId,
+                employeeId: _currentUser.EmployeeId ?? clockStamp.EmployeeId);
+
+            await _timeAttendanceLogDataService.SaveAsync(entity: timeAttendanceLog,
+                _currentUser.UserId);
         }
 
         private static TimeLogImportDetailsDto ConvertToImportDetailsDto(TimeLogImportModel parsedResult)

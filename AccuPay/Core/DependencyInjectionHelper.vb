@@ -103,6 +103,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IVehicleRepository, VehicleRepository)
         services.AddTransient(Of IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository)
         services.AddTransient(Of IResetLeaveCreditRepository, ResetLeaveCreditRepository)
+        services.AddTransient(Of ITimeAttendanceLogRepository, TimeAttendanceLogRepository)
 
         services.AddTransient(Of ICalendarService, CalendarService)
         services.AddTransient(Of IListOfValueService, ListOfValueService)
@@ -152,6 +153,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ITripTicketDataService, TripTicketDataService)
         services.AddTransient(Of IUserDataService, UserDataService)
         services.AddTransient(Of IResetLeaveCreditDataService, ResetLeaveCreditDataService)
+        services.AddTransient(Of ITimeAttendanceLogDataService, TimeAttendanceLogDataService)
 
         services.AddTransient(Of IShiftImportParser, ShiftImportParser)
         services.AddTransient(Of ITimeLogImportParser, TimeLogImportParser)
