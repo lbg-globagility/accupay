@@ -140,7 +140,7 @@ namespace AccuPay.Web.TimeLogs
         {
             var timeAttendanceLog = clockStamp.ToTimeAttendanceLog(userId: _currentUser.UserId,
                 organizationId: _currentUser.OrganizationId,
-                employeeId: _currentUser.EmployeeId ?? clockStamp.EmployeeId);
+                employeeId: _currentUser.HasEmployeeId ? _currentUser.EmployeeId.Value : clockStamp.EmployeeId);
 
             await _timeAttendanceLogDataService.SaveAsync(entity: timeAttendanceLog,
                 _currentUser.UserId);
