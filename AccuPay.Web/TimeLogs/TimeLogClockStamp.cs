@@ -11,15 +11,11 @@ namespace AccuPay.Web.TimeLogs
         public bool StampTag { get; set; }
 
         public TimeAttendanceLog ToTimeAttendanceLog(int userId, int organizationId, int employeeId)
-        {
-            var val = ClockStamp ?? DateTime.UtcNow;
-
-            return TimeAttendanceLog.NewTimeAttendanceLog(userId: userId,
+            => TimeAttendanceLog.NewTimeAttendanceLog(userId: userId,
                 organizationId: organizationId,
-                timeStamp: val,
-                workDay: val.Date,
+                timeStamp: ClockStamp ?? DateTime.UtcNow,
+                workDay: (ClockStamp ?? DateTime.UtcNow).Date,
                 employeeID: employeeId,
                 isTimeIn: StampTag);
-        }
     }
 }
