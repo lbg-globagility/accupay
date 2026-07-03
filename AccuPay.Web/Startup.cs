@@ -46,6 +46,17 @@ namespace AccuPay.Web
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            var myDefaultCorsPolicy = "accupayCorsPolicy";
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: myDefaultCorsPolicy,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173") 
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,7 +95,7 @@ namespace AccuPay.Web
             app.UseMiddleware<ErrorLoggingMiddleware>();
 
             app.UseRouting();
-
+            app.UseCors("accupayCorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 
