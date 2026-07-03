@@ -15,6 +15,7 @@ using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Core.Services.LeaveBalanceReset;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Data.Data_Services;
+using AccuPay.Infrastructure.Data.Reports;
 using AccuPay.Infrastructure.Data.Repositories;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
@@ -178,6 +179,9 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
+            services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
+            services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
+            services.AddTransient<ListOfValueCollection>();
 
             return services;
         }
