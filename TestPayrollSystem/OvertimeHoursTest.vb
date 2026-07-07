@@ -131,7 +131,8 @@ Public Class OvertimeHoursTest
             employeeId:=1,
             startDate:=today,
             startTime:=TimeSpan.Parse(otStartTime),
-            endTime:=TimeSpan.Parse(otEndTime))
+            endTime:=TimeSpan.Parse(otEndTime),
+            status:=Overtime.StatusApproved)
 
         Dim workStart = TimeUtility.RangeStart(today, TimeSpan.Parse(timeIn))
         Dim workEnd = TimeUtility.RangeEnd(today, TimeSpan.Parse(timeIn), TimeSpan.Parse(timeOut))

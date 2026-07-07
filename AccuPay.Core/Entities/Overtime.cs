@@ -90,7 +90,7 @@ namespace AccuPay.Core.Entities
             DateTime startDate,
             TimeSpan? startTime,
             TimeSpan? endTime,
-            string status = StatusApproved,
+            string status,
             string reason = null,
             string comments = null)
         {

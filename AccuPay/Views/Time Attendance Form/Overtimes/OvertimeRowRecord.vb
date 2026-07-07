@@ -37,7 +37,8 @@ Public Class OvertimeRowRecord
             employeeId:=employeeId,
             startDate:=StartDate.Value,
             startTime:=StartTime,
-            endTime:=EndTime)
+            endTime:=EndTime,
+            status:=Overtime.StatusApproved)
 
     End Function
 

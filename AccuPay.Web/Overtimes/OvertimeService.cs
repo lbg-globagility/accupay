@@ -70,7 +70,8 @@ namespace AccuPay.Web.Overtimes
                 startDate: dto.StartDate,
                 startTime: dto.StartTime.TimeOfDay,
                 endTime: dto.EndTime.TimeOfDay,
-                reason: dto.Reason);
+                reason: dto.Reason,
+                status: Overtime.StatusPending);
 
             await _dataService.SaveAsync(overtime, _currentUser.UserId);
 

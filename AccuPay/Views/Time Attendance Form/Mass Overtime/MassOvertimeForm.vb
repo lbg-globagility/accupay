@@ -350,7 +350,8 @@ Public Class MassOvertimePresenter
             employeeId:=model.EmployeeID.Value,
             startDate:=model.Date,
             startTime:=model.StartTime,
-            endTime:=model.EndTime)
+            endTime:=model.EndTime,
+            status:=Overtime.StatusApproved)
 
         If model.IsUpdate Then
             convertedOvertime.RowID = model.Overtime.RowID
