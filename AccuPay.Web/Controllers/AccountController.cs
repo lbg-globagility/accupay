@@ -1,6 +1,7 @@
 using AccuPay.Web.Account;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Users;
+using AccuPay.Web.Users.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -97,5 +98,12 @@ namespace AccuPay.Web.Controllers
         {
             return await _organizationService.GetCurrentOrganization();
         }
+
+        [HttpPost("change-password")]
+        public async Task<ActionResult<UserDto>> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            return await _accountService.ChangePassword(dto.OldPassword,dto.Password);
+        }
+        
     }
 }

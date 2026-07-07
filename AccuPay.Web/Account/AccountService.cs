@@ -1,9 +1,12 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Account
@@ -16,6 +19,8 @@ namespace AccuPay.Web.Account
         private readonly UserTokenService _userTokenService;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IUserDataService _userDataService;
+       
 
         public AccountService(
             UserManager<AspNetUser> users,
@@ -23,7 +28,8 @@ namespace AccuPay.Web.Account
             AccountTokenService accountTokenService,
             UserTokenService userTokenService,
             IOrganizationRepository organizationRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IUserDataService userDataService)
         {
             _users = users;
             _signIn = signIn;
@@ -31,6 +37,7 @@ namespace AccuPay.Web.Account
             _userTokenService = userTokenService;
             _organizationRepository = organizationRepository;
             _currentUser = currentUser;
+            _userDataService = userDataService;
         }
 
         public async Task<string> Login(string username, string password)
@@ -146,6 +153,27 @@ namespace AccuPay.Web.Account
             };
 
             return userDto;
+        }
+        public async Task<UserDto> ChangePassword(string oldpassword,string password)
+        {
+            var user = await _users.FindByIdAsync(_currentUser.UserId.ToString());
+           
+            var result = await _users.ChangePasswordAsync(user, oldpassword, password);
+           
+            if (!result.Succeeded)
+            {
+                throw new BusinessLogicException(result.Errors.ToList()[0].Description);
+            }
+            var userDto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+
+            return userDto;
+
         }
     }
 }
