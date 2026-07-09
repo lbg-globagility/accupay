@@ -122,6 +122,21 @@ namespace AccuPay.Core.ReportModels
                         CreateAdjustmentSummaryColumns();
         }
 
+        public PaystubPayslipModel CreateSummaries(bool isActual, Salary salary, decimal workHours, bool allowanceSalaryOnly = false)
+        {
+            var salaryAmount = allowanceSalaryOnly ? salary.AllowanceSalary
+                : isActual ? salary.TotalSalary : salary.BasicSalary;
+
+            RegularPay = ComputeBasicPay(salary: salaryAmount, workHours: workHours);
+            BasicPay = RegularPay;
+            GrossPay = BasicPay;
+            NetPay = GrossPay;
+
+            return this.CreateOvertimeSummaryColumns().
+                        CreateLoanSummaryColumns().
+                        CreateAdjustmentSummaryColumns();
+        }
+
         public decimal TotalDeductions => Negative(SSSAmount +
                                                     PhilHealthAmount +
                                                     PagibigAmount +

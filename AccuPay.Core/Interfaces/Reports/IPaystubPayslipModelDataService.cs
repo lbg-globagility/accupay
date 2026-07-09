@@ -7,5 +7,7 @@ namespace AccuPay.Core.Interfaces
     public interface IPaystubPayslipModelDataService
     {
         Task<List<PaystubPayslipModel>> GetData(int organizationId, IPayPeriod payPeriod, bool isActual = false);
+
+        Task<List<PaystubPayslipModel>> GetDataAllowanceSalaryOnly(int organizationId, IPayPeriod payPeriod);
     }
 }

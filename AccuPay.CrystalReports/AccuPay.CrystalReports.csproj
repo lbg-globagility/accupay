@@ -92,6 +92,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportBuilder.cs" />
+    <Compile Include="Payslip\DefaulltPayslipAllowanceSalaryOnly.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaulltPayslipAllowanceSalaryOnly.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -181,6 +187,10 @@
     <EmbeddedResource Include="PagIBIGMonthlyReport\Pagibig Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Pagibig Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\DefaulltPayslipAllowanceSalaryOnly.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipAllowanceSalaryOnly.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

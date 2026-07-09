@@ -277,5 +277,90 @@ namespace AccuPay.Infrastructure.Data
 
             return adjustmentModels;
         }
+
+        public async Task<List<PaystubPayslipModel>> GetDataAllowanceSalaryOnly(int organizationId, IPayPeriod payPeriod)
+        {
+            const bool isActual = true;
+
+            List<PaystubPayslipModel> paystubPayslipModels = new List<PaystubPayslipModel>();
+
+            // TODO Create PaystubPayslipModel from database THEN check if equal to new payslip
+            // use paystub repository GetFullPaystub
+            var paystubs = await _context.Paystubs
+                .Include(p => p.Employee).Include(p => p.Actual)
+                .Where(p => p.PayPeriodID == payPeriod.RowID)
+                .Where(p => p.OrganizationID == organizationId)
+                .ToListAsync();
+
+            paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
+
+            var loans = await _context.LoanTransactions
+                .Include(l => l.Loan)
+                .Include(l => l.Loan.LoanType)
+                .Include(l => l.Paystub)
+                .Where(l => l.Paystub.PayPeriodID == payPeriod.RowID)
+                .ToListAsync();
+
+            var adjustments = await _context.Adjustments.
+                                    Include(a => a.Product).
+                                    Include(a => a.Paystub).
+                                    Where(a => a.Paystub.PayPeriodID == payPeriod.RowID).
+                                    ToListAsync();
+
+            var actualAdjustments = await _context.ActualAdjustments.
+                                    Include(a => a.Product).
+                                    Include(a => a.Paystub).
+                                    Where(a => a.Paystub.PayPeriodID == payPeriod.RowID).
+                                    ToListAsync();
+
+            var employeeSalaries = (await _salaryRepository.GetByCutOffAsync(organizationId,
+                                    payPeriod.PayToDate)).
+                                    ToList();
+
+            var ecolas = await _context.AllowanceItems.
+                        Include(p => p.Allowance).
+                        Include(p => p.Allowance.Product).
+                        Where(p => p.Allowance.Product.PartNo.ToUpper() == ProductConstant.ECOLA.ToUpper()).
+                        ToListAsync();
+
+            foreach (var paystub in paystubs)
+            {
+                var employeeId = paystub.EmployeeID.Value;
+
+                var employeeSalary = employeeSalaries.FirstOrDefault(s => s.EmployeeID == employeeId);
+
+                paystub.Ecola = ecolas.
+                                    Where(e => e.PaystubID == paystub.RowID).
+                                    FirstOrDefault()?.Amount ?? 0;
+
+                var salary = isActual ? employeeSalary.TotalSalary : employeeSalary.BasicSalary;
+
+                var allAdjustments = GetEmployeeAdjustments(actualAdjustments, employeeId);
+                allAdjustments.AddRange(GetEmployeeAdjustments(adjustments, employeeId));
+
+                var paystubPayslipModel = new PaystubPayslipModel(paystub.Employee)
+                {
+                    EmployeeId = employeeId,
+
+                    EmployeeNumber = paystub.Employee?.EmployeeNo,
+
+                    EmployeeName = paystub.Employee?.FullNameWithMiddleInitialLastNameFirst,
+
+                    RegularPay = salary,
+
+                    BasicHours = paystub.BasicHours,
+
+                    //GrossPay = employeeSalary.AllowanceSalary,
+
+                    Loans = Enumerable.Empty<PaystubPayslipModel.Loan>().ToList(),
+
+                    Adjustments = Enumerable.Empty<PaystubPayslipModel.Adjustment>().ToList(),
+                };
+
+                paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(isActual: isActual, salary: employeeSalary, paystub.BasicHours, allowanceSalaryOnly: true));
+            }
+
+            return paystubPayslipModels;
+        }
     }
 }

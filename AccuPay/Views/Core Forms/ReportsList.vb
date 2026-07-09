@@ -84,6 +84,10 @@ Public Class ReportsList
             'Payslip
             Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
             lvMainMenu.Items.Add(CreateNewListViewItem(payslipProvider, payslipProvider.Name))
+
+            'Payslip
+            Dim defaulltPayslipAllowanceSalaryOnlyReportProvider As New DefaulltPayslipAllowanceSalaryOnlyReportProvider()
+            lvMainMenu.Items.Add(CreateNewListViewItem(defaulltPayslipAllowanceSalaryOnlyReportProvider, defaulltPayslipAllowanceSalaryOnlyReportProvider.Name))
         End If
     End Sub
 
