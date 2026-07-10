@@ -168,7 +168,8 @@ namespace AccuPay.Infrastructure.Data
             return new List<string>()
             {
                 Overtime.StatusPending,
-                Overtime.StatusApproved
+                Overtime.StatusApproved,
+                Overtime.StatusRejected
             };
         }
 
