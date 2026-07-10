@@ -12,11 +12,10 @@ namespace AccuPay.Core.Entities
 
         public const string StatusPending = "Pending";
 
-        public const string StatusDisapproved = "Disapproved";
+        public const string StatusRejected = "Rejected";
 
         [Column("OTType")]
         public string Type { get; set; }
-
         public TimeSpan? OTStartTime { get; set; }
 
         public TimeSpan? OTEndTime { get; set; }
