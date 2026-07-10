@@ -193,5 +193,45 @@ namespace AccuPay.Web.TimeLogs
 
             return dto;
         }
+        internal async Task<TimeLogDto> CheckIn(SelfServiceCreateTimeLogDto timeLog)
+        {
+            var newTimelog = new TimeLog();
+            newTimelog.EmployeeID = timeLog.EmployeeId;
+            newTimelog.TimeInFull = timeLog.StartTime;
+            newTimelog.LogDate = timeLog.Date;
+            newTimelog.CreatedBy = _currentUser.UserId;
+            newTimelog.OrganizationID = _currentUser.OrganizationId;
+            newTimelog.TimeStampIn = timeLog.StartTime;
+            newTimelog.BranchID = timeLog.BranchId;
+            await _repository.SaveAsync(newTimelog);
+
+            var dto = new TimeLogDto()
+            {
+                Id = newTimelog.RowID,
+                EmployeeId = newTimelog.EmployeeID ?? 0,
+                StartTime = newTimelog.TimeInFull,
+                Date = newTimelog.LogDate,
+                BranchId = newTimelog.BranchID
+            };
+            return dto;
+        }
+        internal async Task<TimeLogDto> Checkout(int Id,SelfServiceCreateTimeLogDto timeLog)
+        {
+            var newTimelog =_repository.GetById(Id);
+            newTimelog.TimeOutFull = timeLog.EndTime;
+            newTimelog.LastUpdBy = _currentUser.UserId;
+            newTimelog.TimeStampOut = timeLog.EndTime;
+            await _repository.UpdateAsync(newTimelog);
+
+            var dto = new TimeLogDto()
+            {
+                Id = newTimelog.RowID,
+                EmployeeId = newTimelog.EmployeeID ?? 0,
+                EndTime = newTimelog.TimeOutFull,
+                Date = newTimelog.LogDate,
+                BranchId = newTimelog.BranchID
+            };
+            return dto;
+        }
     }
 }
