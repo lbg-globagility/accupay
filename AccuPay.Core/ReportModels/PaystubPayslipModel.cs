@@ -127,10 +127,7 @@ namespace AccuPay.Core.ReportModels
             var salaryAmount = allowanceSalaryOnly ? salary.AllowanceSalary
                 : isActual ? salary.TotalSalary : salary.BasicSalary;
 
-            RegularPay = ComputeBasicPay(salary: salaryAmount, workHours: workHours);
-            BasicPay = RegularPay;
-            GrossPay = BasicPay;
-            NetPay = GrossPay;
+            BasicPay = ComputeBasicPay(salary: salaryAmount, workHours: workHours);
 
             return this.CreateOvertimeSummaryColumns().
                         CreateLoanSummaryColumns().

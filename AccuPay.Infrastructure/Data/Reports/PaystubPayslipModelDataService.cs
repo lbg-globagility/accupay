@@ -280,7 +280,7 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<List<PaystubPayslipModel>> GetDataAllowanceSalaryOnly(int organizationId, IPayPeriod payPeriod)
         {
-            const bool isActual = true;
+            const bool isActual = false;
 
             List<PaystubPayslipModel> paystubPayslipModels = new List<PaystubPayslipModel>();
 
@@ -338,6 +338,8 @@ namespace AccuPay.Infrastructure.Data
                 var allAdjustments = GetEmployeeAdjustments(actualAdjustments, employeeId);
                 allAdjustments.AddRange(GetEmployeeAdjustments(adjustments, employeeId));
 
+                var xljx = employeeSalary.TotalSalary / employeeSalary.BasicSalary;
+
                 var paystubPayslipModel = new PaystubPayslipModel(paystub.Employee)
                 {
                     EmployeeId = employeeId,
@@ -346,18 +348,124 @@ namespace AccuPay.Infrastructure.Data
 
                     EmployeeName = paystub.Employee?.FullNameWithMiddleInitialLastNameFirst,
 
-                    RegularPay = salary,
-
-                    BasicHours = paystub.BasicHours,
-
-                    //GrossPay = employeeSalary.AllowanceSalary,
-
                     Loans = Enumerable.Empty<PaystubPayslipModel.Loan>().ToList(),
 
                     Adjustments = Enumerable.Empty<PaystubPayslipModel.Adjustment>().ToList(),
+
+                    BasicHours = paystub.RegularHours,
+
+                    LeaveHours = paystub.LeaveHours,
+
+                    LeavePay = (xljx * paystub.LeavePay) - paystub.LeavePay,
+
+                    // overtimes
+                    OvertimeHours = paystub.OvertimeHours,
+
+                    OvertimePay = (xljx * paystub.OvertimePay) - paystub.OvertimePay,
+
+                    NightDiffHours = paystub.NightDiffHours,
+
+                    NightDiffPay = (xljx * paystub.NightDiffPay) - paystub.NightDiffPay,
+
+                    NightDiffOvertimeHours = paystub.NightDiffOvertimeHours,
+
+                    NightDiffOvertimePay = (xljx * paystub.NightDiffOvertimePay) - paystub.NightDiffOvertimePay,
+
+                    RestDayHours = paystub.RestDayHours,
+
+                    RestDayPay = (xljx * paystub.RestDayPay) - paystub.RestDayPay,
+
+                    RestDayOTHours = paystub.RestDayOTHours,
+
+                    RestDayOTPay = (xljx * paystub.RestDayOTPay) - paystub.RestDayOTPay,
+
+                    SpecialHolidayHours = paystub.SpecialHolidayHours,
+
+                    SpecialHolidayPay = (xljx * paystub.SpecialHolidayPay) - paystub.SpecialHolidayPay,
+
+                    SpecialHolidayOTHours = paystub.SpecialHolidayOTHours,
+
+                    SpecialHolidayOTPay = (xljx * paystub.SpecialHolidayOTPay) - paystub.SpecialHolidayOTPay,
+
+                    RegularHolidayHours = paystub.RegularHolidayHours,
+
+                    RegularHolidayPay = (xljx * paystub.RegularHolidayPay) - paystub.RegularHolidayPay,
+
+                    RegularHolidayOTHours = paystub.RegularHolidayOTHours,
+
+                    RegularHolidayOTPay = (xljx * paystub.RegularHolidayOTPay) - paystub.RegularHolidayOTPay,
+
+                    RestDayNightDiffHours = paystub.RestDayNightDiffHours,
+
+                    RestDayNightDiffPay = (xljx * paystub.RestDayNightDiffPay) - paystub.RestDayNightDiffPay,
+
+                    RestDayNightDiffOTHours = paystub.RestDayNightDiffOTHours,
+
+                    RestDayNightDiffOTPay = (xljx * paystub.RestDayNightDiffOTPay) - paystub.RestDayNightDiffOTPay,
+
+                    SpecialHolidayNightDiffHours = paystub.SpecialHolidayNightDiffHours,
+
+                    SpecialHolidayNightDiffPay = (xljx * paystub.SpecialHolidayNightDiffPay) - paystub.SpecialHolidayNightDiffPay,
+
+                    SpecialHolidayNightDiffOTHours = paystub.SpecialHolidayNightDiffOTHours,
+
+                    SpecialHolidayNightDiffOTPay = (xljx * paystub.SpecialHolidayNightDiffOTPay) - paystub.SpecialHolidayNightDiffOTPay,
+
+                    SpecialHolidayRestDayHours = paystub.SpecialHolidayRestDayHours,
+
+                    SpecialHolidayRestDayPay = (xljx * paystub.SpecialHolidayRestDayPay) - paystub.SpecialHolidayRestDayPay,
+
+                    SpecialHolidayRestDayOTHours = paystub.SpecialHolidayRestDayOTHours,
+
+                    SpecialHolidayRestDayOTPay = (xljx * paystub.SpecialHolidayRestDayOTPay) - paystub.SpecialHolidayRestDayOTPay,
+
+                    SpecialHolidayRestDayNightDiffHours = paystub.SpecialHolidayRestDayNightDiffHours,
+
+                    SpecialHolidayRestDayNightDiffPay = (xljx * paystub.SpecialHolidayRestDayNightDiffPay) - paystub.SpecialHolidayRestDayNightDiffPay,
+
+                    SpecialHolidayRestDayNightDiffOTHours = paystub.SpecialHolidayRestDayNightDiffOTHours,
+
+                    SpecialHolidayRestDayNightDiffOTPay = (xljx * paystub.SpecialHolidayRestDayNightDiffOTPay) - paystub.SpecialHolidayRestDayNightDiffOTPay,
+
+                    RegularHolidayNightDiffHours = paystub.RegularHolidayNightDiffHours,
+
+                    RegularHolidayNightDiffPay = (xljx * paystub.RegularHolidayNightDiffPay) - paystub.RegularHolidayNightDiffPay,
+
+                    RegularHolidayNightDiffOTHours = paystub.RegularHolidayNightDiffOTHours,
+
+                    RegularHolidayNightDiffOTPay = (xljx * paystub.RegularHolidayNightDiffOTPay) - paystub.RegularHolidayNightDiffOTPay,
+
+                    RegularHolidayRestDayHours = paystub.RegularHolidayRestDayHours,
+
+                    RegularHolidayRestDayPay = (xljx * paystub.RegularHolidayRestDayPay) - paystub.RegularHolidayRestDayPay,
+
+                    RegularHolidayRestDayOTHours = paystub.RegularHolidayRestDayOTHours,
+
+                    RegularHolidayRestDayOTPay = (xljx * paystub.RegularHolidayRestDayOTPay) - paystub.RegularHolidayRestDayOTPay,
+
+                    RegularHolidayRestDayNightDiffHours = paystub.RegularHolidayRestDayNightDiffHours,
+
+                    RegularHolidayRestDayNightDiffPay = (xljx * paystub.RegularHolidayRestDayNightDiffPay) - paystub.RegularHolidayRestDayNightDiffPay,
+
+                    RegularHolidayRestDayNightDiffOTHours = paystub.RegularHolidayRestDayNightDiffOTHours,
+
+                    RegularHolidayRestDayNightDiffOTPay = (xljx * paystub.RegularHolidayRestDayNightDiffOTPay) - paystub.RegularHolidayRestDayNightDiffOTPay
                 };
 
-                paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(isActual: isActual, salary: employeeSalary, paystub.BasicHours, allowanceSalaryOnly: true));
+                var fsdfsd = paystubPayslipModel.CreateSummaries(isActual: true, salary: employeeSalary, paystub.BasicHours, allowanceSalaryOnly: true);
+
+                var differ = paystub.RegularHours / paystub.BasicHours;
+
+                paystubPayslipModel.RegularPay = differ * paystubPayslipModel.BasicPay;
+
+                paystubPayslipModel.GrossPay = paystubPayslipModel.RegularPay +
+                    paystubPayslipModel.TotalOvertimePay +
+                    paystubPayslipModel.LeavePay;
+
+                paystubPayslipModel.NetPay = paystubPayslipModel.GrossPay;
+
+                paystubPayslipModels.Add(fsdfsd);
+
             }
 
             return paystubPayslipModels;
