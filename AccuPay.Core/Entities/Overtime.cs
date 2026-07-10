@@ -12,6 +12,8 @@ namespace AccuPay.Core.Entities
 
         public const string StatusPending = "Pending";
 
+        public const string StatusDisapproved = "Disapproved";
+
         [Column("OTType")]
         public string Type { get; set; }
 
