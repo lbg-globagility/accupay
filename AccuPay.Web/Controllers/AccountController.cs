@@ -104,6 +104,10 @@ namespace AccuPay.Web.Controllers
         {
             return await _accountService.ChangePassword(dto.OldPassword,dto.Password);
         }
-        
+        [HttpPost("change-user-password/{id}")]
+        public async Task<ActionResult<UserDto>> ChangeUserPassword([FromBody] ChangePasswordDto dto,int id)
+        {
+            return await _accountService.ChangeUserPassword(id, dto.Password);
+        }
     }
 }
