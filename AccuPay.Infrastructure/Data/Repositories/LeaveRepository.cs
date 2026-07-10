@@ -148,7 +148,8 @@ namespace AccuPay.Infrastructure.Data
             return new List<string>()
             {
                 Leave.StatusPending,
-                Leave.StatusApproved
+                Leave.StatusApproved,
+                Leave.StatusRejected
             };
         }
 

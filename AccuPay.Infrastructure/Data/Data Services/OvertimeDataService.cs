@@ -116,7 +116,7 @@ namespace AccuPay.Infrastructure.Data
             if (overtime.OTEndTime == null)
                 throw new BusinessLogicException("End Time is required.");
 
-            if (new string[] { Overtime.StatusPending, Overtime.StatusApproved }
+            if (new string[] { Overtime.StatusPending, Overtime.StatusApproved, Overtime.StatusRejected }
                 .Contains(overtime.Status) == false)
             {
                 throw new BusinessLogicException("Status is not valid.");

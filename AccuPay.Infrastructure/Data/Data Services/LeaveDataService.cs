@@ -619,7 +619,7 @@ namespace AccuPay.Infrastructure.Data
             if ((leave.StartTime.HasValue && leave.EndTime == null) || (leave.EndTime.HasValue && leave.StartTime == null))
                 throw new BusinessLogicException("Both Start Time and End Time should have value or both should be empty.");
 
-            if (new string[] { Leave.StatusPending, Leave.StatusApproved }
+            if (new string[] { Leave.StatusPending, Leave.StatusApproved, Leave.StatusRejected }
                             .Contains(leave.Status) == false)
             {
                 throw new BusinessLogicException("Status is not valid.");
