@@ -81,6 +81,9 @@ Public Class ReportsList
             Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()
             lvMainMenu.Items.Add(CreateNewListViewItem(reportProvider, reportProvider.Name))
 
+            Dim payrollSummaryExcelFormatAllownceSalaryReportProvider As New PayrollSummaryExcelFormatAllownceSalaryReportProvider()
+            lvMainMenu.Items.Add(CreateNewListViewItem(payrollSummaryExcelFormatAllownceSalaryReportProvider, payrollSummaryExcelFormatAllownceSalaryReportProvider.Name))
+
             'Payslip
             Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
             lvMainMenu.Items.Add(CreateNewListViewItem(payslipProvider, payslipProvider.Name))

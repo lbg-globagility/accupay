@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace AccuPay.Core.Interfaces
 {
@@ -12,6 +12,7 @@ namespace AccuPay.Core.Interfaces
             int payPeriodToId,
             string salaryDistributionType,
             bool isActual,
-            string saveFilePath);
+            string saveFilePath,
+            bool isBasedOnAllowanceSalary = false);
     }
 }

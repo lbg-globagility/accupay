@@ -39,7 +39,7 @@ namespace AccuPay.Infrastructure.Reports
         private readonly IPayPeriodRepository _payPeriodRepository;
         private readonly IPaystubDataService _paystubDataService;
         private readonly ISystemOwnerService _systemOwnerService;
-        private readonly IPayrollSummaryExcelFormatReportDataService _reportDataService;
+        private readonly IPayrollSummaryExcelFormatReportDataService _payrollSummaryExcelFormatReportDataService;
 
         public PayrollSummaryReportBuilder(
             IOrganizationRepository organizationRepository,
@@ -53,7 +53,7 @@ namespace AccuPay.Infrastructure.Reports
             _payPeriodRepository = payPeriodRepository;
             _paystubDataService = paystubDataService;
             _systemOwnerService = systemOwnerService;
-            _reportDataService = reportDataService;
+            _payrollSummaryExcelFormatReportDataService = reportDataService;
             _settings = listOfValueService.Create();
 
             _reportColumns = GetReportColumns();
@@ -163,7 +163,8 @@ namespace AccuPay.Infrastructure.Reports
             int payPeriodToId,
             string salaryDistributionType,
             bool isActual,
-            string saveFilePath)
+            string saveFilePath,
+            bool isBasedOnAllowanceSalary = false)
         {
             var payPeriod = await GetSelectedPayPeriod(
                 payPeriodFromId: payPeriodFromId,
@@ -185,13 +186,14 @@ namespace AccuPay.Infrastructure.Reports
             if (organization == null)
                 throw new BusinessLogicException("Organization does not exists.");
 
-            var employeeTable = _reportDataService.GetData(
+            var employeeTable = _payrollSummaryExcelFormatReportDataService.GetData(
                 organizationId: organizationId,
                 payPeriodFromId: payPeriodFromId,
                 payPeriodToId: payPeriodToId,
                 salaryDistributionType: salaryDistributionType,
                 Convert.ToInt16(isActual),
-                keepInOneSheet);
+                keepInOneSheet,
+                isBasedOnAllowanceSalary: isBasedOnAllowanceSalary);
 
             var allEmployees = employeeTable.Rows.OfType<DataRow>().ToList();
 

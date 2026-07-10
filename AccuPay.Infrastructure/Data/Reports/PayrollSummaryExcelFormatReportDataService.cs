@@ -18,7 +18,8 @@ namespace AccuPay.Infrastructure.Data
             int payPeriodToId,
             string salaryDistributionType,
             short isActual,
-            bool keepInOneSheet)
+            bool keepInOneSheet,
+            bool isBasedOnAllowanceSalary = false)
         {
             var distributionTypes = new string[] {
                 PayrollSummaryCategory.Cash.ToTrimmedLowerCase(),
@@ -38,6 +39,17 @@ namespace AccuPay.Infrastructure.Data
                 isActual,
                 salaryDistributionType == PayrollSummaryCategory.All ? "null" : $"'{salaryDistributionType}'",
                 keepInOneSheet);
+
+            if (isBasedOnAllowanceSalary)
+            {
+                procedureCall = string.Format("CALL PAYROLLSUMMARY_ALLOWANCE_SALARY({0}, {1}, {2}, {3}, {4}, {5});",
+                    organizationId,
+                    payPeriodFromId,
+                    payPeriodToId,
+                    isActual,
+                    salaryDistributionType == PayrollSummaryCategory.All ? "null" : $"'{salaryDistributionType}'",
+                    keepInOneSheet);
+            }
 
             var data = CallRawSql(procedureCall);
 
