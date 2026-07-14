@@ -42,6 +42,28 @@ namespace AccuPay.Web.TimeLogs
             return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
         }
 
+        public async Task<PaginatedList<TimeLogDto>> ListForCurrentEmployee(TimeLogsByEmployeePageOptions options)
+        {
+            if (!_currentUser.EmployeeId.HasValue)
+                throw new Exception("Current user is not associated with an employee.");
+
+            var datePeriod = new TimePeriod(options.DateFrom, options.DateTo);
+
+            var timeLogs = await _repository.GetLatestByEmployeeAndDatePeriodAsync(
+                _currentUser.EmployeeId.Value,
+                datePeriod);
+            var total = timeLogs.Count;
+
+            var paged = timeLogs
+                .OrderBy(t => t.LogDate)
+                .Skip(options.Offset)
+                .Take(options.PageSize)
+                .Select(t => ConvertToDto(t))
+                .ToList();
+
+            return new PaginatedList<TimeLogDto>(paged, total, ++options.PageIndex, options.PageSize);
+        }
+
         internal async Task BatchApply(ICollection<UpdateTimeLogDto> dtos)
         {
             var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
