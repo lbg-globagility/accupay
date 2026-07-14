@@ -56,7 +56,8 @@ namespace AccuPay.Web.Users
                     Id = t.Id,
                     FirstName = t.FirstName,
                     LastName = t.LastName,
-                    Email = t.Email
+                    Email = t.Email,
+                    EmployeeId = t.EmployeeId
                 }
             );
 
@@ -137,7 +138,8 @@ namespace AccuPay.Web.Users
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email
+                Email = user.Email,
+                EmployeeId = user.EmployeeId,
             };
 
             return dto;

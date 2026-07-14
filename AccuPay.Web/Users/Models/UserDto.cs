@@ -11,5 +11,7 @@ namespace AccuPay.Web.Users
         public string Email { get; set; }
 
         public string Type { get; set; }
+
+        public int? EmployeeId { get; set; }
     }
 }
