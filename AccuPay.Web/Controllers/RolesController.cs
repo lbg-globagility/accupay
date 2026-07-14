@@ -60,6 +60,14 @@ namespace AccuPay.Web.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        [Permission(PermissionTypes.RoleDelete)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            await _roleService.Delete(id);
+            return Ok();
+        }
+
         [HttpGet]
         [Permission(PermissionTypes.RoleRead)]
         public async Task<ActionResult<PaginatedList<RoleDto>>> List([FromQuery] PageOptions options)

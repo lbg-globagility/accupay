@@ -98,6 +98,11 @@ namespace AccuPay.Web.Users
             return ConvertToDto(role);
         }
 
+        public async Task Delete(int roleId)
+        {
+            await _roleDataService.DeleteAsync(roleId);
+        }
+
         public async Task<PaginatedList<RoleDto>> List(PageOptions options)
         {
             var (roles, total) = await _roleRepository.List(options, _currentUser.ClientId);
