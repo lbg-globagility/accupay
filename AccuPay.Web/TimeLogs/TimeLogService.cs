@@ -276,5 +276,144 @@ namespace AccuPay.Web.TimeLogs
 
             return dto;
         }
+
+        public async Task<EmployeeTimelogFiling> CreateFiling(CreateEmployeeTimelogFilingDto dto)
+        {
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
+
+            var filing = new EmployeeTimelogFiling
+            {
+                EmployeeID = dto.EmployeeId,
+                OrganizationID = _currentUser.OrganizationId,
+                EntryType = dto.EntryType,
+                LogDate = dto.LogDate,
+                Time = dto.Time.TimeOfDay,
+                Reason = dto.Reason,
+                Status = EmployeeTimelogFiling.StatusPending
+            };
+
+            // Set audit created by
+            filing.CreatedBy = _currentUser.UserId;
+
+            await _repository.CreateFilingAsync(filing);
+
+            return filing;
+        }
+        public async Task<TimeLogDto> ApproveFiling(int filingId)
+        {
+            var filing = await _repository.GetFilingByIdAsync(filingId);
+
+            if (filing == null)
+                throw new Exception("Filing not found.");
+
+            if (filing.Status == EmployeeTimelogFiling.StatusApproved)
+                throw new Exception("Filing already approved.");
+
+            if (filing.Status != EmployeeTimelogFiling.StatusPending)
+                throw new Exception("Only pending filings can be approved.");
+
+            // Normalize date
+            var date = filing.LogDate.Date;
+
+            // Build timeFull (DateTime) from LogDate date + Time span
+            var timeFull = date.Add(filing.Time);
+
+            // Find existing timelog for that employee and date (latest)
+            var existing = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(
+                filing.EmployeeID.Value,
+                new TimePeriod(date, date))).FirstOrDefault(t => t.LogDate.Date == date);
+
+            // Decide action by EntryType
+            var entryType = filing.EntryType?.Trim().ToLower();
+
+            TimeLog affectedTimeLog = existing;
+
+            switch (entryType)
+            {
+                case EmployeeTimelogFiling.CheckInType:
+                    if (existing == null)
+                    {
+                        affectedTimeLog = new TimeLog()
+                        {
+                            OrganizationID = filing.OrganizationID,
+                            EmployeeID = filing.EmployeeID,
+                            LogDate = date,
+                            TimeInFull = timeFull,
+                            TimeStampIn = timeFull,
+                            CreatedBy = _currentUser.UserId
+                        };
+
+                        await _repository.SaveAsync(affectedTimeLog);
+                    }
+                    else
+                    {
+                        existing.TimeInFull = timeFull;
+                        existing.TimeStampIn = timeFull;
+                        existing.LastUpdBy = _currentUser.UserId;
+
+                        await _repository.UpdateAsync(existing);
+                    }
+                    break;
+
+                case EmployeeTimelogFiling.CheckOutType:
+                    if (existing == null)
+                    {
+                        affectedTimeLog = new TimeLog()
+                        {
+                            OrganizationID = filing.OrganizationID,
+                            EmployeeID = filing.EmployeeID,
+                            LogDate = date,
+                            TimeOutFull = timeFull,
+                            TimeStampOut = timeFull,
+                            CreatedBy = _currentUser.UserId
+                        };
+
+                        await _repository.SaveAsync(affectedTimeLog);
+                    }
+                    else
+                    {
+                        existing.TimeOutFull = timeFull;
+                        existing.TimeStampOut = timeFull;
+                        existing.LastUpdBy = _currentUser.UserId;
+
+                        await _repository.UpdateAsync(existing);
+                    }
+                    break;
+
+                default:
+                    // For unrecognized entry types, create a generic TimeLog with TimeIn set (fallback)
+                    if (existing == null)
+                    {
+                        affectedTimeLog = new TimeLog()
+                        {
+                            OrganizationID = filing.OrganizationID,
+                            EmployeeID = filing.EmployeeID,
+                            LogDate = date,
+                            TimeInFull = timeFull,
+                            TimeStampIn = timeFull,
+                            CreatedBy = _currentUser.UserId
+                        };
+
+                        await _repository.SaveAsync(affectedTimeLog);
+                    }
+                    else
+                    {
+                        existing.TimeInFull = timeFull;
+                        existing.TimeStampIn = timeFull;
+                        existing.LastUpdBy = _currentUser.UserId;
+
+                        await _repository.UpdateAsync(existing);
+                    }
+                    break;
+            }
+
+            // Mark filing approved and save
+            filing.Status = EmployeeTimelogFiling.StatusApproved;
+            filing.LastUpdBy = _currentUser.UserId;
+            await _repository.UpdateFilingAsync(filing);
+
+            // return DTO of affected TimeLog
+            return ConvertToDto(affectedTimeLog);
+        }
     }
 }

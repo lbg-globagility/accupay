@@ -2,7 +2,6 @@ using AccuPay.Core.Helpers;
 using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers.SelfService
@@ -33,12 +32,11 @@ namespace AccuPay.Web.Controllers.SelfService
             return timelog;
         }
 
-        // New self-service paginated list for current employee
-        [HttpGet("employee")]
-        public async Task<ActionResult<PaginatedList<TimeLogDto>>> ListForCurrentEmployee([FromQuery] TimeLogsByEmployeePageOptions options)
+        [HttpPost("filings")]
+        public async Task<ActionResult> CreateFiling([FromBody] CreateEmployeeTimelogFilingDto dto)
         {
-            var result = await _service.ListForCurrentEmployee(options);
-            return result;
+            var filing = await _service.CreateFiling(dto);
+            return Ok(new { Id = filing.RowID, Status = filing.Status });
         }
     }
 }

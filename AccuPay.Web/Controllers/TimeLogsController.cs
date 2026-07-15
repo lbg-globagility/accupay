@@ -49,5 +49,13 @@ namespace AccuPay.Web.Controllers
             else
                 return result;
         }
+
+        [HttpPost("filings/{id}/approve")]
+        [Permission(PermissionTypes.TimeLogUpdate)]
+        public async Task<ActionResult<TimeLogDto>> ApproveFiling(int id)
+        {
+            var dto = await _service.ApproveFiling(id);
+            return dto;
+        }
     }
 }

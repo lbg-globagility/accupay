@@ -15,5 +15,11 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<TimeLog>> GetLatestByEmployeeAndDatePeriodAsync(int employeeId, TimePeriod datePeriod);
 
         Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployeeAsync(int organizationId, TimeLogsByEmployeePageOptions options);
+
+        Task CreateFilingAsync(EmployeeTimelogFiling filing);
+
+        Task<EmployeeTimelogFiling> GetFilingByIdAsync(int filingId);
+
+        Task UpdateFilingAsync(EmployeeTimelogFiling filing);
     }
 }

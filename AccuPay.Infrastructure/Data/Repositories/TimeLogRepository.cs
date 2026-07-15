@@ -12,8 +12,11 @@ namespace AccuPay.Infrastructure.Data
 {
     public class TimeLogRepository : SavableRepository<TimeLog>, ITimeLogRepository
     {
+        private readonly PayrollContext _context;
+
         public TimeLogRepository(PayrollContext context) : base(context)
         {
+            _context = context;
         }
 
         #region Save
@@ -24,6 +27,12 @@ namespace AccuPay.Infrastructure.Data
             {
                 _context.Entry(timeLog.Employee).State = EntityState.Detached;
             }
+        }
+
+        public async Task CreateFilingAsync(EmployeeTimelogFiling filing)
+        {
+            _context.Set<EmployeeTimelogFiling>().Add(filing);
+            await _context.SaveChangesAsync();
         }
 
         #endregion Save
@@ -113,6 +122,18 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.LogDate <= datePeriod.End);
         }
 
+        public async Task<EmployeeTimelogFiling> GetFilingByIdAsync(int filingId)
+        {
+            return await _context.Set<EmployeeTimelogFiling>()
+                .Include(f => f.Employee)
+                .FirstOrDefaultAsync(f => f.RowID == filingId);
+        }
+
+        public async Task UpdateFilingAsync(EmployeeTimelogFiling filing)
+        {
+            _context.Entry(filing).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
         #endregion Queries
     }
 }
