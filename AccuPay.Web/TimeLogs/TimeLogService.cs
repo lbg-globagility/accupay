@@ -217,10 +217,22 @@ namespace AccuPay.Web.TimeLogs
         }
         internal async Task<TimeLogDto> CheckIn(SelfServiceCreateTimeLogDto timeLog)
         {
+            if (timeLog == null) throw new ArgumentNullException(nameof(timeLog));
+            var date = timeLog.Date.Date;
+
+            var existingForDate = await _repository.GetLatestByEmployeeAndDatePeriodAsync(
+                timeLog.EmployeeId,
+                new TimePeriod(date, date));
+
+            if (existingForDate != null && existingForDate.Any(t => t.TimeInFull != null))
+            {
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("Employee already checked in for the specified date.");
+            }
+
             var newTimelog = new TimeLog();
             newTimelog.EmployeeID = timeLog.EmployeeId;
             newTimelog.TimeInFull = timeLog.StartTime;
-            newTimelog.LogDate = timeLog.Date;
+            newTimelog.LogDate = date;
             newTimelog.CreatedBy = _currentUser.UserId;
             newTimelog.OrganizationID = _currentUser.OrganizationId;
             newTimelog.TimeStampIn = timeLog.StartTime;
@@ -237,22 +249,31 @@ namespace AccuPay.Web.TimeLogs
             };
             return dto;
         }
-        internal async Task<TimeLogDto> Checkout(int Id,SelfServiceCreateTimeLogDto timeLog)
+        internal async Task<TimeLogDto> Checkout(int Id, SelfServiceCreateTimeLogDto timeLog)
         {
-            var newTimelog =_repository.GetById(Id);
-            newTimelog.TimeOutFull = timeLog.EndTime;
-            newTimelog.LastUpdBy = _currentUser.UserId;
-            newTimelog.TimeStampOut = timeLog.EndTime;
-            await _repository.UpdateAsync(newTimelog);
+            var existingTimeLog = _repository.GetById(Id);
+
+            if (existingTimeLog == null)
+                throw new Exception("Time log not found.");
+
+            if (existingTimeLog.TimeOutFull != null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log already checked out for the specified record.");
+
+            existingTimeLog.TimeOutFull = timeLog.EndTime;
+            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.TimeStampOut = timeLog.EndTime;
+
+            await _repository.UpdateAsync(existingTimeLog);
 
             var dto = new TimeLogDto()
             {
-                Id = newTimelog.RowID,
-                EmployeeId = newTimelog.EmployeeID ?? 0,
-                EndTime = newTimelog.TimeOutFull,
-                Date = newTimelog.LogDate,
-                BranchId = newTimelog.BranchID
+                Id = existingTimeLog.RowID,
+                EmployeeId = existingTimeLog.EmployeeID ?? 0,
+                EndTime = existingTimeLog.TimeOutFull,
+                Date = existingTimeLog.LogDate,
+                BranchId = existingTimeLog.BranchID
             };
+
             return dto;
         }
     }
