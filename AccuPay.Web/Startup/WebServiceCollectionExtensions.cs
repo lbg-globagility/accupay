@@ -63,6 +63,7 @@ namespace AccuPay.Web
             services.AddScoped<PayperiodService>();
             services.AddScoped<PaystubService>();
             services.AddScoped<TimeEntryService>();
+            services.AddScoped<TimeLogEmailService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();
