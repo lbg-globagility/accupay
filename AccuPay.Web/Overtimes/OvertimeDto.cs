@@ -27,5 +27,13 @@ namespace AccuPay.Web.Overtimes
         public string Reason { get; set; }
 
         public string Comments { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime? LastUpd { get; set; }
+
+        public int? CreatedBy { get; set; }
+
+        public int? LastUpdBy { get; set; }
     }
 }
