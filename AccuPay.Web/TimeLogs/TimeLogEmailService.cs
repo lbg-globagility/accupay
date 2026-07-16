@@ -62,12 +62,28 @@ namespace AccuPay.Web.TimeLogs
             }
 
             var domain = _configuration["App:Domain"] ?? string.Empty;
-            var filingUrl = string.IsNullOrWhiteSpace(domain)
-                ? $"/timelogs/filings/{filingId}"
-                : $"{domain.TrimEnd('/')}/timelogs/filings/{filingId}";
+            var baseDomain = string.IsNullOrWhiteSpace(domain)
+                ? string.Empty
+                : domain.TrimEnd('/');
+
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            // token TTL (hours) default 24
+            var ttlHours = 24;
+            int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours);
+            if (configuredHours > 0) ttlHours = configuredHours;
+
+            var token = ApprovalTokenHelper.GenerateToken(filingId, secret, TimeSpan.FromHours(ttlHours));
+
+            var approveUrl = string.IsNullOrWhiteSpace(baseDomain)
+                ? $"/api/timelogs/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}"
+                : $"{baseDomain}/api/timelogs/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}";
+
+            var rejectUrl = string.IsNullOrWhiteSpace(baseDomain)
+                ? $"/api/timelogs/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}"
+                : $"{baseDomain}/api/timelogs/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}";
 
             var subject = "[AccuPay] Timelog filing approval request";
-            var html = BuildFilingHtml(filing, filingUrl);
+            var html = BuildFilingHtml(filing, approveUrl, rejectUrl);
 
             var email = new Email(subject, recipients);
             email.Html = html;
@@ -78,7 +94,7 @@ namespace AccuPay.Web.TimeLogs
             return true;
         }
 
-        private static string BuildFilingHtml(EmployeeTimelogFiling filing, string filingUrl)
+        private static string BuildFilingHtml(EmployeeTimelogFiling filing, string approveUrl, string rejectUrl)
         {
             var sb = new StringBuilder();
 
@@ -95,8 +111,11 @@ namespace AccuPay.Web.TimeLogs
             sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Status:</td><td style=\"padding:4px;\">{filing.Status}</td></tr>");
             sb.AppendLine("</table>");
             sb.AppendLine("<br/>");
-            sb.AppendLine($"<p>Please review the filing and approve or reject it in the application:</p>");
-            sb.AppendLine($"<p><a href=\"{filingUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;\">Open Filing</a></p>");
+            sb.AppendLine($"<p>Please review the filing and approve or reject it using the buttons below:</p>");
+            sb.AppendLine("<p>");
+            sb.AppendLine($"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>");
+            sb.AppendLine($"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>");
+            sb.AppendLine("</p>");
             sb.AppendLine("<p>If you prefer to use the API directly, use the existing endpoints to approve or reject the filing.</p>");
             sb.AppendLine("</div>");
 

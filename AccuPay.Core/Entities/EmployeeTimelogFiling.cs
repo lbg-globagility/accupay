@@ -30,6 +30,7 @@ namespace AccuPay.Core.Entities
 
         public string Status { get; set; }
 
+        public string ApproverEmail { get; set; }
 
         public bool IsApproved => Status == StatusApproved;
 

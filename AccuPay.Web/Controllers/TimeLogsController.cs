@@ -4,6 +4,7 @@ using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,10 +16,12 @@ namespace AccuPay.Web.Controllers
     public class TimeLogsController : ControllerBase
     {
         private readonly TimeLogService _service;
+        private readonly IConfiguration _configuration;
 
-        public TimeLogsController(TimeLogService service)
+        public TimeLogsController(TimeLogService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
 
         [HttpGet("employees")]
@@ -56,6 +59,64 @@ namespace AccuPay.Web.Controllers
         {
             var dto = await _service.ApproveFiling(id);
             return dto;
+        }
+
+        // Token-verified GET that approves and returns a simple HTML page (for email link)
+        [HttpGet("filings/{id}/approve")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ApproveFilingWithToken(int id, [FromQuery] string token)
+        {
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+            {
+                var errHtml = $"<html><body><h3>Approval failed</h3><p>{System.Net.WebUtility.HtmlEncode(error)}</p></body></html>";
+                return Content(errHtml, "text/html");
+            }
+
+            try
+            {
+                await _service.ApproveFiling(id);
+                var okHtml = "<html><body><h3>Filing Approved</h3><p>The timelog filing was successfully approved.</p></body></html>";
+                return Content(okHtml, "text/html");
+            }
+            catch (System.Exception ex)
+            {
+                var errHtml = $"<html><body><h3>Approval failed</h3><p>{System.Net.WebUtility.HtmlEncode(ex.Message)}</p></body></html>";
+                return Content(errHtml, "text/html");
+            }
+        }
+
+        [HttpPost("filings/{id}/reject")]
+        [Permission(PermissionTypes.TimeLogUpdate)]
+        public async Task<ActionResult> RejectFiling(int id)
+        {
+            await _service.RejectFiling(id);
+            return Ok();
+        }
+
+        // Token-verified GET that rejects and returns a simple HTML page (for email link)
+        [HttpGet("filings/{id}/reject")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RejectFilingWithToken(int id, [FromQuery] string token)
+        {
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+            {
+                var errHtml = $"<html><body><h3>Rejection failed</h3><p>{System.Net.WebUtility.HtmlEncode(error)}</p></body></html>";
+                return Content(errHtml, "text/html");
+            }
+
+            try
+            {
+                await _service.RejectFiling(id);
+                var okHtml = "<html><body><h3>Filing Rejected</h3><p>The timelog filing was successfully rejected.</p></body></html>";
+                return Content(okHtml, "text/html");
+            }
+            catch (System.Exception ex)
+            {
+                var errHtml = $"<html><body><h3>Rejection failed</h3><p>{System.Net.WebUtility.HtmlEncode(ex.Message)}</p></body></html>";
+                return Content(errHtml, "text/html");
+            }
         }
     }
 }

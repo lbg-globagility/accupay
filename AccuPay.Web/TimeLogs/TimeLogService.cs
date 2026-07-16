@@ -340,7 +340,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             TimeInFull = timeFull,
                             TimeStampIn = timeFull,
-                            CreatedBy = _currentUser.UserId
+                            CreatedBy = null
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -349,7 +349,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.TimeInFull = timeFull;
                         existing.TimeStampIn = timeFull;
-                        existing.LastUpdBy = _currentUser.UserId;
+                        existing.LastUpdBy = null;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -365,7 +365,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             TimeOutFull = timeFull,
                             TimeStampOut = timeFull,
-                            CreatedBy = _currentUser.UserId
+                            CreatedBy = null
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -374,7 +374,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.TimeOutFull = timeFull;
                         existing.TimeStampOut = timeFull;
-                        existing.LastUpdBy = _currentUser.UserId;
+                        existing.LastUpdBy = null;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -391,7 +391,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             TimeInFull = timeFull,
                             TimeStampIn = timeFull,
-                            CreatedBy = _currentUser.UserId
+                            CreatedBy = null
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -400,7 +400,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.TimeInFull = timeFull;
                         existing.TimeStampIn = timeFull;
-                        existing.LastUpdBy = _currentUser.UserId;
+                        existing.LastUpdBy = null;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -409,11 +409,31 @@ namespace AccuPay.Web.TimeLogs
 
             // Mark filing approved and save
             filing.Status = EmployeeTimelogFiling.StatusApproved;
-            filing.LastUpdBy = _currentUser.UserId;
+            filing.LastUpdBy = null;
             await _repository.UpdateFilingAsync(filing);
 
             // return DTO of affected TimeLog
             return ConvertToDto(affectedTimeLog);
+        }
+        public async Task<bool> RejectFiling(int filingId)
+        {
+            var filing = await _repository.GetFilingByIdAsync(filingId);
+
+            if (filing == null)
+                throw new Exception("Filing not found.");
+
+            if (filing.Status == EmployeeTimelogFiling.StatusRejected)
+                throw new Exception("Filing already rejected.");
+
+            if (filing.Status != EmployeeTimelogFiling.StatusPending)
+                throw new Exception("Only pending filings can be rejected.");
+
+            filing.Status = EmployeeTimelogFiling.StatusRejected;
+            filing.LastUpdBy = _currentUser.UserId;
+
+            await _repository.UpdateFilingAsync(filing);
+
+            return true;
         }
     }
 }
