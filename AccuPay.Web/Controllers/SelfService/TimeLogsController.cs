@@ -1,4 +1,5 @@
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +15,13 @@ namespace AccuPay.Web.Controllers.SelfService
     {
         private readonly TimeLogService _service;
         private readonly TimeLogEmailService _emailService;
+        private readonly ITimeLogRepository _timeLogRepository;
 
-        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService)
+        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository)
         {
             _service = service;
             _emailService = emailService;
+            _timeLogRepository = timeLogRepository;
         }
 
         [HttpPost]
@@ -47,6 +50,25 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             var success = await _emailService.SendFilingForApprovalEmailAsync(id);
             if (!success) return NotFound();
+            return Ok();
+        }
+        // NEW: Update filing endpoint
+        [HttpPut("filings/{id}")]
+        [Permission(PermissionTypes.TimeLogUpdate)]
+        public async Task<ActionResult> UpdateFiling(int id, [FromBody] UpdateEmployeeTimelogFilingDto dto)
+        {
+            var filing = await _timeLogRepository.GetFilingByIdAsync(id);
+            if (filing == null) return NotFound();
+
+            // Update allowed fields
+            filing.EntryType = dto.EntryType;
+            filing.LogDate = dto.LogDate;
+            filing.Time = dto.Time;
+            filing.Reason = dto.Reason;
+            filing.ApproverEmail = dto.ApproverEmail;
+
+            await _timeLogRepository.UpdateFilingAsync(filing);
+
             return Ok();
         }
     }
