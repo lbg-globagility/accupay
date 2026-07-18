@@ -1,6 +1,7 @@
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.AllowanceType;
+using AccuPay.Web.Appraisers;
 using AccuPay.Web.Branches;
 using AccuPay.Web.Calendars;
 using AccuPay.Web.Clients;
@@ -64,6 +65,7 @@ namespace AccuPay.Web
             services.AddScoped<PaystubService>();
             services.AddScoped<TimeEntryService>();
             services.AddScoped<TimeLogEmailService>();
+            services.AddScoped<ApproverService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();

@@ -28,6 +28,7 @@
     <Folder Include="Account\Exceptions\" />
     <Folder Include="Core\Configurations\" />
     <Folder Include="Files\Exceptions\" />
+    <Folder Include="Appraisers\" />
   </ItemGroup>
 
   <ItemGroup>

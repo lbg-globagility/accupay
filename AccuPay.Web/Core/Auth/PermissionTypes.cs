@@ -126,5 +126,10 @@ namespace AccuPay.Web.Core.Auth
         public const string SelfserveTimeEntryCreate = "SelfserveTimeEntry:create";
         public const string SelfserveTimeEntryUpdate = "SelfserveTimeEntry:update";
         public const string SelfserveTimeEntryDelete = "SelfserveTimeEntry:delete";
+
+        public const string ApproverRead = "Approver:read";
+        public const string ApproverCreate = "Approver:create";
+        public const string ApproverUpdate = "Approver:update";
+        public const string ApproverDelete = "Approver:delete";
     }
 }
