@@ -118,5 +118,11 @@ namespace AccuPay.Web.Controllers
                 return Content(errHtml, "text/html");
             }
         }
+        [HttpGet("employee")]
+        public async Task<ActionResult<PaginatedList<TimeLogDto>>> ListForCurrentEmployee([FromQuery] TimeLogsByEmployeePageOptions options)
+        {
+            var result = await _service.ListForCurrentEmployee(options);
+            return result;
+        }
     }
 }
