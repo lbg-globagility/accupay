@@ -15,15 +15,18 @@ namespace AccuPay.Web.Controllers.SelfService
         private readonly LeaveService _leaveService;
         private readonly ILeaveRepository _leaveRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly LeaveEmailService _emailService;
 
         public LeavesController(
             LeaveService leaveService,
             ILeaveRepository leaveRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            LeaveEmailService emailService)
         {
             _leaveService = leaveService;
             _leaveRepository = leaveRepository;
             _currentUser = currentUser;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -39,6 +42,15 @@ namespace AccuPay.Web.Controllers.SelfService
         public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] SelfServiceCreateLeaveDto dto)
         {
             return await _leaveService.Create(dto);
+        }
+
+        [HttpPost("filings/{id}/send-approval-email")]
+        [Permission(PermissionTypes.LeaveUpdate)]
+        public async Task<ActionResult> SendFilingForApprovalEmail(int id)
+        {
+            var success = await _emailService.SendFilingForApprovalEmailAsync(id);
+            if (!success) return NotFound();
+            return Ok();
         }
 
         [HttpDelete]

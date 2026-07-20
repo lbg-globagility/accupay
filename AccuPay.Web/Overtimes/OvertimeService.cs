@@ -102,6 +102,34 @@ namespace AccuPay.Web.Overtimes
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
+        public async Task<OvertimeDto> ApproveFiling(int id)
+        {
+            return await SetFilingStatus(id, Overtime.StatusApproved);
+        }
+
+        public async Task<OvertimeDto> RejectFiling(int id)
+        {
+            return await SetFilingStatus(id, Overtime.StatusRejected);
+        }
+
+        private async Task<OvertimeDto> SetFilingStatus(int id, string status)
+        {
+            var overtime = await _repository.GetByIdWithEmployeeAsync(id);
+            if (overtime == null)
+                throw new Exception("Overtime filing not found.");
+
+            if (overtime.Status == status)
+                throw new Exception($"Overtime filing already {status.ToLowerInvariant()}.");
+
+            if (overtime.Status != Overtime.StatusPending)
+                throw new Exception($"Only pending overtime filings can be {status.ToLowerInvariant()}.");
+
+            overtime.Status = status;
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+
+            return ConvertToDto(overtime);
+        }
+
         public List<string> GetStatusList()
         {
             return _repository.GetStatusList();

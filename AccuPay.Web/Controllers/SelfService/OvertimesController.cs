@@ -12,11 +12,16 @@ namespace AccuPay.Web.Controllers.SelfService
     {
         private readonly OvertimeService _overtimeService;
         private readonly ICurrentUser _currentUser;
+        private readonly OvertimeEmailService _emailService;
 
-        public OvertimesController(OvertimeService overtimeService, ICurrentUser currentUser)
+        public OvertimesController(
+            OvertimeService overtimeService,
+            ICurrentUser currentUser,
+            OvertimeEmailService emailService)
         {
             _overtimeService = overtimeService;
             _currentUser = currentUser;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -34,6 +39,15 @@ namespace AccuPay.Web.Controllers.SelfService
             var overtime = await _overtimeService.Create(dto);
 
             return overtime;
+        }
+
+        [HttpPost("filings/{id}/send-approval-email")]
+        [Permission(PermissionTypes.OvertimeUpdate)]
+        public async Task<ActionResult> SendFilingForApprovalEmail(int id)
+        {
+            var success = await _emailService.SendFilingForApprovalEmailAsync(id);
+            if (!success) return NotFound();
+            return Ok();
         }
     }
 }

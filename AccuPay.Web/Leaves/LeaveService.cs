@@ -132,6 +132,34 @@ namespace AccuPay.Web.Leaves
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
+        public async Task<LeaveDto> ApproveFiling(int id)
+        {
+            return await SetFilingStatus(id, Leave.StatusApproved);
+        }
+
+        public async Task<LeaveDto> RejectFiling(int id)
+        {
+            return await SetFilingStatus(id, Leave.StatusRejected);
+        }
+
+        private async Task<LeaveDto> SetFilingStatus(int id, string status)
+        {
+            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
+            if (leave == null)
+                throw new System.Exception("Leave filing not found.");
+
+            if (leave.Status == status)
+                throw new System.Exception($"Leave filing already {status.ToLowerInvariant()}.");
+
+            if (leave.Status != Leave.StatusPending)
+                throw new System.Exception($"Only pending leave filings can be {status.ToLowerInvariant()}.");
+
+            leave.Status = status;
+            await _dataService.SaveAsync(leave, _currentUser.UserId);
+
+            return ConvertToDto(leave);
+        }
+
         public async Task<List<string>> GetLeaveTypes()
         {
             var leaveTypes = await _productRepository.GetLeaveTypesAsync(_currentUser.OrganizationId);

@@ -2,9 +2,11 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
+using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,15 +20,72 @@ namespace AccuPay.Web.Controllers
         private readonly LeaveService _service;
         private readonly ILeaveRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IConfiguration _configuration;
 
         public LeavesController(
             LeaveService leaveService,
             ILeaveRepository repository,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IConfiguration configuration)
         {
             _service = leaveService;
             _repository = repository;
             _hostingEnvironment = hostingEnvironment;
+            _configuration = configuration;
+        }
+
+        [HttpPost("filings/{id}/approve")]
+        [Permission(PermissionTypes.LeaveUpdate)]
+        public async Task<ActionResult<LeaveDto>> ApproveFiling(int id)
+        {
+            return await _service.ApproveFiling(id);
+        }
+
+        [HttpGet("filings/{id}/approve")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ApproveFilingWithToken(int id, [FromQuery] string token)
+        {
+            return await ChangeFilingStatusWithToken(id, token, true);
+        }
+
+        [HttpPost("filings/{id}/reject")]
+        [Permission(PermissionTypes.LeaveUpdate)]
+        public async Task<ActionResult<LeaveDto>> RejectFiling(int id)
+        {
+            return await _service.RejectFiling(id);
+        }
+
+        [HttpGet("filings/{id}/reject")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RejectFilingWithToken(int id, [FromQuery] string token)
+        {
+            return await ChangeFilingStatusWithToken(id, token, false);
+        }
+
+        private async Task<IActionResult> ChangeFilingStatusWithToken(int id, string token, bool approve)
+        {
+            var action = approve ? "Approval" : "Rejection";
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+                return HtmlResult($"{action} failed", error);
+
+            try
+            {
+                if (approve) await _service.ApproveFiling(id);
+                else await _service.RejectFiling(id);
+                return HtmlResult($"Leave Filing {(approve ? "Approved" : "Rejected")}",
+                    $"The leave filing was successfully {(approve ? "approved" : "rejected")}.");
+            }
+            catch (System.Exception ex)
+            {
+                return HtmlResult($"{action} failed", ex.Message);
+            }
+        }
+
+        private ContentResult HtmlResult(string heading, string message)
+        {
+            var html = $"<html><body><h3>{System.Net.WebUtility.HtmlEncode(heading)}</h3><p>{System.Net.WebUtility.HtmlEncode(message)}</p></body></html>";
+            return Content(html, "text/html");
         }
 
         [HttpGet]
