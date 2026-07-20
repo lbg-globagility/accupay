@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
@@ -17,5 +18,7 @@ namespace AccuPay.Core.Entities
 
         [ForeignKey("OrganizationID")]
         public virtual Organization Organization { get; set; }
+
+        public virtual ICollection<EmployeeApprover> EmployeeApprovers { get; set; }
     }
 }

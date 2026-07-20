@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Interfaces
 {
-    public interface IEmployeeApproverRepository
+    public interface IEmployeeApproverRepository : ISavableRepository<EmployeeApprover>
     {
         Task<ICollection<EmployeeApprover>> GetByEmployeeIdAsync(int employeeId);
+
+        Task DeleteManyAsync(IEnumerable<int> ids);
     }
 }

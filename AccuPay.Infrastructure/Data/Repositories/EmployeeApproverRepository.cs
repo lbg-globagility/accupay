@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Infrastructure.Data
 {
-    public class EmployeeApproverRepository : IEmployeeApproverRepository
+    public class EmployeeApproverRepository : SavableRepository<EmployeeApprover>, IEmployeeApproverRepository
     {
-        private readonly PayrollContext _context;
 
-        public EmployeeApproverRepository(PayrollContext context)
+        public EmployeeApproverRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<ICollection<EmployeeApprover>> GetByEmployeeIdAsync(int employeeId)
@@ -22,6 +20,16 @@ namespace AccuPay.Infrastructure.Data
                 .Include(ea => ea.Approver)
                 .Where(ea => ea.EmployeeID == employeeId)
                 .ToListAsync();
+        }
+        public async Task DeleteManyAsync(IEnumerable<int> ids)
+        {
+            var empApprover = await _context.EmployeeApprovers
+                .Where(x => ids.Contains(x.RowID.Value))
+                .ToListAsync();
+
+            _context.RemoveRange(empApprover);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

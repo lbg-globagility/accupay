@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Core.Entities
 {
     [Table("employeeapprover")]
-    public class EmployeeApprover : BaseEntity
+    public class EmployeeApprover : AuditableEntity
     {
         public int ApproverID { get; set; }
 

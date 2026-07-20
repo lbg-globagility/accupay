@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Employees;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
@@ -25,6 +26,7 @@ namespace AccuPay.Web.Employees.Services
         private readonly IFileRepository _fileRepository;
         private readonly IEmployeeDataService _dataService;
         private readonly IEmployeeImportParser _importParser;
+        private readonly IEmployeeApproverRepository _employeeApproverRepository;
 
         public EmployeeService(
             IEmployeeRepository employeeRepository,
@@ -33,7 +35,8 @@ namespace AccuPay.Web.Employees.Services
             IFilesystem filesystem,
             IFileRepository fileRepository,
             IEmployeeDataService dataService,
-            IEmployeeImportParser importParser)
+            IEmployeeImportParser importParser,
+            IEmployeeApproverRepository employeeApproverRepository)
         {
             _employeeRepository = employeeRepository;
             _currentUser = currentUser;
@@ -42,6 +45,7 @@ namespace AccuPay.Web.Employees.Services
             _fileRepository = fileRepository;
             _dataService = dataService;
             _importParser = importParser;
+            _employeeApproverRepository = employeeApproverRepository;
         }
 
         public async Task<PaginatedList<EmployeeDto>> List(EmployeePageOptions options)
@@ -88,7 +92,26 @@ namespace AccuPay.Web.Employees.Services
             Map(dto, employee);
 
             await _dataService.SaveAsync(employee, _currentUser.UserId);
+            // Sync approvers if provided
+            if (dto.ApproverIds != null)
+            {
+                var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(id);
+                await _employeeApproverRepository.DeleteManyAsync(employeeApprovers.Select(x => x.RowID.Value).ToArray());
+                var employeeId = employee.RowID.Value;
+                foreach (var approverId in dto.ApproverIds)
+                {
+                    var newEmployeeApprover = new EmployeeApprover
+                    {
+                        ApproverID = approverId,
+                        EmployeeID = employee.RowID ?? 0,
+                        CreatedBy = _currentUser.UserId,
+                        LastUpdBy = _currentUser.UserId
+                    };
+                    await _employeeApproverRepository.SaveAsync(newEmployeeApprover);
 
+                }
+            }
+            
             return EmployeeDto.Convert(employee);
         }
 

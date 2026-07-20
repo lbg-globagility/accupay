@@ -292,6 +292,24 @@ namespace AccuPay.Infrastructure.Data
                     .WithMany(e => e.ResetLeaveCreditItems)
                     .HasForeignKey(x => x.EmployeeID);
             });
+            modelBuilder.Entity<Employee>(t => {
+                t.HasKey(x => x.RowID);
+
+                t.HasMany(x => x.EmployeeApprovers)
+                    .WithOne(e => e.Employee)
+                    .HasForeignKey(x => x.EmployeeID);
+            });
+            modelBuilder.Entity<EmployeeApprover>(t => {
+                t.HasKey(x => x.RowID);
+
+                t.HasOne(x => x.Employee)
+                    .WithMany(e => e.EmployeeApprovers)
+                    .HasForeignKey(x => x.EmployeeID);
+
+                t.HasOne(x => x.Approver)
+                    .WithMany(e => e.EmployeeApprovers)
+                    .HasForeignKey(x => x.ApproverID);
+            });
         }
 
         private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)
