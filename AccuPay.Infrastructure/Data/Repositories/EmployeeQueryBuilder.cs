@@ -104,6 +104,11 @@ namespace AccuPay.Infrastructure.Data
             _query = _query.Include(x => x.Position);
             return this;
         }
+        public IEmployeeQueryBuilder IncludeEmployeeApprovers()
+        {
+            _query = _query.Include(x => x.EmployeeApprovers).ThenInclude(x=>x.Approver);
+            return this;
+        }
 
         #endregion Builder Methods
 

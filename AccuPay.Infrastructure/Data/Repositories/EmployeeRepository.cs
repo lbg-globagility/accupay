@@ -306,7 +306,7 @@ namespace AccuPay.Infrastructure.Data
         public override async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.IncludePosition().IncludeEmploymentPolicy().GetByIdAsync(employeeId, null);
+            return await builder.IncludePosition().IncludeEmployeeApprovers().IncludeEmploymentPolicy().GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)

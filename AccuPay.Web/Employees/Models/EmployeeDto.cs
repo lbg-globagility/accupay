@@ -1,5 +1,9 @@
 using AccuPay.Core.Entities;
+using AccuPay.Web.Appraisers;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AccuPay.Web.Employees.Models
 {
@@ -39,6 +43,7 @@ namespace AccuPay.Web.Employees.Models
         public decimal BPIInsurance { get; set; }
         public EmploymentPolicyDto EmploymentPolicy { get; set; }
         public PositionDto Position { get; set; }
+        public ICollection<EmployeeApproversDto> EmployeeApprovers { get; set; }
 
         public static EmployeeDto Convert(Employee employee)
         {
@@ -104,6 +109,21 @@ namespace AccuPay.Web.Employees.Models
                     Name = employee.Position.Name
                 };
             }
+            if (employee.EmployeeApprovers != null)
+            {
+                EmployeeApprovers = employee.EmployeeApprovers.Select(x => new EmployeeApproversDto() {
+                    ApproverID = x.ApproverID,
+                    Id = x.RowID.Value,
+                    Approver = new ApproverDto()
+                    {
+                        FirstName = x.Approver.FirstName,
+                        LastName = x.Approver.LastName,
+                        EmailAddress = x.Approver.EmailAddress,
+                        CompanyName = x.Approver.CompanyName
+                    }
+                    
+                }).ToList();
+            }
         }
 
         public class EmploymentPolicyDto
@@ -118,6 +138,15 @@ namespace AccuPay.Web.Employees.Models
             public int Id { get; set; }
 
             public string Name { get; set; }
+        }
+
+        public class EmployeeApproversDto
+        {
+            public int Id { get; set; }
+
+            public int ApproverID { get; set; }
+
+            public ApproverDto Approver { get; set; }
         }
     }
 }
