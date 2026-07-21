@@ -1,3 +1,4 @@
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
@@ -117,6 +118,13 @@ namespace AccuPay.Web.Controllers
         public async Task<EmployeeImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _employeeService.Import(file);
+        }
+        [HttpPut("{id}/approvers")]
+        [Permission(PermissionTypes.EmployeeUpdate)]
+        public async Task<ActionResult> UpdateEmployeeApprovers(int id,[FromBody] UpdateEmployeeApproversDto dto)
+        {
+            await _employeeService.UpdateEmployeeApprovers(id,dto);
+            return Ok();
         }
     }
 }

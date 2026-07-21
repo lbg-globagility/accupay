@@ -140,13 +140,5 @@ namespace AccuPay.Web.Employees.Models
             public string Name { get; set; }
         }
 
-        public class EmployeeApproversDto
-        {
-            public int Id { get; set; }
-
-            public int ApproverID { get; set; }
-
-            public ApproverDto Approver { get; set; }
-        }
     }
 }

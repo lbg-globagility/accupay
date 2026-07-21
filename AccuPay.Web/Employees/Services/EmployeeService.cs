@@ -92,18 +92,24 @@ namespace AccuPay.Web.Employees.Services
             Map(dto, employee);
 
             await _dataService.SaveAsync(employee, _currentUser.UserId);
+            
+            return EmployeeDto.Convert(employee);
+        }
+        public async Task UpdateEmployeeApprovers(int employeeId,UpdateEmployeeApproversDto dto)
+        {
             // Sync approvers if provided
+            var list = new List<EmployeeApproversDto>();
             if (dto.ApproverIds != null)
             {
-                var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(id);
+                var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(employeeId);
                 await _employeeApproverRepository.DeleteManyAsync(employeeApprovers.Select(x => x.RowID.Value).ToArray());
-                var employeeId = employee.RowID.Value;
+               
                 foreach (var approverId in dto.ApproverIds)
                 {
                     var newEmployeeApprover = new EmployeeApprover
                     {
                         ApproverID = approverId,
-                        EmployeeID = employee.RowID ?? 0,
+                        EmployeeID = employeeId,
                         CreatedBy = _currentUser.UserId,
                         LastUpdBy = _currentUser.UserId
                     };
@@ -111,10 +117,7 @@ namespace AccuPay.Web.Employees.Services
 
                 }
             }
-            
-            return EmployeeDto.Convert(employee);
         }
-
         private void Map(CrudEmployeeDto dto, Employee employee)
         {
             employee.EmployeeNo = dto.EmployeeNo;
