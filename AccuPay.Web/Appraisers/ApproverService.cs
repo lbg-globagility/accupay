@@ -39,7 +39,8 @@ namespace AccuPay.Web.Appraisers
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 EmailAddress = dto.EmailAddress,
-                CompanyName = dto.CompanyName
+                CompanyName = dto.CompanyName,
+                IsActive = true
             };
 
             await _repository.SaveAsync(approver);
@@ -62,12 +63,14 @@ namespace AccuPay.Web.Appraisers
             return ConvertToDto(approver);
         }
 
-        public async Task Delete(int id)
+        public async Task SetAsInactive(int id)
         {
             var approver = await _repository.GetByIdAsync(id);
             if (approver == null) return;
 
-            await _repository.DeleteAsync(approver);
+            approver.IsActive = false;
+
+            await _repository.SaveAsync(approver);
         }
 
         private static ApproverDto ConvertToDto(Approver approver)

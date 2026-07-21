@@ -64,7 +64,7 @@ namespace AccuPay.Web.Controllers
             var existing = await _service.GetById(id);
             if (existing == null) return NotFound();
 
-            await _service.Delete(id);
+            await _service.SetAsInactive(id);
 
             return Ok();
         }

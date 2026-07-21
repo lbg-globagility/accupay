@@ -16,6 +16,8 @@ namespace AccuPay.Core.Entities
 
         public string CompanyName { get; set; }
 
+        public bool IsActive { get; set; }
+
         [ForeignKey("OrganizationID")]
         public virtual Organization Organization { get; set; }
 

@@ -26,7 +26,7 @@ namespace AccuPay.Infrastructure.Data
         {
             var query = _context.Approvers
                 .Include(a => a.Organization)
-                .Where(a => a.OrganizationID == organizationId)
+                .Where(a => a.OrganizationID == organizationId && a.IsActive)
                 .OrderBy(a => a.LastName)
                 .ThenBy(a => a.FirstName)
                 .AsQueryable();
@@ -51,7 +51,7 @@ namespace AccuPay.Infrastructure.Data
         public async Task<Approver> GetByIdWithOrganizationAsync(int id)
         {
             return await _context.Approvers
-                .Include(a => a.Organization)
+                .Include(a => a.Organization).Where(x=>x.IsActive)
                 .FirstOrDefaultAsync(a => a.RowID == id);
         }
     }
