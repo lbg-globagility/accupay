@@ -5,6 +5,7 @@ using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Core.ReportModels.PaystubPayslipModel;
 
 namespace AccuPay.Web.Leaves
 {
@@ -217,7 +218,11 @@ namespace AccuPay.Web.Leaves
                 Status = leave.Status,
                 Reason = leave.Reason,
                 Comments = leave.Comments,
-                ApproverEmail = leave.ApproverEmail
+                ApproverEmail = leave.ApproverEmail,
+                CreatedBy = leave.CreatedBy,
+                LastUpd = leave.LastUpd,
+                Created = leave.Created,
+                LastUpdBy = leave.LastUpdBy
             };
         }
 

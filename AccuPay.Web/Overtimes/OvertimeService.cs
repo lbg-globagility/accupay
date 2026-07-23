@@ -170,7 +170,11 @@ namespace AccuPay.Web.Overtimes
                 Status = overtime.Status,
                 Reason = overtime.Reason,
                 Comments = overtime.Comments,
-                ApproverEmail = overtime.ApproverEmail
+                ApproverEmail = overtime.ApproverEmail,
+                CreatedBy = overtime.CreatedBy,
+                LastUpd= overtime.LastUpd,
+                Created = overtime.Created,
+                LastUpdBy = overtime.LastUpdBy
             };
         }
 

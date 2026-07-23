@@ -183,7 +183,11 @@ namespace AccuPay.Web.TimeLogs
                 StartTime = timeLog.TimeInFull,
                 EndTime = timeLog.TimeOutFull,
                 BranchId = timeLog.BranchID,
-                BranchName = timeLog.Branch?.Name
+                BranchName = timeLog.Branch?.Name,
+                CreatedBy = timeLog.CreatedBy,
+                LastUpd = timeLog.LastUpd,
+                Created = timeLog.Created,
+                LastUpdBy = timeLog.LastUpdBy
             };
         }
 

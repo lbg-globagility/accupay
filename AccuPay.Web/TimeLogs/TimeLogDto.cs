@@ -23,5 +23,13 @@ namespace AccuPay.Web.TimeLogs
         public int? BranchId { get; set; }
 
         public string BranchName { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime? LastUpd { get; set; }
+
+        public int? CreatedBy { get; set; }
+
+        public int? LastUpdBy { get; set; }
     }
 }
