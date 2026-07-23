@@ -132,9 +132,9 @@ namespace AccuPay.Web.Leaves
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
-        public async Task<LeaveDto> ApproveFiling(int id)
+        public async Task<LeaveDto> ApproveFiling(int id, string approverEmail)
         {
-            return await SetFilingStatus(id, Leave.StatusApproved);
+            return await SetFilingStatus(id, Leave.StatusApproved, approverEmail);
         }
 
         public async Task<LeaveDto> RejectFiling(int id)
@@ -142,7 +142,7 @@ namespace AccuPay.Web.Leaves
             return await SetFilingStatus(id, Leave.StatusRejected);
         }
 
-        private async Task<LeaveDto> SetFilingStatus(int id, string status)
+        private async Task<LeaveDto> SetFilingStatus(int id, string status, string approverEmail = null)
         {
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
             if (leave == null)
@@ -155,7 +155,24 @@ namespace AccuPay.Web.Leaves
                 throw new System.Exception($"Only pending leave filings can be {status.ToLowerInvariant()}.");
 
             leave.Status = status;
-            await _dataService.SaveAsync(leave, _currentUser.UserId);
+
+            if (status == Leave.StatusApproved)
+                leave.ApproverEmail = approverEmail;
+
+            if (_currentUser.UserId > 0)
+            {
+                // Authenticated approval/rejection: go through the normal audited save
+                // (stamps LastUpdBy and records a UserActivity entry).
+                await _dataService.SaveAsync(leave, _currentUser.UserId);
+            }
+            else
+            {
+                // Anonymous email-link approval/rejection: there is no attributable user,
+                // so bypass the audited pipeline and leave LastUpdBy null (the column/FK
+                // support null; ApproverEmail already records who approved it).
+                leave.LastUpdBy = null;
+                await _leaveRepository.UpdateApprovalAsync(leave);
+            }
 
             return ConvertToDto(leave);
         }
@@ -199,7 +216,8 @@ namespace AccuPay.Web.Leaves
                 EndDate = leave.ProperEndDate,
                 Status = leave.Status,
                 Reason = leave.Reason,
-                Comments = leave.Comments
+                Comments = leave.Comments,
+                ApproverEmail = leave.ApproverEmail
             };
         }
 

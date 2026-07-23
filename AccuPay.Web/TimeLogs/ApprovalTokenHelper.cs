@@ -6,18 +6,35 @@ namespace AccuPay.Web.TimeLogs
 {
     internal static class ApprovalTokenHelper
     {
-        // token = "{expiryUnixSeconds}.{signatureBase64Url}"
-        public static string GenerateToken(int filingId, string secret, TimeSpan ttl)
+        // token without an approver email = "{expiryUnixSeconds}.{signatureBase64Url}"
+        // token with an approver email    = "{expiryUnixSeconds}.{emailBase64Url}.{signatureBase64Url}"
+        public static string GenerateToken(int filingId, string secret, TimeSpan ttl, string approverEmail = null)
         {
             var expiry = DateTimeOffset.UtcNow.Add(ttl).ToUnixTimeSeconds();
-            var payload = $"{filingId}:{expiry}";
-            var signature = ComputeHmac(payload, secret);
-            return $"{expiry}.{signature}";
+
+            if (string.IsNullOrEmpty(approverEmail))
+            {
+                var payload = $"{filingId}:{expiry}";
+                var signature = ComputeHmac(payload, secret);
+                return $"{expiry}.{signature}";
+            }
+
+            var emailPayload = $"{filingId}:{expiry}:{approverEmail}";
+            var emailSignature = ComputeHmac(emailPayload, secret);
+            var encodedEmail = Base64UrlEncode(Encoding.UTF8.GetBytes(approverEmail));
+            return $"{expiry}.{encodedEmail}.{emailSignature}";
         }
 
         public static bool ValidateToken(string token, int filingId, string secret, out string error)
         {
+            return ValidateToken(token, filingId, secret, out error, out _);
+        }
+
+        public static bool ValidateToken(string token, int filingId, string secret, out string error, out string approverEmail)
+        {
             error = null;
+            approverEmail = null;
+
             if (string.IsNullOrWhiteSpace(token))
             {
                 error = "Token is missing.";
@@ -25,7 +42,7 @@ namespace AccuPay.Web.TimeLogs
             }
 
             var parts = token.Split('.');
-            if (parts.Length != 2)
+            if (parts.Length != 2 && parts.Length != 3)
             {
                 error = "Invalid token format.";
                 return false;
@@ -44,16 +61,41 @@ namespace AccuPay.Web.TimeLogs
                 return false;
             }
 
-            var expectedPayload = $"{filingId}:{expiry}";
+            string expectedPayload;
+            string signaturePart;
+            string email = null;
+
+            if (parts.Length == 3)
+            {
+                try
+                {
+                    email = Encoding.UTF8.GetString(Base64UrlDecode(parts[1]));
+                }
+                catch
+                {
+                    error = "Invalid token format.";
+                    return false;
+                }
+
+                expectedPayload = $"{filingId}:{expiry}:{email}";
+                signaturePart = parts[2];
+            }
+            else
+            {
+                expectedPayload = $"{filingId}:{expiry}";
+                signaturePart = parts[1];
+            }
+
             var expectedSig = ComputeHmac(expectedPayload, secret);
 
             // constant time compare
-            if (!AreEqualBase64Url(parts[1], expectedSig))
+            if (!AreEqualBase64Url(signaturePart, expectedSig))
             {
                 error = "Invalid token signature.";
                 return false;
             }
 
+            approverEmail = string.IsNullOrEmpty(email) ? null : email;
             return true;
         }
 
@@ -74,6 +116,17 @@ namespace AccuPay.Web.TimeLogs
             var s = Convert.ToBase64String(input);
             s = s.TrimEnd('=').Replace('+', '-').Replace('/', '_');
             return s;
+        }
+
+        private static byte[] Base64UrlDecode(string input)
+        {
+            var s = input.Replace('-', '+').Replace('_', '/');
+            switch (s.Length % 4)
+            {
+                case 2: s += "=="; break;
+                case 3: s += "="; break;
+            }
+            return Convert.FromBase64String(s);
         }
 
         private static bool AreEqualBase64Url(string a, string b)

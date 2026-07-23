@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Overtimes;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
@@ -102,9 +103,9 @@ namespace AccuPay.Web.Overtimes
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
-        public async Task<OvertimeDto> ApproveFiling(int id)
+        public async Task<OvertimeDto> ApproveFiling(int id, string approverEmail)
         {
-            return await SetFilingStatus(id, Overtime.StatusApproved);
+            return await SetFilingStatus(id, Overtime.StatusApproved, approverEmail);
         }
 
         public async Task<OvertimeDto> RejectFiling(int id)
@@ -112,7 +113,7 @@ namespace AccuPay.Web.Overtimes
             return await SetFilingStatus(id, Overtime.StatusRejected);
         }
 
-        private async Task<OvertimeDto> SetFilingStatus(int id, string status)
+        private async Task<OvertimeDto> SetFilingStatus(int id, string status, string approverEmail = null)
         {
             var overtime = await _repository.GetByIdWithEmployeeAsync(id);
             if (overtime == null)
@@ -125,7 +126,23 @@ namespace AccuPay.Web.Overtimes
                 throw new Exception($"Only pending overtime filings can be {status.ToLowerInvariant()}.");
 
             overtime.Status = status;
-            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+            if (status == Overtime.StatusApproved)
+                overtime.ApproverEmail = approverEmail;
+
+            if (_currentUser.UserId > 0)
+            {
+                // Authenticated approval/rejection: go through the normal audited save
+                // (stamps LastUpdBy and records a UserActivity entry).
+                await _dataService.SaveAsync(overtime, _currentUser.UserId);
+            }
+            else
+            {
+                // Anonymous email-link approval/rejection: there is no attributable user,
+                // so bypass the audited pipeline and leave LastUpdBy null (the column/FK
+                // support null; ApproverEmail already records who approved it).
+                overtime.LastUpdBy = null;
+                await _repository.UpdateApprovalAsync(overtime);
+            }
 
             return ConvertToDto(overtime);
         }
@@ -152,7 +169,8 @@ namespace AccuPay.Web.Overtimes
                 EndDate = overtime.OTEndDate,
                 Status = overtime.Status,
                 Reason = overtime.Reason,
-                Comments = overtime.Comments
+                Comments = overtime.Comments,
+                ApproverEmail = overtime.ApproverEmail
             };
         }
 

@@ -34,9 +34,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("filings/{id}/approve")]
         [Permission(PermissionTypes.OvertimeUpdate)]
-        public async Task<ActionResult<OvertimeDto>> ApproveFiling(int id)
+        public async Task<ActionResult<OvertimeDto>> ApproveFiling(int id, [FromBody] ApproveFilingDto dto)
         {
-            return await _service.ApproveFiling(id);
+            return await _service.ApproveFiling(id, dto?.ApproverEmail);
         }
 
         [HttpGet("filings/{id}/approve")]
@@ -64,12 +64,12 @@ namespace AccuPay.Web.Controllers
         {
             var action = approve ? "Approval" : "Rejection";
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
-            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error, out var approverEmail))
                 return HtmlResult($"{action} failed", error);
 
             try
             {
-                if (approve) await _service.ApproveFiling(id);
+                if (approve) await _service.ApproveFiling(id, approverEmail);
                 else await _service.RejectFiling(id);
                 return HtmlResult($"Overtime Filing {(approve ? "Approved" : "Rejected")}",
                     $"The overtime filing was successfully {(approve ? "approved" : "rejected")}.");

@@ -54,25 +54,29 @@ namespace AccuPay.Web.Leaves
                 return false;
             }
 
-            var token = CreateToken(filingId);
-            var approveUrl = CreateUrl($"/api/leaves/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}");
-            var rejectUrl = CreateUrl($"/api/leaves/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}");
-            var email = new Email("[AccuPay] Leave filing approval request", recipients)
+            foreach (var recipient in recipients)
             {
-                Html = BuildHtml(filing, approveUrl, rejectUrl)
-            };
+                var token = CreateToken(filingId, recipient);
+                var approveUrl = CreateUrl($"/api/leaves/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}");
+                var rejectUrl = CreateUrl($"/api/leaves/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}");
+                var email = new Email("[AccuPay] Leave filing approval request", recipient)
+                {
+                    Html = BuildHtml(filing, approveUrl, rejectUrl)
+                };
 
-            await _emailService.Send(email);
+                await _emailService.Send(email);
+            }
+
             _logger.LogInformation("Approval email for leave filing {FilingId} sent to {Count} recipients.", filingId, recipients.Count);
             return true;
         }
 
-        private string CreateToken(int id)
+        private string CreateToken(int id, string approverEmail)
         {
             var hours = 24;
             if (int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours) && configuredHours > 0)
                 hours = configuredHours;
-            return ApprovalTokenHelper.GenerateToken(id, _configuration["App:ApprovalTokenSecret"] ?? string.Empty, TimeSpan.FromHours(hours));
+            return ApprovalTokenHelper.GenerateToken(id, _configuration["App:ApprovalTokenSecret"] ?? string.Empty, TimeSpan.FromHours(hours), approverEmail);
         }
 
         private string CreateUrl(string path)

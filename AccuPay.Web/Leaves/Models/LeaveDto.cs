@@ -30,6 +30,8 @@ namespace AccuPay.Web.Leaves
 
         public string Comments { get; set; }
 
+        public string ApproverEmail { get; set; }
+
         public DateTime Created { get; set; }
 
         public DateTime? LastUpd { get; set; }

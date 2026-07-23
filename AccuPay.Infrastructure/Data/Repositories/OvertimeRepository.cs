@@ -31,6 +31,14 @@ namespace AccuPay.Infrastructure.Data
             await _context.SaveChangesAsync();
         }
 
+        // Bypasses the audited SaveAsync pipeline (AuditUser/UserActivity logging),
+        // since anonymous email-link approvals have no attributable user for those.
+        public async Task UpdateApprovalAsync(Overtime overtime)
+        {
+            _context.Entry(overtime).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         protected override void DetachNavigationProperties(Overtime overtime)
         {
             if (overtime.Employee != null)

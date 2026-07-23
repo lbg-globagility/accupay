@@ -32,6 +32,8 @@ namespace AccuPay.Core.Entities
 
         public string Comments { get; set; }
 
+        public string ApproverEmail { get; set; }
+
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 

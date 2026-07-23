@@ -52,16 +52,21 @@ namespace AccuPay.Web.Overtimes
             var hours = 24;
             if (int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours) && configuredHours > 0)
                 hours = configuredHours;
-            var token = ApprovalTokenHelper.GenerateToken(filingId,
-                _configuration["App:ApprovalTokenSecret"] ?? string.Empty, TimeSpan.FromHours(hours));
             var domain = (_configuration["App:Domain"] ?? string.Empty).TrimEnd('/');
-            var approvePath = $"/api/overtimes/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}";
-            var rejectPath = $"/api/overtimes/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}";
-            var email = new Email("[AccuPay] Overtime filing approval request", recipients)
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+
+            foreach (var recipient in recipients)
             {
-                Html = BuildHtml(filing, domain + approvePath, domain + rejectPath)
-            };
-            await _emailService.Send(email);
+                var token = ApprovalTokenHelper.GenerateToken(filingId, secret, TimeSpan.FromHours(hours), recipient);
+                var approvePath = $"/api/overtimes/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}";
+                var rejectPath = $"/api/overtimes/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}";
+                var email = new Email("[AccuPay] Overtime filing approval request", recipient)
+                {
+                    Html = BuildHtml(filing, domain + approvePath, domain + rejectPath)
+                };
+                await _emailService.Send(email);
+            }
+
             _logger.LogInformation("Approval email for overtime filing {FilingId} sent to {Count} recipients.", filingId, recipients.Count);
             return true;
         }
