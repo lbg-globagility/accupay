@@ -20,7 +20,6 @@ namespace AccuPay.Core.Entities
 
         [ForeignKey("OrganizationID")]
         public virtual Organization Organization { get; set; }
-
         public virtual ICollection<EmployeeApprover> EmployeeApprovers { get; set; }
     }
 }

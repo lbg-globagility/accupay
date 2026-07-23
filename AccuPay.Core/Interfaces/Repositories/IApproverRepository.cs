@@ -10,5 +10,6 @@ namespace AccuPay.Core.Interfaces
     {
         Task<PaginatedList<Approver>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "");
         Task<Approver> GetByIdWithOrganizationAsync(int id);
+        Task<Approver> ApproverEmployees(int id);
     }
 }

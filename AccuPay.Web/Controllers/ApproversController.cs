@@ -68,5 +68,16 @@ namespace AccuPay.Web.Controllers
 
             return Ok();
         }
+        [HttpGet("{id}/employee")]
+        [Permission(PermissionTypes.ApproverRead)]
+        public async Task<ActionResult<ApproverDto>> ApproverEmployees(int id)
+        {
+            var dto = await _service.ApproverEmployees(id);
+
+            if (dto == null)
+                return NotFound();
+
+            return dto;
+        }
     }
 }

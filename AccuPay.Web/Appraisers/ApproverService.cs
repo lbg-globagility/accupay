@@ -2,7 +2,10 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
+using AutoMapper;
+using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Web.Appraisers.ApproverDto;
 
 namespace AccuPay.Web.Appraisers
 {
@@ -10,11 +13,12 @@ namespace AccuPay.Web.Appraisers
     {
         private readonly IApproverRepository _repository;
         private readonly ICurrentUser _currentUser;
-
-        public ApproverService(IApproverRepository repository, ICurrentUser currentUser)
+        private readonly IMapper _mapper;
+        public ApproverService(IApproverRepository repository, ICurrentUser currentUser, IMapper mapper)
         {
             _repository = repository;
             _currentUser = currentUser;
+            _mapper = mapper;
         }
 
         public async Task<PaginatedList<ApproverDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -85,8 +89,16 @@ namespace AccuPay.Web.Appraisers
                 FirstName = approver.FirstName,
                 LastName = approver.LastName,
                 EmailAddress = approver.EmailAddress,
-                CompanyName = approver.CompanyName
+                CompanyName = approver.CompanyName,
+               
+
             };
+        }
+        public async Task<ApproverDto> ApproverEmployees(int id)
+        {
+            var approver = await _repository.ApproverEmployees(id);
+            return _mapper.Map<ApproverDto>(approver);
+            
         }
     }
 }

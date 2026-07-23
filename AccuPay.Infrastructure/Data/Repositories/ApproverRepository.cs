@@ -54,5 +54,11 @@ namespace AccuPay.Infrastructure.Data
                 .Include(a => a.Organization).Where(x=>x.IsActive)
                 .FirstOrDefaultAsync(a => a.RowID == id);
         }
+        public async Task<Approver> ApproverEmployees(int id)
+        {
+            return await _context.Approvers.Include(x=>x.EmployeeApprovers).ThenInclude(x=>x.Employee)
+                .Where(x => x.IsActive)
+                .FirstOrDefaultAsync(a => a.RowID == id);
+        }
     }
 }

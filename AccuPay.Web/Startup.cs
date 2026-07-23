@@ -29,12 +29,13 @@ namespace AccuPay.Web
         {
             services.AddControllers();
             services.AddDatabase(Configuration);
+            services.AddAutoMapper();
             services.AddAccuPayCoreServices();
             services.AddAuthenticationService(new JwtConfiguration(Configuration));
             services.AddWebServices();
             services.AddEmailService(new EmailConfiguration(Configuration));
             services.AddFilesystem(Configuration);
-
+            
             services.AddMvc();
 
             services.AddSwaggerGen(c =>

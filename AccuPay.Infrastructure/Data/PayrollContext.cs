@@ -310,6 +310,13 @@ namespace AccuPay.Infrastructure.Data
                     .WithMany(e => e.EmployeeApprovers)
                     .HasForeignKey(x => x.ApproverID);
             });
+            modelBuilder.Entity<Approver>(t => {
+                t.HasKey(x => x.RowID);
+
+                t.HasMany(x => x.EmployeeApprovers)
+                    .WithOne(e => e.Approver)
+                    .HasForeignKey(x => x.ApproverID);
+            });
         }
 
         private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)
