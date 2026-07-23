@@ -9,6 +9,7 @@ using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Files.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -217,6 +218,12 @@ namespace AccuPay.Web.Employees.Services
             var employees = await _employeeRepository.GetUnregisteredEmployeeAsync(options, searchTerm, clientId, organizationId);
 
             return employees.Select(e => EmployeeDto.Convert(e));
+        }
+
+        public async Task DeleteEmpoloyeeApprover(int id)
+        {
+            var employeeApprover= await _employeeApproverRepository.GetByIdAsync(id);
+           await _employeeApproverRepository.DeleteAsync(employeeApprover);
         }
     }
 }

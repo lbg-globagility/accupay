@@ -126,5 +126,12 @@ namespace AccuPay.Web.Controllers
             await _employeeService.UpdateEmployeeApprovers(id,dto);
             return Ok();
         }
+        [HttpDelete("{id}/delete-approver")]
+        [Permission(PermissionTypes.EmployeeDelete)]
+        public async Task<ActionResult> DeleteEmployeeApprover (int id)
+        {
+            await _employeeService.DeleteEmpoloyeeApprover(id);
+            return Ok("Approver Deleted!");
+        }
     }
 }
