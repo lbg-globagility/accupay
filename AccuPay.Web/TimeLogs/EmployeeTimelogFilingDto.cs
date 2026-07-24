@@ -1,0 +1,31 @@
+using AccuPay.Core.Entities;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AccuPay.Web.TimeLogs
+{
+    public class EmployeeTimelogFilingDto
+    {
+        public string EntryType { get; set; }
+
+        public DateTime LogDate { get; set; }
+
+        public TimeSpan Time { get; set; }
+
+        public virtual EmployeeDto Employee { get; set; }
+
+        public string Reason { get; set; }
+
+        public string Status { get; set; }
+
+        public string ApproverEmail { get; set; }
+
+        public class EmployeeDto
+        {
+            public string FirstName { get; set; }
+            public string MiddleName { get; set; }
+            public string LastName { get; set; }
+        }
+
+    }
+}

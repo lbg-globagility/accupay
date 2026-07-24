@@ -6,6 +6,7 @@ using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -21,17 +22,20 @@ namespace AccuPay.Web.TimeLogs
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
         private readonly ITimeLogRepository _repository;
+        private readonly IMapper _mapper;
 
         public TimeLogService(
             ITimeLogDataService service,
             ITimeLogImportParser importParser,
             ICurrentUser currentUser,
-            ITimeLogRepository repository)
+            ITimeLogRepository repository,
+            IMapper mapper)
         {
             _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
@@ -439,5 +443,28 @@ namespace AccuPay.Web.TimeLogs
 
             return true;
         }
+        public async Task<PaginatedList<EmployeeTimelogFilingDto>> ListFilingForCurrentEmployee(TimeLogsByEmployeePageOptions options)
+        {
+            if (!_currentUser.EmployeeId.HasValue)
+                throw new Exception("Current user is not associated with an employee.");
+
+            var datePeriod = new TimePeriod(options.DateFrom, options.DateTo);
+
+            var filing = await _repository.GetLatestFilingByEmployeeAndDatePeriodAsync(
+                _currentUser.EmployeeId.Value,
+                datePeriod);
+            var total = filing.Count;
+
+            var paged = filing
+                .OrderBy(t => t.LogDate)
+                .Skip(options.Offset)
+                .Take(options.PageSize)
+                .ToList();
+
+            var map= paged.Select(x => _mapper.Map<EmployeeTimelogFilingDto>(x));
+
+            return new PaginatedList<EmployeeTimelogFilingDto>(map, total, ++options.PageIndex, options.PageSize);
+        }
+
     }
 }

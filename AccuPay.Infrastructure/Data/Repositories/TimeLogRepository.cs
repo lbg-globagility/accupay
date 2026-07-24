@@ -134,6 +134,18 @@ namespace AccuPay.Infrastructure.Data
             _context.Entry(filing).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ICollection<EmployeeTimelogFiling>> GetLatestFilingByEmployeeAndDatePeriodAsync(int employeeId, TimePeriod datePeriod)
+        {
+            return await _context.EmployeeTimelogFilings
+                .Include(x=>x.Employee)
+                .Where(x => datePeriod.Start <= x.LogDate)
+                .Where(x => x.LogDate <= datePeriod.End)
+                .Where(x => x.EmployeeID == employeeId)
+                .OrderByDescending(x => x.LastUpd)
+                .OrderBy(x => x.LogDate)
+                .ToListAsync();
+        }
         #endregion Queries
     }
 }

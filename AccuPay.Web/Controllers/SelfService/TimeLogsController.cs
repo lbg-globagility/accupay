@@ -71,5 +71,11 @@ namespace AccuPay.Web.Controllers.SelfService
 
             return Ok();
         }
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<EmployeeTimelogFilingDto>>> TimelogFilingList([FromQuery] TimeLogsByEmployeePageOptions options)
+        {
+            var result = await _service.ListFilingForCurrentEmployee(options);
+            return result;
+        }
     }
 }

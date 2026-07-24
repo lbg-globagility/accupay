@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Web.Appraisers;
 using AccuPay.Web.Employees.Models;
+using AccuPay.Web.TimeLogs;
 using AutoMapper;
 
 namespace AccuPay.Web.AutoMapperProfile
@@ -16,6 +17,9 @@ namespace AccuPay.Web.AutoMapperProfile
             CreateMap<Approver, ApproverDto>();
             CreateMap<EmployeeApprover, ApproverDto.EmployeeApproversDto>();
             CreateMap<Employee, ApproverDto.EmployeeDto>();
+
+            CreateMap<EmployeeTimelogFiling, EmployeeTimelogFilingDto>();
+            CreateMap<Employee, EmployeeTimelogFilingDto.EmployeeDto>();
         }
     }
 }
