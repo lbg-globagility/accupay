@@ -34,5 +34,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsApproved => Status == StatusApproved;
 
+
+        public string TimeStamp => Time.ToString(@"hh\:mm");
+
     }
 }

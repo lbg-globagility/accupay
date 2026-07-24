@@ -6,11 +6,10 @@ namespace AccuPay.Web.TimeLogs
 {
     public class EmployeeTimelogFilingDto
     {
+        public int Id { get; set; }
         public string EntryType { get; set; }
 
         public DateTime LogDate { get; set; }
-
-        public TimeSpan Time { get; set; }
 
         public virtual EmployeeDto Employee { get; set; }
 
@@ -19,6 +18,8 @@ namespace AccuPay.Web.TimeLogs
         public string Status { get; set; }
 
         public string ApproverEmail { get; set; }
+
+        public string TimeStamp { get; set; }
 
         public class EmployeeDto
         {
