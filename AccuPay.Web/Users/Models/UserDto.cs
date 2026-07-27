@@ -13,5 +13,7 @@ namespace AccuPay.Web.Users
         public string Type { get; set; }
 
         public int? EmployeeId { get; set; }
+
+        public string Image { get; set; }
     }
 }

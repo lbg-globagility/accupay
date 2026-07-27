@@ -127,10 +127,32 @@ namespace AccuPay.Web.Account
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Type = user.EmployeeId.HasValue ? "Employee" : "Admin"
+                Type = user.EmployeeId.HasValue ? "Employee" : "Admin",
+                Image = await GetImageBase64(user.OriginalImageId)
             };
 
             return userDto;
+        }
+
+        private async Task<string> GetImageBase64(int? imageId)
+        {
+            if (!imageId.HasValue)
+            {
+                return null;
+            }
+
+            var file = await _fileRepository.GetById(imageId.Value);
+
+            if (file == null)
+            {
+                return null;
+            }
+
+            using var stream = await _filesystem.Get(file.Path);
+            using var memoryStream = new System.IO.MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+
+            return $"data:{file.MediaType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
         }
 
         public async Task<UserDto> Register(VerifyRegistrationDto dto)
