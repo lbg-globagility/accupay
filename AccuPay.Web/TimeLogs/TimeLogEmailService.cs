@@ -5,15 +5,32 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogEmailService
     {
+        private const string DefaultSubject = "[AccuPay] Timelog filing correction request";
+
+        private const string DefaultHtmlBody =
+            "<div style=\"font-family:Segoe UI, Arial, sans-serif;\">" +
+            "<p>Hi {approver},</p>" +
+            "<p>{employee} filed a time log correction for {date} ({time}).</p>" +
+            "<p>Reason: {reason}</p>" +
+            "<p>{approveButton} {rejectButton}</p>" +
+            "</div>";
+
+        private const string DefaultTextBody =
+            "Hi {approver},\n\n" +
+            "{employee} filed a time log correction for {date} ({time}).\n" +
+            "Reason: {reason}\n\n" +
+            "Approve: {approveButton}\n" +
+            "Reject: {rejectButton}";
+
         private readonly ITimeLogRepository _timeLogRepository;
         private readonly IEmployeeApproverRepository _employeeApproverRepository;
+        private readonly IEmailTemplateRepository _emailTemplateRepository;
         private readonly EmailService _emailService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<TimeLogEmailService> _logger;
@@ -21,12 +38,14 @@ namespace AccuPay.Web.TimeLogs
         public TimeLogEmailService(
             ITimeLogRepository timeLogRepository,
             IEmployeeApproverRepository employeeApproverRepository,
+            IEmailTemplateRepository emailTemplateRepository,
             EmailService emailService,
             IConfiguration configuration,
             ILogger<TimeLogEmailService> logger)
         {
             _timeLogRepository = timeLogRepository;
             _employeeApproverRepository = employeeApproverRepository;
+            _emailTemplateRepository = emailTemplateRepository;
             _emailService = emailService;
             _configuration = configuration;
             _logger = logger;
@@ -48,13 +67,14 @@ namespace AccuPay.Web.TimeLogs
             }
 
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
-            var recipients = employeeApprovers
-                .Select(ea => ea.Approver?.EmailAddress)
-                .Where(e => !string.IsNullOrWhiteSpace(e))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
+            var approvers = employeeApprovers
+                .Select(ea => ea.Approver)
+                .Where(a => a != null && !string.IsNullOrWhiteSpace(a.EmailAddress))
+                .GroupBy(a => a.EmailAddress, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.First())
                 .ToList();
 
-            if (!recipients.Any())
+            if (!approvers.Any())
             {
                 _logger.LogWarning("No approver emails found for employee {EmployeeId} when sending filing {FilingId}.",
                     filing.EmployeeID, filingId);
@@ -82,44 +102,49 @@ namespace AccuPay.Web.TimeLogs
                 ? $"/api/timelogs/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}"
                 : $"{baseDomain}/api/timelogs/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}";
 
-            var subject = "[AccuPay] Timelog filing approval request";
-            var html = BuildFilingHtml(filing, approveUrl, rejectUrl);
+            var employeeName = filing.Employee?.FullName ?? "An employee";
 
-            var email = new Email(subject, recipients);
-            email.Html = html;
+            var template = await _emailTemplateRepository.GetByCodeAsync(
+                EmailTemplate.TimeLogFilingApprovalCode, filing.OrganizationID);
 
-            await _emailService.Send(email);
+            var subject = string.IsNullOrWhiteSpace(template?.Subject) ? DefaultSubject : template.Subject;
+            var htmlBody = string.IsNullOrWhiteSpace(template?.HtmlBody) ? DefaultHtmlBody : template.HtmlBody;
+            var textBody = string.IsNullOrWhiteSpace(template?.TextBody) ? DefaultTextBody : template.TextBody;
 
-            _logger.LogInformation("Approval email for filing {FilingId} sent to {Count} recipients.", filingId, recipients.Count);
+            var approveButtonHtml = $"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>";
+            var rejectButtonHtml = $"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>";
+
+            foreach (var approver in approvers)
+            {
+                var approverName = $"{approver.FirstName} {approver.LastName}".Trim();
+
+                var email = new Email(subject, approver.EmailAddress);
+                email.Text = ApplyPlaceholders(textBody, filing, approverName, employeeName, approveUrl, rejectUrl);
+                email.Html = ApplyPlaceholders(htmlBody, filing, approverName, employeeName, approveButtonHtml, rejectButtonHtml);
+
+                await _emailService.Send(email);
+            }
+
+            _logger.LogInformation("Approval email for filing {FilingId} sent to {Count} recipients.", filingId, approvers.Count);
             return true;
         }
 
-        private static string BuildFilingHtml(EmployeeTimelogFiling filing, string approveUrl, string rejectUrl)
+        private static string ApplyPlaceholders(
+            string template,
+            EmployeeTimelogFiling filing,
+            string approverName,
+            string employeeName,
+            string approveButtonOrUrl,
+            string rejectButtonOrUrl)
         {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("<div style=\"font-family:Segoe UI, Arial, sans-serif;\">");
-            sb.AppendLine($"<h2>Timelog Filing Approval Request</h2>");
-            sb.AppendLine("<table style=\"border-collapse:collapse;\">");
-            sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Employee:</td><td style=\"padding:4px;\">{filing.Employee?.FullName ?? string.Empty}</td></tr>");
-            sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Date:</td><td style=\"padding:4px;\">{filing.LogDate:yyyy-MM-dd}</td></tr>");
-            sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Time:</td><td style=\"padding:4px;\">{filing.Time}</td></tr>");
-            if (!string.IsNullOrWhiteSpace(filing.Reason))
-            {
-                sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Reason:</td><td style=\"padding:4px;\">{filing.Reason}</td></tr>");
-            }
-            sb.AppendLine($"<tr><td style=\"padding:4px;font-weight:bold;\">Status:</td><td style=\"padding:4px;\">{filing.Status}</td></tr>");
-            sb.AppendLine("</table>");
-            sb.AppendLine("<br/>");
-            sb.AppendLine($"<p>Please review the filing and approve or reject it using the buttons below:</p>");
-            sb.AppendLine("<p>");
-            sb.AppendLine($"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>");
-            sb.AppendLine($"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>");
-            sb.AppendLine("</p>");
-            sb.AppendLine("<p>If you prefer to use the API directly, use the existing endpoints to approve or reject the filing.</p>");
-            sb.AppendLine("</div>");
-
-            return sb.ToString();
+            return template
+                .Replace("{approver}", approverName)
+                .Replace("{employee}", employeeName)
+                .Replace("{date}", filing.LogDate.ToString("yyyy-MM-dd"))
+                .Replace("{time}", filing.TimeStamp)
+                .Replace("{reason}", string.IsNullOrWhiteSpace(filing.Reason) ? "N/A" : filing.Reason)
+                .Replace("{approveButton}", approveButtonOrUrl)
+                .Replace("{rejectButton}", rejectButtonOrUrl);
         }
     }
 }

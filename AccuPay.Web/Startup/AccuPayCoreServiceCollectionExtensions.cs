@@ -91,6 +91,7 @@ namespace AccuPay.Web
             services.AddScoped<IResetLeaveCreditRepository, ResetLeaveCreditRepository>();
             services.AddScoped<IEmployeeApproverRepository, EmployeeApproverRepository>();
             services.AddScoped<IApproverRepository, ApproverRepository>();
+            services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
 
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IListOfValueService, ListOfValueService>();

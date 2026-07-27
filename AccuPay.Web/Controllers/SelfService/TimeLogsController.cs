@@ -45,7 +45,6 @@ namespace AccuPay.Web.Controllers.SelfService
             return Ok(new { Id = filing.RowID, Status = filing.Status });
         }
         [HttpPost("filings/{id}/send-approval-email")]
-        [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult> SendFilingForApprovalEmail(int id)
         {
             var success = await _emailService.SendFilingForApprovalEmailAsync(id);

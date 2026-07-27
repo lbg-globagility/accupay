@@ -101,6 +101,7 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<EmployeeTimelogFiling> EmployeeTimelogFilings { get; set; }
         internal virtual DbSet<Approver> Approvers { get; set; }
         internal virtual DbSet<EmployeeApprover> EmployeeApprovers { get; set; }
+        internal virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
 
         public PayrollContext(DbContextOptions options)
             : base(options)
