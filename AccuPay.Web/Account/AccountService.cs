@@ -2,8 +2,11 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Files;
 using AccuPay.Web.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
@@ -20,7 +23,10 @@ namespace AccuPay.Web.Account
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IUserDataService _userDataService;
-       
+        private readonly IFilesystem _filesystem;
+        private readonly IFileRepository _fileRepository;
+
+
 
         public AccountService(
             UserManager<AspNetUser> users,
@@ -29,7 +35,9 @@ namespace AccuPay.Web.Account
             UserTokenService userTokenService,
             IOrganizationRepository organizationRepository,
             ICurrentUser currentUser,
-            IUserDataService userDataService)
+            IUserDataService userDataService,
+            IFilesystem filesystem,
+            IFileRepository fileRepository)
         {
             _users = users;
             _signIn = signIn;
@@ -38,6 +46,8 @@ namespace AccuPay.Web.Account
             _organizationRepository = organizationRepository;
             _currentUser = currentUser;
             _userDataService = userDataService;
+            _filesystem = filesystem;
+            _fileRepository = fileRepository;
         }
 
         public async Task<string> Login(string username, string password)
@@ -195,6 +205,48 @@ namespace AccuPay.Web.Account
 
             return userDto;
 
+        }
+        public async Task UpdateCurrentUserImage(IFormFile image)
+        {
+            if (image == null)
+            {
+                throw new BusinessLogicException("Image is required.");
+            }
+
+            var user = await _users.FindByIdAsync(_currentUser.UserId.ToString());
+
+            var path = $"User/{user.Id}/{image.FileName}";
+            var savedPath = await _filesystem.Move(image, path);
+
+            if (user.OriginalImageId.HasValue)
+            {
+                var file = await _fileRepository.GetById(user.OriginalImageId.Value);
+
+                file.Key = image.FileName;
+                file.Filename = image.FileName;
+                file.Path = savedPath;
+                file.MediaType = image.ContentType;
+                file.Size = image.Length;
+                file.UpdatedById = _currentUser.UserId;
+
+                await _fileRepository.Update(file);
+            }
+            else
+            {
+                var file = new File(
+                    key: image.FileName,
+                    location: savedPath,
+                    file: image);
+
+                file.CreatedById = _currentUser.UserId;
+                file.UpdatedById = file.CreatedById;
+
+                await _fileRepository.Create(file);
+
+                user.OriginalImage = file;
+
+                await _users.UpdateAsync(user);
+            }
         }
     }
 }

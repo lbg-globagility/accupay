@@ -4,6 +4,7 @@ using AccuPay.Web.Users;
 using AccuPay.Web.Users.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -108,6 +109,13 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<UserDto>> ChangeUserPassword([FromBody] ChangePasswordDto dto,int id)
         {
             return await _accountService.ChangeUserPassword(id, dto.Password);
+        }
+        [HttpPost("set-image")]
+        public async Task<ActionResult> UpdateCurrentUserImage([FromForm] UserImageDto dto)
+        {
+            await _accountService.UpdateCurrentUserImage(dto.Image);
+
+            return Ok();
         }
     }
 }
