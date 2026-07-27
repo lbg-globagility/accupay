@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Web.Appraisers;
+using AccuPay.Web.EmailTemplates;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.TimeLogs;
 using AutoMapper;
@@ -20,6 +21,8 @@ namespace AccuPay.Web.AutoMapperProfile
 
             CreateMap<EmployeeTimelogFiling, EmployeeTimelogFilingDto>();
             CreateMap<Employee, EmployeeTimelogFilingDto.EmployeeDto>();
+
+            CreateMap<EmailTemplate, EmailTemplateDto>();
         }
     }
 }

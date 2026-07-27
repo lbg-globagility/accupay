@@ -10,6 +10,7 @@ using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.Core.Views;
 using AccuPay.Web.Divisions;
+using AccuPay.Web.EmailTemplates;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.EmploymentPolicies.Services;
 using AccuPay.Web.Files.Services;
@@ -68,6 +69,7 @@ namespace AccuPay.Web
             services.AddScoped<LeaveEmailService>();
             services.AddScoped<OvertimeEmailService>();
             services.AddScoped<ApproverService>();
+            services.AddScoped<EmailTemplateService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();
