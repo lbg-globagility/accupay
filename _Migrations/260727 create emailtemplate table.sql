@@ -27,3 +27,14 @@ VALUES (
   'Hi {approver},\n\n{employee} filed a time log correction for {date} ({time}).\nReason: {reason}\n\nApprove: {approveButton}\nReject: {rejectButton}',
   1
 );
+
+-- Global default template (OrganizationID = NULL) for the leave filing approval email.
+INSERT INTO `emailtemplate` (`OrganizationID`, `Code`, `Subject`, `HtmlBody`, `TextBody`, `IsActive`)
+VALUES (
+  NULL,
+  'LeaveFilingApproval',
+  '[AccuPay] Leave filing approval request',
+  '<div style="font-family:Segoe UI, Arial, sans-serif;"><p>Hi {approver},</p><p>{employee} requested {leavetype} leave ({date} {time}).</p><p>Reason: {reason}</p><p>{approveButton} {rejectButton}</p></div>',
+  'Hi {approver},\n\n{employee} requested {leavetype} leave ({date} {time}).\nReason: {reason}\n\nApprove: {approveButton}\nReject: {rejectButton}',
+  1
+);

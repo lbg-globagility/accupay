@@ -7,6 +7,8 @@ namespace AccuPay.Core.Entities
     {
         public const string TimeLogFilingApprovalCode = "TimeLogFilingApproval";
 
+        public const string LeaveFilingApprovalCode = "LeaveFilingApproval";
+
         public string Code { get; set; }
 
         public string Subject { get; set; }
