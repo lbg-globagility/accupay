@@ -9,6 +9,8 @@ namespace AccuPay.Core.Entities
 
         public const string LeaveFilingApprovalCode = "LeaveFilingApproval";
 
+        public const string OvertimeFilingApprovalCode = "OvertimeFilingApproval";
+
         public string Code { get; set; }
 
         public string Subject { get; set; }
