@@ -61,5 +61,14 @@ namespace AccuPay.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{id}/resend-invitation")]
+        [Permission(PermissionTypes.UserCreate)]
+        public async Task<ActionResult> ResendInvitation(int id)
+        {
+            await _service.ResendInvitation(id);
+
+            return Ok();
+        }
     }
 }

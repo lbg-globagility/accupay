@@ -178,5 +178,14 @@ namespace AccuPay.Web.Users
 
             return file;
         }
+        public async Task ResendInvitation(int id)
+        {
+            var user = await _users.FindByIdAsync(id.ToString());
+            if (user == null)
+                throw new BusinessLogicException("User not found!");
+            if (user.Status != AspNetUserStatus.Pending)
+                throw new BusinessLogicException("This account is already verified");
+            await _emailService.SendInvitation(user);
+        }
     }
 }

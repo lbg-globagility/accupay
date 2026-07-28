@@ -1,5 +1,6 @@
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.EmailTemplates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmailTemplatesController : ControllerBase
     {
         private readonly EmailTemplateService _emailTemplateService;
