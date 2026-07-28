@@ -24,8 +24,15 @@ namespace AccuPay.Web.Controllers
             return await _emailTemplateService.GetByCode(code);
         }
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] EmailTemplateDto value)
         {
+            var updated = await _emailTemplateService.Update(id, value);
+            if (updated == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updated);
         }
     }
 }

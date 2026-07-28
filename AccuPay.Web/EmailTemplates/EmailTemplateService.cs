@@ -24,5 +24,23 @@ namespace AccuPay.Web.EmailTemplates
             var emailTemplate =await _emailTemplateRepository.GetByCodeAsync(code, _currentUser.OrganizationId);
             return _mapper.Map<EmailTemplateDto>(emailTemplate);
         }
+
+        public async Task<EmailTemplateDto> Update(int id, EmailTemplateDto dto)
+        {
+            var emailTemplate = await _emailTemplateRepository.GetByIdAsync(id);
+            if (emailTemplate == null)
+            {
+                return null;
+            }
+            string formattedBody = dto.HtmlBody.Replace("\r\n", "<br />").Replace("\n", "<br />");
+            var wrap = $"<div style='font-family:Segoe UI, Arial, sans-serif;'>{formattedBody}</div>";
+            emailTemplate.Subject = dto.Subject;
+            emailTemplate.HtmlBody = wrap;
+            emailTemplate.TextBody = dto.TextBody;
+
+            await _emailTemplateRepository.UpdateAsync(emailTemplate);
+
+            return _mapper.Map<EmailTemplateDto>(emailTemplate);
+        }
     }
 }
