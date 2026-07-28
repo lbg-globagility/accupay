@@ -59,5 +59,7 @@ namespace AccuPay.Core.Interfaces
         Task<decimal> GetVacationLeaveBalance(int employeeId);
 
         Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue);
+
+        Task<ICollection<Employee>> GetAllActiveEmployeesWithOrganizationAsync();
     }
 }

@@ -412,6 +412,15 @@ namespace AccuPay.Infrastructure.Data
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
         }
 
+        public async Task<ICollection<Employee>> GetAllActiveEmployeesWithOrganizationAsync()
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .IsActive()
+                .IncludeOrganization()
+                .ToListAsync(new int?());
+        }
+
         #endregion TODO: Move to service
     }
 }

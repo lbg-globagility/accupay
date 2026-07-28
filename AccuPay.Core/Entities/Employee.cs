@@ -224,5 +224,12 @@ namespace AccuPay.Core.Entities
         {
             MaternityLeaveBalance = parentalLeaveBalance;
         }
+
+        [ForeignKey(nameof(OrganizationID))]
+        public virtual Organization Organization { get; set; }
+
+        public string OrganizationName => Organization?.Name;
+
+        public string CustomDisplayText => $"[{OrganizationName}] {FullNameLastNameFirst} {EmployeeNo}" ?? string.Empty;
     }
 }

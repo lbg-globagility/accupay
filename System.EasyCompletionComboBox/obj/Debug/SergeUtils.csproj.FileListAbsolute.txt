@@ -1,0 +1,12 @@
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\bin\Debug\SergeUtils.dll
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\bin\Debug\SergeUtils.pdb
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\obj\Debug\SergeUtils.csproj.AssemblyReference.cache
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\obj\Debug\SergeUtils.csproj.CoreCompileInputs.cache
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\obj\Debug\SergeUtils.dll
+E:\Repositories\dreamhearts-warehousing-system\System.CustomUserControl\obj\Debug\SergeUtils.pdb
+E:\Repositories\accupay\System.EasyCompletionComboBox\bin\Debug\SergeUtils.dll
+E:\Repositories\accupay\System.EasyCompletionComboBox\bin\Debug\SergeUtils.pdb
+E:\Repositories\accupay\System.EasyCompletionComboBox\obj\Debug\SergeUtils.csproj.AssemblyReference.cache
+E:\Repositories\accupay\System.EasyCompletionComboBox\obj\Debug\SergeUtils.csproj.CoreCompileInputs.cache
+E:\Repositories\accupay\System.EasyCompletionComboBox\obj\Debug\SergeUtils.dll
+E:\Repositories\accupay\System.EasyCompletionComboBox\obj\Debug\SergeUtils.pdb

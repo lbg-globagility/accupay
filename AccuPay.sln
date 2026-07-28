@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29009.5
+# Visual Studio Version 18
+VisualStudioVersion = 18.9.12009.208 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TestPayrollSystem", "TestPayrollSystem\TestPayrollSystem.vbproj", "{E07152A3-70D0-4074-825A-25EA29CF4FC3}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -41,6 +41,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Crystal Reports", "Crystal Reports", "{43A2422D-C7DB-48B2-BC0E-4E0EEBBA0E36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.Core.TestData", "AccuPay.Core.TestData\AccuPay.Core.TestData.csproj", "{F7F8A26D-8FDA-4C30-9F8D-63DC3075B767}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SergeUtils", "System.EasyCompletionComboBox\SergeUtils.csproj", "{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +172,14 @@ Global
 		{F7F8A26D-8FDA-4C30-9F8D-63DC3075B767}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7F8A26D-8FDA-4C30-9F8D-63DC3075B767}.Release|x86.ActiveCfg = Release|Any CPU
 		{F7F8A26D-8FDA-4C30-9F8D-63DC3075B767}.Release|x86.Build.0 = Release|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{25438301-DDF3-4EFD-8C17-4AA3249CC9E0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

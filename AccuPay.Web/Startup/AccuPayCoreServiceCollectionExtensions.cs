@@ -89,6 +89,9 @@ namespace AccuPay.Web
             services.AddScoped<IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository>();
             services.AddScoped<IResetLeaveCreditRepository, ResetLeaveCreditRepository>();
             services.AddScoped<ITimeAttendanceLogRepository, TimeAttendanceLogRepository>();
+            services.AddScoped<IContractorRepository, ContractorRepository>();
+            services.AddScoped<IContractorProjectRepository, ContractorProjectRepository>();
+            services.AddScoped<IProjectEmployeeRepository, ProjectEmployeeRepository>();
 
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IListOfValueService, ListOfValueService>();
@@ -141,6 +144,9 @@ namespace AccuPay.Web
             services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
             services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
             services.AddScoped<ITimeAttendanceLogDataService, TimeAttendanceLogDataService>();
+            services.AddScoped<IContractorDataService, ContractorDataService>();
+            services.AddScoped<IContractorProjectDataService, ContractorProjectDataService>();
+            services.AddScoped<IProjectEmployeeDataService, ProjectEmployeeDataService>();
 
             services.AddScoped<IAllowanceImportParser, AllowanceImportParser>();
             services.AddScoped<IEmployeeImportParser, EmployeeImportParser>();
