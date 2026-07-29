@@ -131,5 +131,8 @@ namespace AccuPay.Web.Core.Auth
         public const string ApproverCreate = "Approver:create";
         public const string ApproverUpdate = "Approver:update";
         public const string ApproverDelete = "Approver:delete";
+
+        public const string SettingsRead = "Settings:read";
+        public const string SettingsUpdate = "Settings:update";
     }
 }

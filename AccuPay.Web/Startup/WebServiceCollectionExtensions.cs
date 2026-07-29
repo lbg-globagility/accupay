@@ -24,6 +24,7 @@ using AccuPay.Web.Payroll;
 using AccuPay.Web.Positions;
 using AccuPay.Web.Reports;
 using AccuPay.Web.Salaries.Services;
+using AccuPay.Web.Settings;
 using AccuPay.Web.Shifts.Services;
 using AccuPay.Web.TimeEntries;
 using AccuPay.Web.TimeLogs;
@@ -70,6 +71,7 @@ namespace AccuPay.Web
             services.AddScoped<OvertimeEmailService>();
             services.AddScoped<ApproverService>();
             services.AddScoped<EmailTemplateService>();
+            services.AddScoped<SettingService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();
