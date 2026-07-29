@@ -134,5 +134,8 @@ namespace AccuPay.Web.Core.Auth
 
         public const string SettingsRead = "Settings:read";
         public const string SettingsUpdate = "Settings:update";
+
+        public const string EmailTemplateRead = "EmailTemplate:read";
+        public const string EmailTemplateUpdate = "EmailTemplate:update";
     }
 }
