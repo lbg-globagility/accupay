@@ -18,9 +18,12 @@ namespace AccuPay.Web.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly SettingService _settingService;
-        public SettingsController(SettingService settingService)
+        private readonly ICurrentUser _currentUser;
+
+        public SettingsController(SettingService settingService, ICurrentUser currentUser)
         {
             _settingService = settingService;
+            _currentUser = currentUser;
         }
 
         [HttpGet("web-settings")]
@@ -29,7 +32,12 @@ namespace AccuPay.Web.Controllers
         {
             return await _settingService.GetWebSettingPolicy();
         }
-    }
 
-    
+        [HttpPut("web-settings/{id}")]
+        [Permission(PermissionTypes.SettingsUpdate)]
+        public async Task<ActionResult<SettingDto>> UpdateWebSetting(int id, [FromBody] SettingDto setting)
+        {
+            return await _settingService.UpdateWebSetting(id, setting, _currentUser.UserId);
+        }
+    }
 }
