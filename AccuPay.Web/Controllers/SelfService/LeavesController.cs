@@ -41,7 +41,7 @@ namespace AccuPay.Web.Controllers.SelfService
         }
 
         [HttpPost]
-        public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] SelfServiceCreateLeaveDto dto)
+        public async Task<ActionResult<List<LeaveDto>>> CreateLeave([FromBody] SelfServiceCreateLeaveDto dto)
         {
             return await _leaveService.Create(dto);
         }

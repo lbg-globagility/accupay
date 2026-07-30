@@ -15,6 +15,8 @@ namespace AccuPay.Web.Leaves
 
         public DateTime? EndTime { get; set; }
 
+        public DateTime EndDate { get; set; }
+
         public string Reason { get; set; }
     }
 }

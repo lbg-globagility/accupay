@@ -1,8 +1,10 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +14,13 @@ namespace AccuPay.Web.Leaves
 {
     public class LeaveService
     {
+        // Sentinel times used for the boundary days of a multi-day self-service leave filing:
+        // the first day runs from its given start time through end of day, and the last day
+        // runs from start of day through its given end time. Days in between are whole-day.
+        private static readonly TimeSpan StartOfDay = TimeSpan.Zero;
+
+        private static readonly TimeSpan EndOfDay = new TimeSpan(23, 59, 59);
+
         private readonly ILeaveRepository _leaveRepository;
         private readonly IProductRepository _productRepository;
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
@@ -95,24 +104,50 @@ namespace AccuPay.Web.Leaves
             return ConvertToDto(leave);
         }
 
-        public async Task<LeaveDto> Create(SelfServiceCreateLeaveDto dto)
+        public async Task<List<LeaveDto>> Create(SelfServiceCreateLeaveDto dto)
         {
-            var leave = new Leave()
+            var startDate = dto.StartDate.Date;
+            var endDate = dto.EndDate.Date;
+
+            if (endDate < startDate)
+                throw new BusinessLogicException("End Date cannot be earlier than Start Date.");
+
+           
+
+            var leaves = new List<Leave>();
+
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                TimeSpan? dayStartTime = null;
+                TimeSpan? dayEndTime = null;
+                dayStartTime = dto.StartTime.Value.TimeOfDay;
+                dayEndTime = dto.EndTime.Value.TimeOfDay;
+                
+
+                var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime);
+
+                leaves.Add(leave);
+            }
+
+            await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
+
+            return leaves.Select(x => ConvertToDto(x)).ToList();
+        }
+
+        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime)
+        {
+            return new Leave()
             {
                 EmployeeID = _currentUser.EmployeeId,
                 OrganizationID = _currentUser.OrganizationId,
+                LeaveType = dto.LeaveType,
+                StartDate = date,
+                EndDate = date,
+                StartTime = startTime,
+                EndTime = endTime,
+                Reason = dto.Reason,
+                Status = Leave.StatusPending
             };
-
-            leave.LeaveType = dto.LeaveType;
-            leave.StartDate = dto.StartDate;
-            leave.StartTime = dto.StartTime?.TimeOfDay;
-            leave.EndTime = dto.EndTime?.TimeOfDay;
-            leave.Reason = dto.Reason;
-            leave.Status = Leave.StatusPending;
-
-            await _dataService.SaveAsync(leave, _currentUser.UserId);
-
-            return ConvertToDto(leave);
         }
 
         public async Task<LeaveDto> Update(int id, UpdateLeaveDto dto)
