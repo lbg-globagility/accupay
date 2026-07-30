@@ -23,7 +23,7 @@ SELECT
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
     FORMAT(IFNULL(els.TotalLoanAmount, 0), 2) `DatCol5`,
     @currentBalance := (ROUND(IFNULL(els.TotalLoanAmount, 0),2) - ROUND(IFNULL(
-	 	(SELECT SUM(scheduledloansperpayperiod.DeductionAmount)
+	 	(SELECT SUM(scheduledloansperpayperiod.DeductionAmount - IFNULL(scheduledloansperpayperiod.InterestAmount, 0))
 		FROM scheduledloansperpayperiod
 		INNER JOIN payperiod
 		ON scheduledloansperpayperiod.PayPeriodID = payperiod.RowID
