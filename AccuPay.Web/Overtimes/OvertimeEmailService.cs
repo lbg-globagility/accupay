@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.TimeLogs;
@@ -54,10 +55,18 @@ namespace AccuPay.Web.Overtimes
         public async Task<bool> SendFilingForApprovalEmailAsync(int filingId)
         {
             var filing = await _overtimeRepository.GetByIdWithEmployeeAsync(filingId);
-            if (filing?.EmployeeID == null)
+            if (filing == null)
             {
-                _logger.LogWarning("Overtime filing {FilingId} was not found or has no employee.", filingId);
-                return false;
+                throw new BusinessLogicException("Filing {FilingId} not found when attempting to send approval email.");
+
+            }
+            if (!filing.EmployeeID.HasValue)
+            {
+                throw new BusinessLogicException("Filing {FilingId} has no EmployeeID.");
+            }
+            if (filing.IsNotifyEmail)
+            {
+                throw new BusinessLogicException("Already emailed a leave filing to approvers");
             }
 
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
@@ -70,8 +79,8 @@ namespace AccuPay.Web.Overtimes
 
             if (!approvers.Any())
             {
-                _logger.LogWarning("No approver emails found for overtime filing {FilingId}.", filingId);
-                return false;
+                throw new BusinessLogicException("No approver emails found for overtime filing {FilingId}.");
+               
             }
 
             var template = await _emailTemplateRepository.GetByCodeAsync(
@@ -88,7 +97,8 @@ namespace AccuPay.Web.Overtimes
                 hours = configuredHours;
             var domain = (_configuration["App:Domain"] ?? string.Empty).TrimEnd('/');
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
-
+            filing.IsNotifyEmail = true;
+            await _overtimeRepository.UpdateAsync(filing);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();

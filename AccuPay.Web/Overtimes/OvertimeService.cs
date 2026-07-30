@@ -174,7 +174,8 @@ namespace AccuPay.Web.Overtimes
                 CreatedBy = overtime.CreatedBy,
                 LastUpd= overtime.LastUpd,
                 Created = overtime.Created,
-                LastUpdBy = overtime.LastUpdBy
+                LastUpdBy = overtime.LastUpdBy,
+                IsNotifyEmail= overtime.IsNotifyEmail
             };
         }
 

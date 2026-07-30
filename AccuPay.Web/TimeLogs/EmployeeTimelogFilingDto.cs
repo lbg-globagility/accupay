@@ -21,6 +21,7 @@ namespace AccuPay.Web.TimeLogs
 
         public string TimeStamp { get; set; }
 
+        public bool IsNotifyEmail { get; set; }
         public class EmployeeDto
         {
             public string FirstName { get; set; }

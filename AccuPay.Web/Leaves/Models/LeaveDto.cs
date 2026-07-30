@@ -39,5 +39,7 @@ namespace AccuPay.Web.Leaves
         public int? CreatedBy { get; set; }
 
         public int? LastUpdBy { get; set; }
+
+        public bool IsNotifyEmail { get; set; }
     }
 }

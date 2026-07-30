@@ -37,5 +37,7 @@ namespace AccuPay.Web.Overtimes
         public int? CreatedBy { get; set; }
 
         public int? LastUpdBy { get; set; }
+
+        public bool IsNotifyEmail { get; set; }
     }
 }

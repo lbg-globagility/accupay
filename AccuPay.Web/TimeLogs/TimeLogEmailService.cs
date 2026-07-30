@@ -1,5 +1,7 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Web.Core.Emails;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -56,14 +58,16 @@ namespace AccuPay.Web.TimeLogs
             var filing = await _timeLogRepository.GetFilingByIdAsync(filingId);
             if (filing == null)
             {
-                _logger.LogWarning("Filing {FilingId} not found when attempting to send approval email.", filingId);
-                return false;
+                throw new BusinessLogicException("Filing {FilingId} not found when attempting to send approval email.");
+                
             }
-
             if (!filing.EmployeeID.HasValue)
             {
-                _logger.LogWarning("Filing {FilingId} has no EmployeeID.", filingId);
-                return false;
+                throw new BusinessLogicException("Filing {FilingId} has no EmployeeID.");
+            }
+            if (filing.IsNotifyEmail)
+            {
+                throw new BusinessLogicException("Already emailed a leave filing to approvers");
             }
 
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
@@ -76,9 +80,8 @@ namespace AccuPay.Web.TimeLogs
 
             if (!approvers.Any())
             {
-                _logger.LogWarning("No approver emails found for employee {EmployeeId} when sending filing {FilingId}.",
-                    filing.EmployeeID, filingId);
-                return false;
+                throw new BusinessLogicException("No approver emails found for employee {EmployeeId} when sending filing {FilingId}.");
+                
             }
 
             var domain = _configuration["App:Domain"] ?? string.Empty;
@@ -113,7 +116,8 @@ namespace AccuPay.Web.TimeLogs
 
             var approveButtonHtml = $"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>";
             var rejectButtonHtml = $"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>";
-
+            filing.IsNotifyEmail = true;
+            await _timeLogRepository.UpdateFilingAsync(filing);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();

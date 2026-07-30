@@ -258,7 +258,8 @@ namespace AccuPay.Web.Leaves
                 CreatedBy = leave.CreatedBy,
                 LastUpd = leave.LastUpd,
                 Created = leave.Created,
-                LastUpdBy = leave.LastUpdBy
+                LastUpdBy = leave.LastUpdBy,
+                IsNotifyEmail = leave.IsNotifyEmail
             };
         }
 

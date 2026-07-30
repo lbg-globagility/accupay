@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.TimeLogs;
@@ -58,10 +59,13 @@ namespace AccuPay.Web.Leaves
             var filing = await _leaveRepository.GetByIdWithEmployeeAsync(filingId);
             if (filing?.EmployeeID == null)
             {
-                _logger.LogWarning("Leave filing {FilingId} was not found or has no employee.", filingId);
-                return false;
+                throw new BusinessLogicException("Leave filing {FilingId} was not found or has no employee.");
             }
-
+            if (filing.IsNotifyEmail)
+            {
+                throw new BusinessLogicException("Already emailed a leave filing to approvers");
+            }
+            
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
             var approvers = employeeApprovers
                 .Select(ea => ea.Approver)
@@ -72,8 +76,7 @@ namespace AccuPay.Web.Leaves
 
             if (!approvers.Any())
             {
-                _logger.LogWarning("No approver emails found for leave filing {FilingId}.", filingId);
-                return false;
+                throw new BusinessLogicException("No approver emails found for leave filing {FilingId}.");
             }
 
             var template = await _emailTemplateRepository.GetByCodeAsync(
@@ -84,7 +87,8 @@ namespace AccuPay.Web.Leaves
             var textBody = string.IsNullOrWhiteSpace(template?.TextBody) ? DefaultTextBody : template.TextBody;
 
             var employeeName = filing.Employee?.FullName ?? "An employee";
-
+            filing.IsNotifyEmail = true;
+            await _leaveRepository.UpdateAsync(filing);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();
