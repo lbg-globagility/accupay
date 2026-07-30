@@ -121,11 +121,11 @@ namespace AccuPay.CrystalReports
         {
             var rptdoc = new OfficialPaySlipFormat();
 
-            var txtOrganizName = (TextObject)rptdoc.ReportDefinition.Sections[2].ReportObjects["txtOrganizName"];
-            txtOrganizName.Text = organization.Name.ToUpper();
+            var txtOrganizName = (TextObject)rptdoc?.Section2?.ReportObjects["txtOrganizName"];
+            if(txtOrganizName != null) txtOrganizName.Text = organization.Name.ToUpper();
 
-            var txtPayPeriod = (TextObject)rptdoc.ReportDefinition.Sections[2].ReportObjects["txtPayPeriod"];
-            txtPayPeriod.Text = $"{payPeriod.PayFromDate.ToString(customDateFormat)} to {payPeriod.PayToDate.ToString(customDateFormat)}";
+            var txtPayPeriod = (TextObject)rptdoc?.Section2?.ReportObjects["txtPayPeriod"];
+            if (txtPayPeriod != null) txtPayPeriod.Text = $"{payPeriod.PayFromDate.ToString(customDateFormat)} to {payPeriod.PayToDate.ToString(customDateFormat)}";
 
             return rptdoc;
         }

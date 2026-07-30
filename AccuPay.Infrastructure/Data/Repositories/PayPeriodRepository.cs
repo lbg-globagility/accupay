@@ -274,6 +274,34 @@ namespace AccuPay.Infrastructure.Data
             return firstPayPeriod;
         }
 
+        public async Task<PayPeriod> GetCurrentOpenAsync(Organization organization)
+        {
+            IOrderedQueryable<PayPeriod> query;
+
+            //if (organization.IsWeekly)
+            //{
+            //    query = CreateBaseQueryWeekly(organization.RowID.Value)
+            //        .Where(p => p.Status == PayPeriodStatus.Open)
+            //        .OrderByDescending(p => p.PayFromDate);
+            //}
+            //else // if (organization.IsSemiMonthly)
+            //{
+            query = CreateBaseQuery(organization.RowID.Value)
+                .Where(p => p.Status == PayPeriodStatus.Open)
+                .OrderByDescending(p => p.PayFromDate);
+            //}
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<PayPeriod> GetMostRecentAsync(int organizationId)
+            => await CreateBaseQuery(organizationId)
+                .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
+
+        public async Task<PayPeriod> GetMostRecentAsync(Organization organization)
+            => await GetMostRecentAsync(organization.RowID.Value);
+
         #endregion Single entity
 
         #region List of entities

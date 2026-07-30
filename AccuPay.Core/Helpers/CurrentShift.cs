@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
+using System.Linq;
 
 namespace AccuPay.Core.Helpers
 {
@@ -91,6 +92,35 @@ namespace AccuPay.Core.Helpers
         public override string ToString()
         {
             return $"{Start:yyyy-MM-dd hh:mm tt} - {End:yyyy-MM-dd hh:mm tt} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} ";
+        }
+
+        private const int HOURS_PER_DAY = 24;
+
+        internal bool IsValidLogPeriod(TimePeriod logPeriod)
+        {
+            var nonShiftHours = HOURS_PER_DAY - ShiftHours;
+            var splittedNonShiftHours = nonShiftHours / 2;
+            var veryStartTime = Start.AddHours(-(double)splittedNonShiftHours);
+
+            var timeCollection = Enumerable.Range(0, HOURS_PER_DAY)
+                .Select(t =>
+                {
+                    var fsdfsd = veryStartTime.AddHours(t);
+
+                    return new
+                    {
+                        startRange = fsdfsd,
+                        endRange = fsdfsd.AddHours((double)ShiftHours)
+                    };
+                })
+                .ToList();
+
+            var fsdf = timeCollection
+                .Where(t => t.startRange <= logPeriod.Start)
+                .Where(t => t.endRange >= logPeriod.End)
+                .ToList();
+
+            return fsdf?.Any() ?? false;
         }
 
         public bool MarkedAsWholeDay => _shift?.MarkedAsWholeDay ?? false;

@@ -36,10 +36,12 @@ namespace AccuPay.Web
             services.AddScoped<IAspNetUserRepository, AspNetUserRepository>();
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<IAwardRepository, AwardRepository>();
+            services.AddScoped<IBankFileHeaderRepository, BankFileHeaderRepository>();
             services.AddScoped<IBonusRepository, BonusRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<IBreakTimeBracketRepository, BreakTimeBracketRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
+            services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICertificationRepository, CertificationRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
@@ -79,6 +81,7 @@ namespace AccuPay.Web
             services.AddScoped<ISalaryRepository, SalaryRepository>();
             services.AddScoped<IShiftRepository, ShiftRepository>();
             services.AddScoped<ISocialSecurityBracketRepository, SocialSecurityBracketRepository>();
+            services.AddScoped<ISoloParentBeneficiaryRepository, SoloParentBeneficiaryRepository>();
             services.AddScoped<ISystemInfoRepository, SystemInfoRepository>();
             services.AddScoped<ITimeAttendanceLogRepository, TimeAttendanceLogRepository>();
             services.AddScoped<ITimeEntryRepository, TimeEntryRepository>();
@@ -119,6 +122,7 @@ namespace AccuPay.Web
             services.AddScoped<ISystemOwnerService, SystemOwnerService>();
 
             services.AddScoped<IAllowanceDataService, AllowanceDataService>();
+            services.AddScoped<IBankFileHeaderDataService, BankFileHeaderDataService>();
             services.AddScoped<IBonusDataService, BonusDataService>();
             services.AddScoped<ICalendarDataService, CalendarDataService>();
             services.AddScoped<IDivisionDataService, DivisionDataService>();
@@ -136,6 +140,7 @@ namespace AccuPay.Web
             services.AddScoped<IPositionDataService, PositionDataService>();
             services.AddScoped<IRoleDataService, RoleDataService>();
             services.AddScoped<ISalaryDataService, SalaryDataService>();
+            services.AddScoped<ISoloParentBeneficiaryDataService, SoloParentBeneficiaryDataService>();            
             services.AddScoped<ITimeEntryDataService, TimeEntryDataService>();
             services.AddScoped<ITimeLogDataService, TimeLogDataService>();
             services.AddScoped<ITripTicketDataService, TripTicketDataService>();
@@ -172,6 +177,7 @@ namespace AccuPay.Web
             services.AddScoped<ICostCenterReportBuilder, CostCenterReportBuilder>();
 
             services.AddScoped<IAttachmentDataService, AttachmentDataService>();
+            services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
             services.AddScoped<IAwardDataService, AwardDataService>();
             services.AddScoped<IBonusDataService, BonusDataService>();
             services.AddScoped<ICertificationDataService, CertificationDataService>();
@@ -187,6 +193,7 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IListOfValueCollection, ListOfValueCollection>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
+            services.AddScoped<ListOfValueCollection>();
             services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
 
             return services;

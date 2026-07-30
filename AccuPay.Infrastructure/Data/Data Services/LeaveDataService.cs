@@ -28,6 +28,7 @@ namespace AccuPay.Infrastructure.Data
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IShiftRepository _shiftRepository;
         private readonly ILeaveRepository _leaveRepository;
+        private readonly ISoloParentBeneficiaryDataService _soloParentBeneficiaryDataService;
 
         public LeaveDataService(
             PayrollContext context,
@@ -37,7 +38,8 @@ namespace AccuPay.Infrastructure.Data
             ILeaveLedgerRepository leaveLedgerRepository,
             IPayPeriodRepository payPeriodRepository,
             IShiftRepository shiftRepository,
-            IUserActivityRepository userActivityRepository) :
+            IUserActivityRepository userActivityRepository,
+            ISoloParentBeneficiaryDataService soloParentBeneficiaryDataService) :
 
             base(leaveRepository,
                 payPeriodRepository,
@@ -50,15 +52,80 @@ namespace AccuPay.Infrastructure.Data
             _leaveLedgerRepository = leaveLedgerRepository;
             _shiftRepository = shiftRepository;
             _leaveRepository = leaveRepository;
+            _soloParentBeneficiaryDataService = soloParentBeneficiaryDataService;
         }
 
         #region SaveManyAsync
 
         public override async Task<Leave> SaveAsync(Leave leave, int changedByUserId)
         {
+            await ScrutinizeExceedAllowableLeaveAsync(leave);
+
             await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
             return leave;
+        }
+
+        private async Task ScrutinizeExceedAllowableLeaveAsync(Leave leave)
+        {
+            var leaveLedgers = (await _leaveLedgerRepository.GetAllByEmployee(leave.EmployeeID))
+                .Where(t => t.Product?.PartNo == leave.LeaveType);
+
+            if (!(leaveLedgers?.Any() ?? false)) return; // for Leave w/o pay
+
+            var leaveTransactions = new List<LeaveTransaction>();
+            foreach (var ledger in leaveLedgers)
+                leaveTransactions.AddRange(ledger.LeaveTransactions);
+
+            var latestCreditTransaction = leaveTransactions
+                .Where(t => t.IsCredit)
+                .OrderByDescending(t => t.TransactionDate)
+                .FirstOrDefault();
+
+            if (latestCreditTransaction == null) return; // for Leave w/o pay
+
+            var latestLeaves = (await _leaveRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                    employeeIds: new int[] { leave.EmployeeID.Value },
+                    datePeriod: new TimePeriod(latestCreditTransaction.TransactionDate.Date, latestCreditTransaction.TransactionDate.Date.AddYears(1).AddDays(-1))))?
+                .Where(t => t.IsApproved)?
+                .Where(t => t.LeaveType == leave.LeaveType)?
+                .ToList();
+
+            var latestLeaveShiftScheds = await _shiftRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                employeeId: leave.EmployeeID.Value,
+                datePeriod: new TimePeriod(latestCreditTransaction.TransactionDate.Date, latestCreditTransaction.TransactionDate.Date.AddYears(1).AddDays(-1)));
+
+            var latestTotalFiledLeaveHours = 0M;
+
+            foreach (var latestLeave in latestLeaves)
+            {
+                var shiftSched = latestLeaveShiftScheds.FirstOrDefault(t => t.DateSched.Date == latestLeave.StartDate.Date);
+
+                latestTotalFiledLeaveHours += shiftSched?.WorkHours ?? 0;
+            }
+
+            var thisLeaveShiftSched = (await _shiftRepository.GetByEmployeeAndDatePeriodAsync(organizationId: leave.OrganizationID.Value,
+                employeeId: leave.EmployeeID.Value,
+                datePeriod: new TimePeriod(leave.StartDate.Date, leave.StartDate.Date)))
+                .FirstOrDefault();
+
+            //var thisLeaveHours = leave.IsBasedOnShiftSched ?
+            //    thisLeaveShiftSched.WorkHours :
+            //    (decimal)(leave.EndTimeFull.Value - leave.StartTimeFull.Value).TotalHours;
+
+            //var isExceed = latestCreditTransaction.Amount < latestTotalFiledLeaveHours + thisLeaveHours;
+            var isExceed = latestCreditTransaction.Amount < latestTotalFiledLeaveHours;
+            if (isExceed)
+                throw new BusinessLogicException("Employee exceeded the allowable leave hours.");
+
+            await ValidateSoloParentBenefitAsync(leave);
+        }
+
+        private async Task ValidateSoloParentBenefitAsync(Leave leave)
+        {
+            if (leave.LeaveType == ProductConstant.SOLO_PARENT_LEAVE
+                && (await _soloParentBeneficiaryDataService.IsEmployeeBeneficiaryAsync(leave.EmployeeID.Value)) == false)
+                    throw new BusinessLogicException("Employee is not a solo parent leave beneficiary.");
         }
 
         public override async Task SaveManyAsync(List<Leave> leaves, int changedByUserId)
@@ -597,6 +664,8 @@ namespace AccuPay.Infrastructure.Data
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             leave.UpdateEndDate();
+
+            await ValidateSoloParentBenefitAsync(leave);
         }
 
         protected override async Task RecordUpdate(Leave newValue, Leave oldValue)

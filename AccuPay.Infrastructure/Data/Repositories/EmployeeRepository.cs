@@ -356,6 +356,9 @@ namespace AccuPay.Infrastructure.Data
             return await GetLeaveBalance(employeeId, ProductConstant.SICK_LEAVE);
         }
 
+        public async Task<decimal> GetSoloParentLeaveBalanceAsync(int employeeId)
+            => await GetLeaveBalance(employeeId, ProductConstant.SOLO_PARENT_LEAVE);
+
         private async Task<decimal> GetLeaveBalance(int employeeId, string partNo)
         {
             var defaultBalance = 0;

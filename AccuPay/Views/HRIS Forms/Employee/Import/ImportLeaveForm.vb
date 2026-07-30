@@ -70,11 +70,17 @@ Public Class ImportLeaveForm
             Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
             ToList()
 
+        Dim soloParentBeneficiaryDataService = MainServiceProvider.GetRequiredService(Of ISoloParentBeneficiaryDataService)()
+        Dim soloParentBeneficiaries = Await soloParentBeneficiaryDataService.GetAllByOrganizationIdAsync(z_OrganizationID)
+
         For Each model In models
 
             Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
 
-            dataSource.Add(CreateLeaveModel(model, employee))
+            Dim leaveModel = CreateLeaveModel(model, employee)
+            leaveModel.SetSoloParentBeneficiary(soloParentBeneficiaries)
+
+            dataSource.Add(leaveModel)
         Next
 
         _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
@@ -225,6 +231,7 @@ Public Class ImportLeaveForm
         Private _employeeNotExists As Boolean
         Private _noStatus As Boolean
         Private _notMeantToUseAddtlVL As Boolean
+        Private _notSoloParentBeneficiary As Boolean
         Private _reasons As String
         Private _comments As String
 
@@ -334,6 +341,8 @@ Public Class ImportLeaveForm
 
                 _notMeantToUseAddtlVL = Not _grantsAdditionalVacationLeaveTypeFeaure And LeaveType = ADDITIONAL_VACATION_LEAVETYPE
 
+                _notSoloParentBeneficiary = Not _IsSoloParentBeneficiary AndAlso LeaveType = ProductConstant.SOLO_PARENT_LEAVE
+
                 Return _noEmployeeNo _
                     Or _noLeaveType _
                     Or _noStartDate _
@@ -341,7 +350,8 @@ Public Class ImportLeaveForm
                     Or _employeeNotExists _
                     Or _noStatus _
                     Or _notMeantToUseAddtlVL _
-                    Or (_noStartDate = False AndAlso Not String.IsNullOrWhiteSpace(ToLeave().Validate))
+                    Or (_noStartDate = False AndAlso Not String.IsNullOrWhiteSpace(ToLeave().Validate)) _
+                    Or _notSoloParentBeneficiary
             End Get
         End Property
 
@@ -363,6 +373,8 @@ Public Class ImportLeaveForm
 
                 If _notMeantToUseAddtlVL Then description.Add($"AccuPay doesn't support {ADDITIONAL_VACATION_LEAVETYPE} leave type")
 
+                If _notSoloParentBeneficiary Then description.Add("Employee is not a solo parent leave beneficiary.")
+
                 'add the model validation if there are no error message (there are checks that are here and in the model validation so only use the model validation if it there is no error detected here)
                 If Not description.Any Then
                     Dim validationErrorMessage = ToLeave().Validate
@@ -382,6 +394,7 @@ Public Class ImportLeaveForm
 
         <Ignore>
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
+        Public ReadOnly Property IsSoloParentBeneficiary As Boolean
 
         Public Function ToLeave(Optional isNew As Boolean = True) As Leave
 
@@ -399,6 +412,11 @@ Public Class ImportLeaveForm
                 .IsNew = isNew
             }
         End Function
+
+        Friend Sub SetSoloParentBeneficiary(soloParentBeneficiaries As ICollection(Of SoloParentBeneficiary))
+            _IsSoloParentBeneficiary = If(soloParentBeneficiaries?.Any(Function(t) Equals(t.EmployeeId, _employee.RowID)), False)
+
+        End Sub
 
     End Class
 

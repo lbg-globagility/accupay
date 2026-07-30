@@ -31,6 +31,9 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<LeaveLedger>> GetAllByEmployee(int? employeeId)
         {
             return await _context.LeaveLedgers
+                .Include(t => t.Product)
+                .Include(t => t.LeaveTransactions)
+                    .ThenInclude(lt => lt.PayPeriod)
                 .Where(t => t.EmployeeID == employeeId)
                 .ToListAsync();
         }
@@ -40,6 +43,7 @@ namespace AccuPay.Infrastructure.Data
             return await _context.LeaveTransactions
                 .Where(t => t.LeaveLedgerID == leaveLedgerId)
                 .OrderByDescending(t => t.TransactionDate)
+                    .ThenByDescending(t => t.Created)
                 .ToListAsync();
         }
 
@@ -101,7 +105,18 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.ProductID == leaveTypeId)
                 .FirstOrDefaultAsync();
 
-            if (ledger == null) return;
+            if (ledger == null)
+            {
+                ledger = new LeaveLedger
+                {
+                    EmployeeID = employeeId,
+                    ProductID = leaveTypeId,
+                    OrganizationID = organizationId,
+                    CreatedBy = userId,
+                };
+
+                await CreateAsync(ledger);
+            }
 
             var newTransaction = LeaveTransaction.NewLeaveTransaction(userId: userId,
                 organizationId: organizationId,
@@ -149,6 +164,15 @@ namespace AccuPay.Infrastructure.Data
             {
                 _context.Entry(leaveTransaction).State = EntityState.Deleted;
             }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(LeaveLedger leaveLedger)
+        {
+            if (leaveLedger == null) return;
+
+            await _context.LeaveLedgers.AddAsync(leaveLedger);
 
             await _context.SaveChangesAsync();
         }

@@ -5,8 +5,10 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Infrastructure.Data
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeAttendForm
@@ -36,7 +38,11 @@ Public Class TimeAttendForm
 
     Private Async Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MassOvertimeToolStripMenuItem.Visible = _policyHelper.UseMassOvertime
-        ResetLeaveCreditsToolStripMenuItem.Visible = (Await _systemOwnerService.GetCurrentSystemOwnerAsync()) = SystemOwner.Cinema2000
+
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
+        Dim leaveResetPolicy = New LeaveResetPolicy(Await listOfValueService.CreateAsync())
+        ResetLeaveCreditsToolStripMenuItem.Visible = (Await _systemOwnerService.GetCurrentSystemOwnerAsync()) = SystemOwner.Cinema2000 _
+            Or leaveResetPolicy.IsLeaveResetEnable
 
         If Not _policyHelper.UseUserLevel Then
 
