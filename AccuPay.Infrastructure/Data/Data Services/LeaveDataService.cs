@@ -720,7 +720,7 @@ namespace AccuPay.Infrastructure.Data
                     changes);
             }
         }
-
+      
         #endregion Overrides
 
         #region Others

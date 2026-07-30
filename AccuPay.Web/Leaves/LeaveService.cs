@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Leaves.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -244,5 +245,22 @@ namespace AccuPay.Web.Leaves
                 Balance = transaction.Balance
             };
         }
+        public async Task<List<EmployeeLeaveBalanceDto>> GetLeaveBalanceAsync(int employeeId)
+        {
+            var leaveLedgers = await _leaveLedgerRepository.GetAllByEmployeeAndLeaveType(employeeId);
+            var list =new List<EmployeeLeaveBalanceDto>();
+            leaveLedgers.ToList().ForEach(x =>
+            {
+                var dto = new EmployeeLeaveBalanceDto
+                {
+                    Balance =x.LastTransaction!=null ? x.LastTransaction.Balance: 0,
+                    LeaveType = x.Product.PartNo
+                };
+                list.Add(dto);
+            });
+             
+            return list;
+        }
+       
     }
 }

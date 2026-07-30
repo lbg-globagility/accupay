@@ -10,5 +10,6 @@ namespace AccuPay.Core.Interfaces
         Task<decimal> ForceUpdateLeaveAllowanceAsync(int employeeId, int organizationId, int userId, LeaveType selectedLeaveType, decimal newAllowance);
 
         Task<PaginatedList<LeaveLedger>> GetLeaveBalancesAsync(PageOptions options, int organizationId, string searchTerm);
+
     }
 }

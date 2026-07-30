@@ -2,6 +2,7 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
+using AccuPay.Web.Leaves.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace AccuPay.Web.Controllers.SelfService
         private readonly ILeaveRepository _leaveRepository;
         private readonly ICurrentUser _currentUser;
         private readonly LeaveEmailService _emailService;
+
 
         public LeavesController(
             LeaveService leaveService,
@@ -67,6 +69,12 @@ namespace AccuPay.Web.Controllers.SelfService
         public ActionResult<ICollection<string>> GetLeaveStatusesAsync()
         {
             return _leaveRepository.GetStatusList();
+        }
+
+        [HttpGet("leave-balance")]
+        public async Task<List<EmployeeLeaveBalanceDto>> EmployeeLeaveBalance()
+        {
+            return await _leaveService.GetLeaveBalanceAsync(_currentUser.EmployeeId.Value);
         }
     }
 }

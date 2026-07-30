@@ -29,5 +29,7 @@ namespace AccuPay.Core.Interfaces
         Task CreateManyLeaveTransactionsAsync(IList<LeaveTransaction> leaveTransactions);
         Task UpdateManyAsync(IList<LeaveLedger> leaveLedgers);
         Task DeleteManyLeaveTransactionsAsync(IList<LeaveTransaction> leaveTransactions);
+
+        Task<ICollection<LeaveLedger>> GetAllByEmployeeAndLeaveType(int? employeeId);
     }
 }

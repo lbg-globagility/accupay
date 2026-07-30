@@ -155,5 +155,16 @@ namespace AccuPay.Infrastructure.Data
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ICollection<LeaveLedger>> GetAllByEmployeeAndLeaveType(int? employeeId)
+        {
+            var ledger =await _context.LeaveLedgers
+                .Include(t => t.Product)
+                .Include(t => t.LeaveTransactions)
+                    .ThenInclude(lt => lt.PayPeriod)
+                .Where(t => t.EmployeeID == employeeId)
+                .Where(x => x.Product.PartNo == ProductConstant.SICK_LEAVE || x.Product.PartNo == ProductConstant.VACATION_LEAVE).ToListAsync();
+            return ledger;
+        }
     }
 }
