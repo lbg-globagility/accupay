@@ -21,6 +21,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Leave> GetByIdWithEmployeeAsync(int id);
 
+        Task<ICollection<Leave>> GetByIdsWithEmployeeAsync(IEnumerable<int> ids);
+
         Task<PaginatedList<Leave>> GetPaginatedListAsync(LeavePageOptions options, int organizationId);
 
         List<string> GetStatusList();

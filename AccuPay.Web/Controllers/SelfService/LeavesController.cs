@@ -46,10 +46,10 @@ namespace AccuPay.Web.Controllers.SelfService
             return await _leaveService.Create(dto);
         }
 
-        [HttpPost("filings/{id}/send-approval-email")]
-        public async Task<ActionResult> SendFilingForApprovalEmail(int id)
+        [HttpPost("filings/send-approval-email")]
+        public async Task<ActionResult> SendFilingForApprovalEmail([FromBody] List<int> filingIds)
         {
-            var success = await _emailService.SendFilingForApprovalEmailAsync(id);
+            var success = await _emailService.SendFilingForApprovalEmailAsync(filingIds);
             if (!success) return NotFound();
             return Ok();
         }
