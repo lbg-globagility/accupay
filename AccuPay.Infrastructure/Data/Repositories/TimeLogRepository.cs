@@ -129,6 +129,14 @@ namespace AccuPay.Infrastructure.Data
                 .FirstOrDefaultAsync(f => f.RowID == filingId);
         }
 
+        public async Task<ICollection<EmployeeTimelogFiling>> GetFilingsByIdsAsync(IEnumerable<int> filingIds)
+        {
+            return await _context.Set<EmployeeTimelogFiling>()
+                .Include(f => f.Employee)
+                .Where(f => filingIds.Contains(f.RowID.Value))
+                .ToListAsync();
+        }
+
         public async Task UpdateFilingAsync(EmployeeTimelogFiling filing)
         {
             _context.Entry(filing).State = EntityState.Modified;

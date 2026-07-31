@@ -4,6 +4,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers.SelfService
@@ -44,10 +45,10 @@ namespace AccuPay.Web.Controllers.SelfService
             var filing = await _service.CreateFiling(dto);
             return Ok(new { Id = filing.RowID, Status = filing.Status });
         }
-        [HttpPost("filings/{id}/send-approval-email")]
-        public async Task<ActionResult> SendFilingForApprovalEmail(int id)
+        [HttpPost("filings/send-approval-email")]
+        public async Task<ActionResult> SendFilingForApprovalEmail([FromBody] List<int> filingIds)
         {
-            var success = await _emailService.SendFilingForApprovalEmailAsync(id);
+            var success = await _emailService.SendFilingForApprovalEmailAsync(filingIds);
             if (!success) return NotFound();
             return Ok();
         }

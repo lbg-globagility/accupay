@@ -20,6 +20,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<EmployeeTimelogFiling> GetFilingByIdAsync(int filingId);
 
+        Task<ICollection<EmployeeTimelogFiling>> GetFilingsByIdsAsync(IEnumerable<int> filingIds);
+
         Task UpdateFilingAsync(EmployeeTimelogFiling filing);
 
         Task<ICollection<EmployeeTimelogFiling>> GetLatestFilingByEmployeeAndDatePeriodAsync(int employeeId, TimePeriod datePeriod);

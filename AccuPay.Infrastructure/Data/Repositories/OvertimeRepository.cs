@@ -62,6 +62,14 @@ namespace AccuPay.Infrastructure.Data
 
         #endregion Single entity
 
+        public async Task<ICollection<Overtime>> GetByIdsWithEmployeeAsync(IEnumerable<int> ids)
+        {
+            return await _context.Overtimes
+                .Include(x => x.Employee)
+                .Where(l => ids.Contains(l.RowID.Value))
+                .ToListAsync();
+        }
+
         #region List of entities
 
         public async Task<ICollection<Overtime>> GetByEmployeeAsync(int employeeId)

@@ -23,6 +23,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Overtime> GetByIdWithEmployeeAsync(int id);
 
+        Task<ICollection<Overtime>> GetByIdsWithEmployeeAsync(IEnumerable<int> ids);
+
         Task<PaginatedList<Overtime>> GetPaginatedListAsync(OvertimePageOptions options, int organizationId);
 
         List<string> GetStatusList();
