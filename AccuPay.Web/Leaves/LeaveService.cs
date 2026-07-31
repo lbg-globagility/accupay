@@ -120,8 +120,15 @@ namespace AccuPay.Web.Leaves
             {
                 TimeSpan? dayStartTime = null;
                 TimeSpan? dayEndTime = null;
-                dayStartTime = dto.StartTime.Value.TimeOfDay;
-                dayEndTime = dto.EndTime.Value.TimeOfDay;
+                if (dto.StartTime != null)
+                {
+                    dayStartTime = dto.StartTime.Value.TimeOfDay;
+                }
+                if (dto.EndTime != null)
+                {
+                    dayEndTime = dto.EndTime.Value.TimeOfDay;
+                }
+                
                 
 
                 var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime);
