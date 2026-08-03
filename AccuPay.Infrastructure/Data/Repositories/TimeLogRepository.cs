@@ -146,6 +146,11 @@ namespace AccuPay.Infrastructure.Data
                 .OrderBy(x => x.LogDate)
                 .ToListAsync();
         }
+        public async Task DeleteFilingAsync(EmployeeTimelogFiling filing)
+        {
+            _context.Entry(filing).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
         #endregion Queries
     }
 }

@@ -54,9 +54,25 @@ namespace AccuPay.Web.Controllers.SelfService
             return Ok();
         }
 
-        [HttpDelete]
-        public async Task Delete()
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<LeaveDto>>> Update(int id, [FromBody] SelfServiceCreateLeaveDto dto)
         {
+            var leaves = await _leaveService.UpdateSelfService(id, dto);
+
+            if (leaves == null)
+                return NotFound();
+            else
+                return leaves;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var deleted = await _leaveService.DeleteSelfService(id);
+
+            if (!deleted) return NotFound();
+
+            return Ok();
         }
 
         [HttpGet("leave-types")]
@@ -75,6 +91,16 @@ namespace AccuPay.Web.Controllers.SelfService
         public async Task<List<EmployeeLeaveBalanceDto>> EmployeeLeaveBalance()
         {
             return await _leaveService.GetLeaveBalanceAsync(_currentUser.EmployeeId.Value);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<LeaveDto>> GetById(int id)
+        {
+            var leave = await _leaveService.GetById(id);
+
+            if (leave == null)
+                return NotFound();
+            else
+                return leave;
         }
     }
 }

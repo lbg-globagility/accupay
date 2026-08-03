@@ -466,5 +466,11 @@ namespace AccuPay.Web.TimeLogs
             return new PaginatedList<EmployeeTimelogFilingDto>(map, total, ++options.PageIndex, options.PageSize);
         }
 
+        public async Task<EmployeeTimelogFilingDto> GetById(int id)
+        {
+            var filing = await _repository.GetFilingByIdAsync(id);
+            return _mapper.Map<EmployeeTimelogFilingDto>(filing);
+        }
+
     }
 }

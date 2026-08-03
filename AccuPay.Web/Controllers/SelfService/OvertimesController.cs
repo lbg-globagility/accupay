@@ -41,12 +41,44 @@ namespace AccuPay.Web.Controllers.SelfService
             return overtime;
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<OvertimeDto>> Update(int id, [FromBody] SelfServiceUpdateOvertimeDto dto)
+        {
+            var overtime = await _overtimeService.UpdateSelfService(id, dto);
+
+            if (overtime == null)
+                return NotFound();
+            else
+                return overtime;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var deleted = await _overtimeService.DeleteSelfService(id);
+
+            if (!deleted) return NotFound();
+
+            return Ok();
+        }
+
         [HttpPost("filings/{id}/send-approval-email")]
         public async Task<ActionResult> SendFilingForApprovalEmail(int id)
         {
             var success = await _emailService.SendFilingForApprovalEmailAsync(id);
             if (!success) return NotFound();
             return Ok();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OvertimeDto>> GetById(int id)
+        {
+            var overtime = await _overtimeService.GetById(id);
+
+            if (overtime == null)
+                return NotFound();
+            else
+                return overtime;
         }
     }
 }

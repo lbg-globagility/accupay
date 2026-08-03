@@ -1,9 +1,11 @@
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers.SelfService
@@ -53,20 +55,36 @@ namespace AccuPay.Web.Controllers.SelfService
         }
         // NEW: Update filing endpoint
         [HttpPut("filings/{id}")]
-        [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult> UpdateFiling(int id, [FromBody] UpdateEmployeeTimelogFilingDto dto)
         {
             var filing = await _timeLogRepository.GetFilingByIdAsync(id);
             if (filing == null) return NotFound();
-
+            if (filing.Status == EmployeeTimelogFiling.StatusApproved)
+                throw new Exception("Only pending leave filings can be edited.");
+            if (filing.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be edited.");
             // Update allowed fields
             filing.EntryType = dto.EntryType;
             filing.LogDate = dto.LogDate;
             filing.Time = dto.Time;
             filing.Reason = dto.Reason;
             filing.ApproverEmail = dto.ApproverEmail;
-
+            
             await _timeLogRepository.UpdateFilingAsync(filing);
+
+            return Ok();
+        }
+        [HttpDelete("filings/{id}")]
+        public async Task<ActionResult> DeleteFiling(int id)
+        {
+            var filing = await _timeLogRepository.GetFilingByIdAsync(id);
+            if (filing == null) return NotFound();
+            if (filing.Status == EmployeeTimelogFiling.StatusApproved)
+                throw new Exception("Only pending leave filings can be deleted.");
+            if (filing.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be deleted.");
+
+            await _timeLogRepository.DeleteFilingAsync(filing);
 
             return Ok();
         }
@@ -75,6 +93,11 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             var result = await _service.ListFilingForCurrentEmployee(options);
             return result;
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeTimelogFilingDto>> TimelogFilingList(int id)
+        {
+            return await _service.GetById(id);
         }
     }
 }

@@ -88,8 +88,13 @@ namespace AccuPay.Web.Leaves
         public async Task<LeaveDto> GetById(int id)
         {
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
+            if (leave == null) return null;
 
-            return ConvertToDto(leave);
+            var dto = ConvertToDto(leave);
+            var filingGroup = await GetFilingGroupAsync(leave);
+            dto.DateTimes = filingGroup.Select(x => x.StartDate).ToList();
+
+            return dto;
         }
 
         public async Task<LeaveDto> Create(CreateLeaveDto dto)
@@ -123,20 +128,24 @@ namespace AccuPay.Web.Leaves
 
                 foreach (var date in dto.DateTimes)
                 {
-                    TimeSpan? dayStartTime = null;
-                    TimeSpan? dayEndTime = null;
                   
-                    var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime, filingGroupDate);
+                    var leave = NewSelfServiceLeave(dto, date, null, null, filingGroupDate);
 
                     leaves.Add(leave);
                 }
 
                 await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
 
-                
-            }
-            return leaves.Select(x => ConvertToDto(x)).ToList();
 
+            }
+
+            var dateTimes = leaves.Select(x => x.StartDate).ToList();
+            return leaves.Select(x =>
+            {
+                var dto = ConvertToDto(x);
+                dto.DateTimes = dateTimes;
+                return dto;
+            }).ToList();
         }
 
         private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
@@ -173,6 +182,75 @@ namespace AccuPay.Web.Leaves
             await _dataService.DeleteAsync(
                 id: id,
                 currentlyLoggedInUserId: _currentUser.UserId);
+        }
+
+        public async Task<List<LeaveDto>> UpdateSelfService(int id, SelfServiceCreateLeaveDto dto)
+        {
+            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
+            if (leave == null || leave.EmployeeID != _currentUser.EmployeeId) return null;
+
+            if (leave.Status != Leave.StatusPending)
+                throw new Exception("Only pending leave filings can be edited.");
+            if (leave.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be edited.");
+
+            var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
+            var filingGroup = await GetFilingGroupAsync(leave);
+
+            foreach (var groupLeave in filingGroup)
+            {
+                await _dataService.DeleteAsync(
+                    id: groupLeave.RowID.Value,
+                    currentlyLoggedInUserId: _currentUser.UserId);
+            }
+
+            var leaves = new List<Leave>();
+            if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
+            {
+                var newLeave = NewSelfServiceLeave(dto, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+                leaves.Add(newLeave);
+                await _dataService.SaveAsync(newLeave, _currentUser.UserId);
+            }
+            else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
+            {
+                foreach (var date in dto.DateTimes)
+                {
+                    var newLeave = NewSelfServiceLeave(dto, date, null, null, filingGroupDate);
+                    leaves.Add(newLeave);
+                }
+
+                await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
+            }
+
+            var dateTimes = leaves.Select(x => x.StartDate).ToList();
+            return leaves.Select(x =>
+            {
+                var dto = ConvertToDto(x);
+                dto.DateTimes = dateTimes;
+                return dto;
+            }).ToList();
+        }
+
+        public async Task<bool> DeleteSelfService(int id)
+        {
+            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
+            if (leave == null || leave.EmployeeID != _currentUser.EmployeeId) return false;
+
+            if (leave.Status != Leave.StatusPending)
+                throw new Exception("Only pending leave filings can be deleted.");
+            if (leave.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be deleted.");
+
+            var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
+            var filingGroup = await GetFilingGroupAsync(leave);
+            foreach (var groupLeave in filingGroup)
+            {
+                await _dataService.DeleteAsync(
+                    id: groupLeave.RowID.Value,
+                    currentlyLoggedInUserId: _currentUser.UserId);
+            }
+
+            return true;
         }
 
         public async Task<LeaveDto> ApproveFiling(int id, string approverEmail)

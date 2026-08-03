@@ -103,6 +103,41 @@ namespace AccuPay.Web.Overtimes
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
+        public async Task<OvertimeDto> UpdateSelfService(int id, SelfServiceUpdateOvertimeDto dto)
+        {
+            var overtime = await _repository.GetByIdWithEmployeeAsync(id);
+            if (overtime == null || overtime.EmployeeID != _currentUser.EmployeeId) return null;
+
+            if (overtime.Status != Overtime.StatusPending)
+                throw new Exception("Only pending overtime filings can be edited.");
+            if (overtime.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be edited.");
+            overtime.OTStartDate = dto.StartDate;
+            overtime.OTStartTime = dto.StartTime.TimeOfDay;
+            overtime.OTEndTime = dto.EndTime.TimeOfDay;
+            overtime.Reason = dto.Reason;
+
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+
+            return ConvertToDto(overtime);
+        }
+
+        public async Task<bool> DeleteSelfService(int id)
+        {
+            var overtime = await _repository.GetByIdWithEmployeeAsync(id);
+            if (overtime == null || overtime.EmployeeID != _currentUser.EmployeeId) return false;
+
+            if (overtime.Status != Overtime.StatusPending)
+                throw new Exception("Only pending overtime filings can be deleted.");
+            if (overtime.IsNotifyEmail)
+                throw new Exception("Not emailed filings can be edited.");
+            await _dataService.DeleteAsync(
+                id: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
+
+            return true;
+        }
+
         public async Task<OvertimeDto> ApproveFiling(int id, string approverEmail)
         {
             return await SetFilingStatus(id, Overtime.StatusApproved, approverEmail);
