@@ -112,7 +112,7 @@ namespace AccuPay.Web.Leaves
             if (endDate < startDate)
                 throw new BusinessLogicException("End Date cannot be earlier than Start Date.");
 
-           
+            var filingGroupDate = DateTime.Now;
 
             var leaves = new List<Leave>();
 
@@ -128,10 +128,10 @@ namespace AccuPay.Web.Leaves
                 {
                     dayEndTime = dto.EndTime.Value.TimeOfDay;
                 }
-                
-                
 
-                var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime);
+
+
+                var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime, filingGroupDate);
 
                 leaves.Add(leave);
             }
@@ -141,7 +141,7 @@ namespace AccuPay.Web.Leaves
             return leaves.Select(x => ConvertToDto(x)).ToList();
         }
 
-        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime)
+        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
         {
             return new Leave()
             {
@@ -153,7 +153,8 @@ namespace AccuPay.Web.Leaves
                 StartTime = startTime,
                 EndTime = endTime,
                 Reason = dto.Reason,
-                Status = Leave.StatusPending
+                Status = Leave.StatusPending,
+                FilingGroupDate = filingGroupDate
             };
         }
 
@@ -266,7 +267,8 @@ namespace AccuPay.Web.Leaves
                 LastUpd = leave.LastUpd,
                 Created = leave.Created,
                 LastUpdBy = leave.LastUpdBy,
-                IsNotifyEmail = leave.IsNotifyEmail
+                IsNotifyEmail = leave.IsNotifyEmail,
+                FilingGroupDate = leave.FilingGroupDate
             };
         }
 

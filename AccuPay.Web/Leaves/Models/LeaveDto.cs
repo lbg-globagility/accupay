@@ -41,5 +41,7 @@ namespace AccuPay.Web.Leaves
         public int? LastUpdBy { get; set; }
 
         public bool IsNotifyEmail { get; set; }
+
+        public DateTime? FilingGroupDate { get; set; }
     }
 }

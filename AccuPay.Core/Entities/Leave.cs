@@ -40,6 +40,11 @@ namespace AccuPay.Core.Entities
         public bool IsNotifyEmail { get; set; }
         public string ApproverEmail { get; set; }
 
+        // Shared timestamp stamped on every Leave row created from the same self-service
+        // date-range filing, so those rows can be grouped back together as one request.
+        [Column("FilingGroupDate")]
+        public DateTime? FilingGroupDate { get; set; }
+
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
 
