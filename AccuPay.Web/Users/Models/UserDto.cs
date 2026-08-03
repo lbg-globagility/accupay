@@ -1,3 +1,5 @@
+using System;
+
 namespace AccuPay.Web.Users
 {
     public class UserDto
@@ -16,6 +18,10 @@ namespace AccuPay.Web.Users
 
         public string EmployeeType { get; set; }
 
+        public string EmploymentStatus { get; set; }
+        public DateTime? StartDate { get; set; }
+        public string PositionName { get; set; }
+        public string EmployeeNo { get; set; }
         public string Image { get; set; }
     }
 }

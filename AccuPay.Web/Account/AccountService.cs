@@ -137,6 +137,11 @@ namespace AccuPay.Web.Account
                 Type = user.EmployeeId.HasValue ? "Employee" : "Admin",
                 EmployeeId = user.EmployeeId,
                 EmployeeType = employee?.EmployeeType,
+                EmploymentStatus = employee?.EmploymentStatus,
+                StartDate = employee?.StartDate,
+                EmployeeNo = employee?.EmployeeNo,
+                PositionName = employee?.Position?.Name,
+                
                 Image = await GetImageBase64(user.OriginalImageId)
             };
 

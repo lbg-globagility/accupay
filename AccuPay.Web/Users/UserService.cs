@@ -53,14 +53,6 @@ namespace AccuPay.Web.Users
         {
             var (users, count) = await _repository.List(options, _currentUser.ClientId, term);
 
-            var employeeIds = users
-                .Where(t => t.EmployeeId.HasValue)
-                .Select(t => t.EmployeeId.Value)
-                .ToArray();
-
-            var employees = await _employeeRepository.GetByMultipleIdAsync(employeeIds);
-            var employeeTypesById = employees.ToDictionary(e => e.RowID.Value, e => e.EmployeeType);
-
             var dtos = users.Select(t =>
                 new UserDto()
                 {
@@ -69,9 +61,6 @@ namespace AccuPay.Web.Users
                     LastName = t.LastName,
                     Email = t.Email,
                     EmployeeId = t.EmployeeId,
-                    EmployeeType = t.EmployeeId.HasValue && employeeTypesById.ContainsKey(t.EmployeeId.Value)
-                        ? employeeTypesById[t.EmployeeId.Value]
-                        : null
                 }
             );
 
@@ -157,8 +146,7 @@ namespace AccuPay.Web.Users
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                EmployeeId = user.EmployeeId,
-                EmployeeType = employee?.EmployeeType,
+                EmployeeId = user.EmployeeId
             };
 
             return dto;
