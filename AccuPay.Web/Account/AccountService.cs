@@ -124,6 +124,10 @@ namespace AccuPay.Web.Account
         {
             var user = await _users.FindByIdAsync(_currentUser.UserId.ToString());
 
+            var employee = user.EmployeeId.HasValue
+                ? await _employeeRepository.GetByIdAsync(user.EmployeeId.Value)
+                : null;
+
             var userDto = new UserDto()
             {
                 Id = user.Id,
@@ -131,6 +135,8 @@ namespace AccuPay.Web.Account
                 LastName = user.LastName,
                 Email = user.Email,
                 Type = user.EmployeeId.HasValue ? "Employee" : "Admin",
+                EmployeeId = user.EmployeeId,
+                EmployeeType = employee?.EmployeeType,
                 Image = await GetImageBase64(user.OriginalImageId)
             };
 

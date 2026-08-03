@@ -27,6 +27,7 @@ namespace AccuPay.Web.Users
         private readonly GenerateDefaultUserImageService _generateDefaultUserImageService;
         private readonly IFilesystem _filesystem;
         private readonly IFileRepository _fileRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public UserService(
             UserManager<AspNetUser> users,
@@ -35,7 +36,8 @@ namespace AccuPay.Web.Users
             IAspNetUserRepository repository,
             GenerateDefaultUserImageService generateDefaultUserImageService,
             IFilesystem filesystem,
-            IFileRepository fileRepository)
+            IFileRepository fileRepository,
+            IEmployeeRepository employeeRepository)
         {
             _users = users;
             _emailService = emailService;
@@ -44,11 +46,20 @@ namespace AccuPay.Web.Users
             _generateDefaultUserImageService = generateDefaultUserImageService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
+            _employeeRepository = employeeRepository;
         }
 
         public async Task<ActionResult<PaginatedList<UserDto>>> List(PageOptions options, string term)
         {
             var (users, count) = await _repository.List(options, _currentUser.ClientId, term);
+
+            var employeeIds = users
+                .Where(t => t.EmployeeId.HasValue)
+                .Select(t => t.EmployeeId.Value)
+                .ToArray();
+
+            var employees = await _employeeRepository.GetByMultipleIdAsync(employeeIds);
+            var employeeTypesById = employees.ToDictionary(e => e.RowID.Value, e => e.EmployeeType);
 
             var dtos = users.Select(t =>
                 new UserDto()
@@ -57,7 +68,10 @@ namespace AccuPay.Web.Users
                     FirstName = t.FirstName,
                     LastName = t.LastName,
                     Email = t.Email,
-                    EmployeeId = t.EmployeeId
+                    EmployeeId = t.EmployeeId,
+                    EmployeeType = t.EmployeeId.HasValue && employeeTypesById.ContainsKey(t.EmployeeId.Value)
+                        ? employeeTypesById[t.EmployeeId.Value]
+                        : null
                 }
             );
 
@@ -133,6 +147,10 @@ namespace AccuPay.Web.Users
         {
             var user = await _users.FindByIdAsync(id.ToString());
 
+            var employee = user.EmployeeId.HasValue
+                ? await _employeeRepository.GetByIdAsync(user.EmployeeId.Value)
+                : null;
+
             var dto = new UserDto()
             {
                 Id = user.Id,
@@ -140,6 +158,7 @@ namespace AccuPay.Web.Users
                 LastName = user.LastName,
                 Email = user.Email,
                 EmployeeId = user.EmployeeId,
+                EmployeeType = employee?.EmployeeType,
             };
 
             return dto;
