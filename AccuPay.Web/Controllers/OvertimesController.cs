@@ -1,4 +1,6 @@
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,15 +24,18 @@ namespace AccuPay.Web.Controllers
         private readonly OvertimeService _service;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly IEmployeeApproverRepository _employeeApproverRepository;
 
         public OvertimesController(
             OvertimeService service,
             IHostingEnvironment hostingEnvironment,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmployeeApproverRepository employeeApproverRepository)
         {
             _service = service;
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
+            _employeeApproverRepository = employeeApproverRepository;
         }
 
         [HttpPost("filings/{id}/approve")]
@@ -156,6 +162,22 @@ namespace AccuPay.Web.Controllers
         public async Task<OvertimeImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
+        }
+        [HttpGet("employee/{employeeId}/pending")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<OvertimeDto>>> GetPendingByEmployee(int employeeId, [FromQuery] int employeeApproverId, [FromQuery] string token)
+        {
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            if (!ApprovalTokenHelper.ValidateToken(token, employeeApproverId, secret, out var error, out var approverEmail))
+                return BadRequest(error);
+
+            var employeeApprover = await _employeeApproverRepository.GetByIdAsync(employeeApproverId);
+            if (employeeApprover == null || employeeApprover.EmployeeID != employeeId)
+                return NotFound();
+
+            if (!string.Equals(employeeApprover.Approver?.EmailAddress, approverEmail, System.StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Token does not match approver.");
+            return await _service.GetPendingByEmployee(employeeId);
         }
     }
 }

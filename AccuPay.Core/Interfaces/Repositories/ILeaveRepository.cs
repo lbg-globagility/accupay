@@ -19,6 +19,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Leave>> GetByEmployeeAsync(int employeeId);
 
+        Task<ICollection<Leave>> GetPendingByEmployeeAsync(int employeeId);
+
         Task<Leave> GetByIdWithEmployeeAsync(int id);
 
         Task<ICollection<Leave>> GetByIdsWithEmployeeAsync(IEnumerable<int> ids);

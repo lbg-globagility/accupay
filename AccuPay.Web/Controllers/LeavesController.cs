@@ -1,5 +1,6 @@
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.TimeLogs;
@@ -21,17 +22,20 @@ namespace AccuPay.Web.Controllers
         private readonly ILeaveRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly IEmployeeApproverRepository _employeeApproverRepository;
 
         public LeavesController(
             LeaveService leaveService,
             ILeaveRepository repository,
             IHostingEnvironment hostingEnvironment,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmployeeApproverRepository employeeApproverRepository)
         {
             _service = leaveService;
             _repository = repository;
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
+            _employeeApproverRepository = employeeApproverRepository;
         }
 
         [HttpPost("filings/{id}/approve")]
@@ -172,6 +176,23 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetLeaveTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-leave-template.xlsx");
+        }
+
+        [HttpGet("employee/{employeeId}/pending")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<LeaveDto>>> GetPendingByEmployee(int employeeId, [FromQuery] int employeeApproverId, [FromQuery] string token)
+        {
+            var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
+            if (!ApprovalTokenHelper.ValidateToken(token, employeeApproverId, secret, out var error, out var approverEmail))
+                return BadRequest(error);
+
+            var employeeApprover = await _employeeApproverRepository.GetByIdAsync(employeeApproverId);
+            if (employeeApprover == null || employeeApprover.EmployeeID != employeeId)
+                return NotFound();
+
+            if (!string.Equals(employeeApprover.Approver?.EmailAddress, approverEmail, System.StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Token does not match approver.");
+            return await _service.GetPendingByEmployee(employeeId);
         }
     }
 }

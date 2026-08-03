@@ -154,6 +154,14 @@ namespace AccuPay.Infrastructure.Data
                 .OrderBy(x => x.LogDate)
                 .ToListAsync();
         }
+        public async Task<ICollection<EmployeeTimelogFiling>> GetPendingByEmployeeAsync(int employeeId)
+        {
+            return await _context.EmployeeTimelogFilings
+                .Include(x => x.Employee)
+                .Where(l => l.EmployeeID == employeeId)
+                .Where(l => l.Status == EmployeeTimelogFiling.StatusPending)
+                .ToListAsync();
+        }
         #endregion Queries
     }
 }

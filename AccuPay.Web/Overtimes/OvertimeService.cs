@@ -5,10 +5,12 @@ using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Overtimes
@@ -197,5 +199,13 @@ namespace AccuPay.Web.Overtimes
 
             return parsedResult;
         }
+        public async Task<List<OvertimeDto>> GetPendingByEmployee(int employeeId)
+        {
+            var overtimes = await _repository.GetPendingByEmployeeAsync(employeeId);
+
+            return overtimes.Select(ConvertToDto).ToList();
+
+        }
+
     }
 }

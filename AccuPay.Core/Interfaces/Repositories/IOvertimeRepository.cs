@@ -30,5 +30,7 @@ namespace AccuPay.Core.Interfaces
         List<string> GetStatusList();
 
         Task UpdateApprovalAsync(Overtime overtime);
+
+        Task<ICollection<Overtime>> GetPendingByEmployeeAsync(int employeeId);
     }
 }

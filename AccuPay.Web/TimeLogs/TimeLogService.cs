@@ -6,6 +6,7 @@ using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Overtimes;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -464,6 +465,13 @@ namespace AccuPay.Web.TimeLogs
             var map= paged.Select(x => _mapper.Map<EmployeeTimelogFilingDto>(x));
 
             return new PaginatedList<EmployeeTimelogFilingDto>(map, total, ++options.PageIndex, options.PageSize);
+        }
+        public async Task<List<EmployeeTimelogFilingDto>> GetPendingByEmployee(int employeeId)
+        {
+            var employeetimefilings = await _repository.GetPendingByEmployeeAsync(employeeId);
+
+            return employeetimefilings.Select(x=>_mapper.Map<EmployeeTimelogFilingDto>(x)).ToList();
+
         }
 
     }

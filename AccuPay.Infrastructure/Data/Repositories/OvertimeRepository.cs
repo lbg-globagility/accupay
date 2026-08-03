@@ -174,6 +174,15 @@ namespace AccuPay.Infrastructure.Data
                     overtimeStatus)
                 .ToListAsync();
         }
+        public async Task<ICollection<Overtime>> GetPendingByEmployeeAsync(int employeeId)
+        {
+            return await _context.Overtimes
+                .Include(x => x.Employee)
+                .Where(l => l.EmployeeID == employeeId)
+                .Where(l => l.Status == Overtime.StatusPending)
+                .ToListAsync();
+        }
+
 
         #endregion List of entities
 

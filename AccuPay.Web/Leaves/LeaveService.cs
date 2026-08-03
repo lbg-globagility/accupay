@@ -90,6 +90,13 @@ namespace AccuPay.Web.Leaves
             return ConvertToDto(leave);
         }
 
+        public async Task<List<LeaveDto>> GetPendingByEmployee(int employeeId)
+        {
+            var leaves = await _leaveRepository.GetPendingByEmployeeAsync(employeeId);
+
+            return leaves.Select(ConvertToDto).ToList();
+        }
+
         public async Task<LeaveDto> Create(CreateLeaveDto dto)
         {
             var leave = new Leave()

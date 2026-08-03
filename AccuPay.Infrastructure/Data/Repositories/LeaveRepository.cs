@@ -69,6 +69,15 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Leave>> GetPendingByEmployeeAsync(int employeeId)
+        {
+            return await _context.Leaves
+                .Include(x => x.Employee)
+                .Where(l => l.EmployeeID == employeeId)
+                .Where(l => l.Status == Leave.StatusPending)
+                .ToListAsync();
+        }
+
         public async Task<PaginatedList<Leave>> GetPaginatedListAsync(
             LeavePageOptions options,
             int organizationId)
