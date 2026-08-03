@@ -35,6 +35,7 @@ namespace AccuPay.Core.Entities
         public bool IsApproved => Status == StatusApproved;
 
         public bool IsNotifyEmail { get; set; }
+        public DateTime? NotifyEmailSentAt { get; set; }
         public string TimeStamp => Time.ToString(@"hh\:mm");
 
     }

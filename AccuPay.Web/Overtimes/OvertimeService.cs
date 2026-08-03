@@ -210,7 +210,8 @@ namespace AccuPay.Web.Overtimes
                 LastUpd= overtime.LastUpd,
                 Created = overtime.Created,
                 LastUpdBy = overtime.LastUpdBy,
-                IsNotifyEmail= overtime.IsNotifyEmail
+                IsNotifyEmail= overtime.IsNotifyEmail,
+                NotifyEmailSentAt = overtime.NotifyEmailSentAt
             };
         }
 

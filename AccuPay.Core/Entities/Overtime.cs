@@ -34,6 +34,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsNotifyEmail { get; set; }
 
+        public DateTime? NotifyEmailSentAt { get; set; }
+
         public string ApproverEmail { get; set; }
 
         [ForeignKey("EmployeeID")]

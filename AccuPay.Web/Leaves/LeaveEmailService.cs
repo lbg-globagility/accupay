@@ -66,7 +66,10 @@ namespace AccuPay.Web.Leaves
             {
                 throw new BusinessLogicException("Only pending leave filings can be emailed for approval.");
             }
-            
+
+            var ttl = ApprovalTokenHelper.GetTokenTtl(_configuration);
+            ApprovalTokenHelper.EnsureResendAllowed(filing.IsNotifyEmail, filing.NotifyEmailSentAt, ttl);
+
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
             var approvers = employeeApprovers
                 .Select(ea => ea.Approver)
@@ -92,13 +95,18 @@ namespace AccuPay.Web.Leaves
             var lastDate = filingGroup.Max(l => l.StartDate);
 
             var employeeName = filing.Employee?.FullName ?? "An employee";
-            filingGroup.ForEach(l => l.IsNotifyEmail = true);
+            var notifyEmailSentAt = DateTime.UtcNow;
+            filingGroup.ForEach(l =>
+            {
+                l.IsNotifyEmail = true;
+                l.NotifyEmailSentAt = notifyEmailSentAt;
+            });
             await _leaveRepository.SaveManyAsync(filingGroup);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();
 
-                var token = CreateToken(filingId, approver.EmailAddress);
+                var token = CreateToken(filingId, approver.EmailAddress, ttl);
                 var approveUrl = CreateUrl($"/api/leaves/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}");
                 var rejectUrl = CreateUrl($"/api/leaves/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}");
 
@@ -134,12 +142,9 @@ namespace AccuPay.Web.Leaves
             return groupLeaves.Any() ? groupLeaves.ToList() : new List<Leave> { filing };
         }
 
-        private string CreateToken(int id, string approverEmail)
+        private string CreateToken(int id, string approverEmail, TimeSpan ttl)
         {
-            var hours = 24;
-            if (int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours) && configuredHours > 0)
-                hours = configuredHours;
-            return ApprovalTokenHelper.GenerateToken(id, _configuration["App:ApprovalTokenSecret"] ?? string.Empty, TimeSpan.FromHours(hours), approverEmail);
+            return ApprovalTokenHelper.GenerateToken(id, _configuration["App:ApprovalTokenSecret"] ?? string.Empty, ttl, approverEmail);
         }
 
         private string CreateUrl(string path)

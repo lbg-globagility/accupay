@@ -38,6 +38,7 @@ namespace AccuPay.Core.Entities
         public string Status { get; set; }
 
         public bool IsNotifyEmail { get; set; }
+        public DateTime? NotifyEmailSentAt { get; set; }
         public string ApproverEmail { get; set; }
 
         // Shared timestamp stamped on every Leave row created from the same self-service

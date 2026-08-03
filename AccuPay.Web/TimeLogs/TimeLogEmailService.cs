@@ -70,6 +70,9 @@ namespace AccuPay.Web.TimeLogs
                 throw new BusinessLogicException("Only pending timelog filings can be emailed for approval.");
             }
 
+            var ttl = ApprovalTokenHelper.GetTokenTtl(_configuration);
+            ApprovalTokenHelper.EnsureResendAllowed(filing.IsNotifyEmail, filing.NotifyEmailSentAt, ttl);
+
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
             var approvers = employeeApprovers
                 .Select(ea => ea.Approver)
@@ -90,12 +93,8 @@ namespace AccuPay.Web.TimeLogs
                 : domain.TrimEnd('/');
 
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
-            // token TTL (hours) default 24
-            var ttlHours = 24;
-            int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours);
-            if (configuredHours > 0) ttlHours = configuredHours;
 
-            var token = ApprovalTokenHelper.GenerateToken(filingId, secret, TimeSpan.FromHours(ttlHours));
+            var token = ApprovalTokenHelper.GenerateToken(filingId, secret, ttl);
 
             var approveUrl = string.IsNullOrWhiteSpace(baseDomain)
                 ? $"/api/timelogs/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}"
@@ -117,6 +116,7 @@ namespace AccuPay.Web.TimeLogs
             var approveButtonHtml = $"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>";
             var rejectButtonHtml = $"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>";
             filing.IsNotifyEmail = true;
+            filing.NotifyEmailSentAt = DateTime.UtcNow;
             await _timeLogRepository.UpdateFilingAsync(filing);
             foreach (var approver in approvers)
             {

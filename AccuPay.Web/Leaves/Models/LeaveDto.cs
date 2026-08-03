@@ -43,6 +43,8 @@ namespace AccuPay.Web.Leaves
 
         public bool IsNotifyEmail { get; set; }
 
+        public DateTime? NotifyEmailSentAt { get; set; }
+
         public DateTime? FilingGroupDate { get; set; }
 
         public List<DateTime>? DateTimes { get; set; }

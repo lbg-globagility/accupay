@@ -69,6 +69,9 @@ namespace AccuPay.Web.Overtimes
                 throw new BusinessLogicException("Only pending overtime filings can be emailed for approval.");
             }
 
+            var ttl = ApprovalTokenHelper.GetTokenTtl(_configuration);
+            ApprovalTokenHelper.EnsureResendAllowed(filing.IsNotifyEmail, filing.NotifyEmailSentAt, ttl);
+
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
             var approvers = employeeApprovers
                 .Select(ea => ea.Approver)
@@ -92,18 +95,16 @@ namespace AccuPay.Web.Overtimes
 
             var employeeName = filing.Employee?.FullName ?? "An employee";
 
-            var hours = 24;
-            if (int.TryParse(_configuration["App:ApprovalTokenHours"], out var configuredHours) && configuredHours > 0)
-                hours = configuredHours;
             var domain = (_configuration["App:Domain"] ?? string.Empty).TrimEnd('/');
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
             filing.IsNotifyEmail = true;
+            filing.NotifyEmailSentAt = DateTime.UtcNow;
             await _overtimeRepository.UpdateAsync(filing);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();
 
-                var token = ApprovalTokenHelper.GenerateToken(filingId, secret, TimeSpan.FromHours(hours), approver.EmailAddress);
+                var token = ApprovalTokenHelper.GenerateToken(filingId, secret, ttl, approver.EmailAddress);
                 var approveUrl = domain + $"/api/overtimes/filings/{filingId}/approve?token={Uri.EscapeDataString(token)}";
                 var rejectUrl = domain + $"/api/overtimes/filings/{filingId}/reject?token={Uri.EscapeDataString(token)}";
 

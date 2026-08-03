@@ -1,3 +1,5 @@
+using AccuPay.Core.Exceptions;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,6 +8,30 @@ namespace AccuPay.Web.TimeLogs
 {
     internal static class ApprovalTokenHelper
     {
+        // How long an approval-email link stays valid before an employee is allowed to resend it.
+        public static TimeSpan GetTokenTtl(IConfiguration configuration, int defaultHours = 24)
+        {
+            var hours = defaultHours;
+            if (int.TryParse(configuration["App:ApprovalTokenHours"], out var configuredHours) && configuredHours > 0)
+                hours = configuredHours;
+
+            return TimeSpan.FromHours(hours);
+        }
+
+        // Resending is blocked while a previously sent approval link is still valid, so approvers
+        // don't get flooded with duplicate emails/tokens for the same filing.
+        public static void EnsureResendAllowed(bool isNotifyEmail, DateTime? notifyEmailSentAt, TimeSpan ttl)
+        {
+            if (!isNotifyEmail || !notifyEmailSentAt.HasValue) return;
+
+            var expiresAt = notifyEmailSentAt.Value.Add(ttl);
+            if (DateTime.UtcNow < expiresAt)
+            {
+                throw new BusinessLogicException(
+                    $"An approval email was already sent and its link is still valid until {expiresAt:yyyy-MM-dd HH:mm} UTC. You can resend it once that link expires.");
+            }
+        }
+
         // token without an approver email = "{expiryUnixSeconds}.{signatureBase64Url}"
         // token with an approver email    = "{expiryUnixSeconds}.{emailBase64Url}.{signatureBase64Url}"
         public static string GenerateToken(int filingId, string secret, TimeSpan ttl, string approverEmail = null)
