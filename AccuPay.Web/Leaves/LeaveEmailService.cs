@@ -21,6 +21,7 @@ namespace AccuPay.Web.Leaves
             "<div style=\"font-family:Segoe UI, Arial, sans-serif;\">" +
             "<p>Hi {approver},</p>" +
             "<p>{employee} requested {leavetype} leave ({date} {time}).</p>" +
+            "<p>Days: {dates}</p>" +
             "<p>Reason: {reason}</p>" +
             "<p>{approveButton} {rejectButton}</p>" +
             "</div>";
@@ -28,6 +29,7 @@ namespace AccuPay.Web.Leaves
         private const string DefaultTextBody =
             "Hi {approver},\n\n" +
             "{employee} requested {leavetype} leave ({date} {time}).\n" +
+            "Days: {dates}\n" +
             "Reason: {reason}\n\n" +
             "Approve: {approveButton}\n" +
             "Reject: {rejectButton}";
@@ -91,8 +93,6 @@ namespace AccuPay.Web.Leaves
             var textBody = string.IsNullOrWhiteSpace(template?.TextBody) ? DefaultTextBody : template.TextBody;
 
             var filingGroup = await GetFilingGroupAsync(filing);
-            var firstDate = filingGroup.Min(l => l.StartDate);
-            var lastDate = filingGroup.Max(l => l.StartDate);
 
             var employeeName = filing.Employee?.FullName ?? "An employee";
             var notifyEmailSentAt = DateTime.Now;
@@ -115,8 +115,8 @@ namespace AccuPay.Web.Leaves
 
                 var email = new Email(subject, approver.EmailAddress)
                 {
-                    Text = ApplyPlaceholders(textBody, filing, firstDate, lastDate, approverName, employeeName, approveUrl, rejectUrl, encodeValues: false),
-                    Html = ApplyPlaceholders(htmlBody, filing, firstDate, lastDate, approverName, employeeName, approveButtonHtml, rejectButtonHtml, encodeValues: true)
+                    Text = ApplyPlaceholders(textBody, filing, filingGroup, approverName, employeeName, approveUrl, rejectUrl, encodeValues: false),
+                    Html = ApplyPlaceholders(htmlBody, filing, filingGroup, approverName, employeeName, approveButtonHtml, rejectButtonHtml, encodeValues: true)
                 };
 
                 await _emailService.Send(email);
@@ -153,11 +153,12 @@ namespace AccuPay.Web.Leaves
             return string.IsNullOrWhiteSpace(domain) ? path : domain + path;
         }
 
+        private const int MaxDatesListed = 10;
+
         private static string ApplyPlaceholders(
             string template,
             Leave filing,
-            DateTime firstDate,
-            DateTime lastDate,
+            List<Leave> filingGroup,
             string approverName,
             string employeeName,
             string approveButtonOrUrl,
@@ -170,15 +171,31 @@ namespace AccuPay.Web.Leaves
                 ? "whole day"
                 : $"{filing.StartTime.Value.ToString(@"hh\:mm")} - {filing.EndTime.Value.ToString(@"hh\:mm")}";
 
-            var date = firstDate.Date == lastDate.Date
+            var orderedDates = filingGroup
+                .Select(l => l.StartDate.Date)
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
+            var firstDate = orderedDates.First();
+            var lastDate = orderedDates.Last();
+            var dayCount = orderedDates.Count;
+
+            var span = firstDate == lastDate
                 ? firstDate.ToString("yyyy-MM-dd")
                 : $"{firstDate:yyyy-MM-dd} - {lastDate:yyyy-MM-dd}";
+            var date = dayCount > 1 ? $"{span} ({dayCount} days)" : span;
+
+            var dateStrings = orderedDates.Select(d => d.ToString("ddd yyyy-MM-dd")).ToList();
+            var dates = dateStrings.Count > MaxDatesListed
+                ? string.Join(", ", dateStrings.Take(MaxDatesListed)) + $", +{dateStrings.Count - MaxDatesListed} more"
+                : string.Join(", ", dateStrings);
 
             return template
                 .Replace("{approver}", E(approverName))
                 .Replace("{employee}", E(employeeName))
                 .Replace("{leavetype}", E(filing.LeaveType))
                 .Replace("{date}", date)
+                .Replace("{dates}", E(dates))
                 .Replace("{time}", time)
                 .Replace("{reason}", E(string.IsNullOrWhiteSpace(filing.Reason) ? "N/A" : filing.Reason))
                 .Replace("{approveButton}", approveButtonOrUrl)
