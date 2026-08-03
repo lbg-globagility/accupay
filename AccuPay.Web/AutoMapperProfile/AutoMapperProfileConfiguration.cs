@@ -16,6 +16,7 @@ namespace AccuPay.Web.AutoMapperProfile
         private AutoMapperProfileConfiguration(string profileName) : base(profileName)
         {
             CreateMap<Approver, ApproverDto>();
+            CreateMap<Approver, SelfServiceApproverDto>();
             CreateMap<EmployeeApprover, ApproverDto.EmployeeApproversDto>();
             CreateMap<Employee, ApproverDto.EmployeeDto>();
 

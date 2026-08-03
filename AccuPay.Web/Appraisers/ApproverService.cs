@@ -3,6 +3,7 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AutoMapper;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static AccuPay.Web.Appraisers.ApproverDto;
@@ -14,11 +15,17 @@ namespace AccuPay.Web.Appraisers
         private readonly IApproverRepository _repository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
-        public ApproverService(IApproverRepository repository, ICurrentUser currentUser, IMapper mapper)
+        private readonly IEmployeeApproverRepository _employeeApproverRepository;
+        public ApproverService(
+            IApproverRepository repository,
+            ICurrentUser currentUser,
+            IMapper mapper,
+            IEmployeeApproverRepository employeeApproverRepository)
         {
             _repository = repository;
             _currentUser = currentUser;
             _mapper = mapper;
+            _employeeApproverRepository = employeeApproverRepository;
         }
 
         public async Task<PaginatedList<ApproverDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -98,7 +105,15 @@ namespace AccuPay.Web.Appraisers
         {
             var approver = await _repository.ApproverEmployees(id);
             return _mapper.Map<ApproverDto>(approver);
-            
+
+        }
+
+        public async Task<List<SelfServiceApproverDto>> GetByEmployeeId(int employeeId)
+        {
+            var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(employeeId);
+            var active = employeeApprovers
+                .Where(ea => ea.Approver != null && ea.Approver.IsActive);
+            return active.Select(x => _mapper.Map<SelfServiceApproverDto>(x.Approver)).ToList();
         }
     }
 }
