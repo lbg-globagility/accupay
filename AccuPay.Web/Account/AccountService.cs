@@ -25,6 +25,7 @@ namespace AccuPay.Web.Account
         private readonly IUserDataService _userDataService;
         private readonly IFilesystem _filesystem;
         private readonly IFileRepository _fileRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
 
 
@@ -37,7 +38,8 @@ namespace AccuPay.Web.Account
             ICurrentUser currentUser,
             IUserDataService userDataService,
             IFilesystem filesystem,
-            IFileRepository fileRepository)
+            IFileRepository fileRepository,
+            IEmployeeRepository employeeRepository)
         {
             _users = users;
             _signIn = signIn;
@@ -48,6 +50,7 @@ namespace AccuPay.Web.Account
             _userDataService = userDataService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
+            _employeeRepository = employeeRepository;
         }
 
         public async Task<string> Login(string username, string password)
@@ -246,9 +249,11 @@ namespace AccuPay.Web.Account
             var path = $"User/{user.Id}/{image.FileName}";
             var savedPath = await _filesystem.Move(image, path);
 
+            File file;
+
             if (user.OriginalImageId.HasValue)
             {
-                var file = await _fileRepository.GetById(user.OriginalImageId.Value);
+                file = await _fileRepository.GetById(user.OriginalImageId.Value);
 
                 file.Key = image.FileName;
                 file.Filename = image.FileName;
@@ -261,7 +266,7 @@ namespace AccuPay.Web.Account
             }
             else
             {
-                var file = new File(
+                file = new File(
                     key: image.FileName,
                     location: savedPath,
                     file: image);
@@ -274,6 +279,18 @@ namespace AccuPay.Web.Account
                 user.OriginalImage = file;
 
                 await _users.UpdateAsync(user);
+            }
+
+            if (user.EmployeeId.HasValue)
+            {
+                var employee = await _employeeRepository.GetByIdAsync(user.EmployeeId.Value);
+
+                if (employee != null)
+                {
+                    employee.OriginalImageId = file.Id;
+
+                    await _employeeRepository.UpdateAsync(employee);
+                }
             }
         }
     }
