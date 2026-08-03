@@ -421,6 +421,7 @@ namespace AccuPay.Infrastructure.Data
             return await builder
                 .IsActive()
                 .IncludeOrganization()
+                .IncludePosition()
                 .ToListAsync(new int?());
         }
 

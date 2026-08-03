@@ -493,6 +493,7 @@
     <Compile Include="Views\Contractor\ProjectAssignmentForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Contractor\ProjectEmployee\ProjectEmployeeModel.vb" />
     <Compile Include="Views\Contractor\ProjectEmployee\ProjectEmployeeSaveChangesForm.Designer.vb">
       <DependentUpon>ProjectEmployeeSaveChangesForm.vb</DependentUpon>
     </Compile>
@@ -1771,14 +1772,14 @@
     <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.resx">
       <DependentUpon>BankFileTextFormatSecurityBankForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Contractor\ContractorProject\ContractorProjectSaveChangesForm.resx">
+      <DependentUpon>ContractorProjectSaveChangesForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.resx">
       <DependentUpon>ApplySoloParentBenefitForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.resx">
       <DependentUpon>EditSoloParentBenefitForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Contractor\ContractorProject\ContractorProjectSaveChangesForm.resx">
-      <DependentUpon>ContractorProjectSaveChangesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Contractor\ContractorSaveChangesForm.resx">
       <DependentUpon>ContractorSaveChangesForm.vb</DependentUpon>

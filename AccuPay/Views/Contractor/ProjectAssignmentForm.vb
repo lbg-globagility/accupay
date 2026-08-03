@@ -231,7 +231,10 @@ Public Class ProjectAssignmentForm
     End Sub
 
     Private Async Sub gridProjects_SelectionChanged(sender As Object, e As EventArgs)
-        If gridContractors.CurrentRow Is Nothing AndAlso gridProjects.CurrentRow Is Nothing Then Return
+        If {gridContractors.CurrentRow, gridProjects.CurrentRow}.Any(Function(t) t Is Nothing) Then
+            gridEmployees.DataSource = Enumerable.Empty(Of ProjectEmployee)()
+            Return
+        End If
 
         Dim contractorProject = CType(gridProjects.CurrentRow.DataBoundItem, ContractorProject)
 

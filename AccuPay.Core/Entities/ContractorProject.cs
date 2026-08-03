@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace AccuPay.Core.Entities
 {
@@ -27,6 +28,7 @@ namespace AccuPay.Core.Entities
         public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; } = new List<ProjectEmployee>();
 
         public string ContractorName => Contractor?.Name;
+
     }
 
     public partial class ContractorProject
@@ -76,5 +78,8 @@ namespace AccuPay.Core.Entities
 
             return clone;
         }
+
+        public ProjectEmployee FindEmployeeById(int id)
+            => ProjectEmployees?.FirstOrDefault(t => t.EmployeeId == id);
     }
 }

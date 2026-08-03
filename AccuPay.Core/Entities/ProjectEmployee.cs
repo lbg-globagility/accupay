@@ -71,5 +71,8 @@ namespace AccuPay.Core.Entities
         public string EmployeeName => Employee?.FullNameLastNameFirst ?? string.Empty;
 
         public string EmployeeNo => Employee?.EmployeeNo ?? string.Empty;
+
+        [NotMapped]
+        public bool IsSelected { get; set; }
     }
 }
