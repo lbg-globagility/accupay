@@ -195,6 +195,7 @@ namespace AccuPay.Web
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<ListOfValueCollection>();
             services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
+            services.AddScoped<IPayrollInvoiceExcelFormatReportBuilder, PayrollInvoiceExcelFormatReportBuilder>();
 
             return services;
         }

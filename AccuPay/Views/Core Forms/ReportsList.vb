@@ -51,7 +51,8 @@ Public Class ReportsList
             New LoanLedgerReportProvider(),
             New Cinema2000TardinessReportProvider(),
             New AlphalistExcelFormatReportProvider(),
-            New BankFileReportProvider(z_OrganizationID)
+            New BankFileReportProvider(z_OrganizationID),
+            New PayrollInvoiceExcelFormatReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 

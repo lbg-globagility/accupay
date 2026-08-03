@@ -99,9 +99,11 @@ Public Class ContractorSaveChangesForm
             Async Function()
                 Dim contractorDataService = GetRequiredService(Of IContractorDataService)()
 
-                If _contractor.IsNewEntity Then Await contractorDataService.SaveAsync(_contractor, _userId)
-
-                If Not _contractor.IsNewEntity Then Await contractorDataService.SaveManyAsync(currentlyLoggedInUserId:=_userId, updated:=New List(Of Contractor) From {_contractor})
+                If _contractor.IsNewEntity Then
+                    Await contractorDataService.SaveAsync(_contractor, _userId)
+                ElseIf Not _contractor.IsNewEntity Then
+                    Await contractorDataService.SaveManyAsync(currentlyLoggedInUserId:=_userId, updated:=New List(Of Contractor) From {_contractor})
+                End If
 
                 DialogResult = DialogResult.OK
 
