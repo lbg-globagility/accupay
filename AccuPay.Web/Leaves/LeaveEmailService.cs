@@ -62,9 +62,9 @@ namespace AccuPay.Web.Leaves
             {
                 throw new BusinessLogicException("Leave filing {FilingId} was not found or has no employee.");
             }
-            if (filing.IsNotifyEmail)
+            if (filing.Status != Leave.StatusPending)
             {
-                throw new BusinessLogicException("Already emailed a leave filing to approvers");
+                throw new BusinessLogicException("Only pending leave filings can be emailed for approval.");
             }
             
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);

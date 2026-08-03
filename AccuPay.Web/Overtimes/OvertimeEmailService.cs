@@ -64,9 +64,9 @@ namespace AccuPay.Web.Overtimes
             {
                 throw new BusinessLogicException("Filing {FilingId} has no EmployeeID.");
             }
-            if (filing.IsNotifyEmail)
+            if (filing.Status != Overtime.StatusPending)
             {
-                throw new BusinessLogicException("Already emailed a leave filing to approvers");
+                throw new BusinessLogicException("Only pending overtime filings can be emailed for approval.");
             }
 
             var employeeApprovers = await _employeeApproverRepository.GetByEmployeeIdAsync(filing.EmployeeID.Value);
