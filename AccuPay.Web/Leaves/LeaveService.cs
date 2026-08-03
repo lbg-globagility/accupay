@@ -113,6 +113,8 @@ namespace AccuPay.Web.Leaves
 
         public async Task<List<LeaveDto>> Create(SelfServiceCreateLeaveDto dto)
         {
+            ValidateSelfServiceDto(dto);
+
             var leaves = new List<Leave>();
             var filingGroupDate = DateTime.Now;
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
@@ -192,24 +194,18 @@ namespace AccuPay.Web.Leaves
             if (leave.Status != Leave.StatusPending)
                 throw new Exception("Only pending leave filings can be edited.");
             if (leave.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be edited.");
+                throw new Exception("Emailed filings can no longer be edited.");
+
+            ValidateSelfServiceDto(dto);
 
             var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
             var filingGroup = await GetFilingGroupAsync(leave);
-
-            foreach (var groupLeave in filingGroup)
-            {
-                await _dataService.DeleteAsync(
-                    id: groupLeave.RowID.Value,
-                    currentlyLoggedInUserId: _currentUser.UserId);
-            }
 
             var leaves = new List<Leave>();
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
                 var newLeave = NewSelfServiceLeave(dto, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
                 leaves.Add(newLeave);
-                await _dataService.SaveAsync(newLeave, _currentUser.UserId);
             }
             else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
@@ -218,9 +214,13 @@ namespace AccuPay.Web.Leaves
                     var newLeave = NewSelfServiceLeave(dto, date, null, null, filingGroupDate);
                     leaves.Add(newLeave);
                 }
-
-                await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
             }
+
+            // The old filing group is deleted and the replacement is created in a single
+            // transaction: the old rows still hold these dates, so create-then-delete would
+            // trip SanitizeEntity's duplicate-date check, and delete-then-create without a
+            // transaction risks losing the request entirely if the create half fails.
+            await _dataService.ReplaceSelfServiceFilingGroupAsync(filingGroup, leaves, _currentUser.UserId);
 
             var dateTimes = leaves.Select(x => x.StartDate).ToList();
             return leaves.Select(x =>
@@ -231,6 +231,17 @@ namespace AccuPay.Web.Leaves
             }).ToList();
         }
 
+        private static void ValidateSelfServiceDto(SelfServiceCreateLeaveDto dto)
+        {
+            if (dto.LeaveTiming != SelfServiceCreateLeaveDto.TimingDay &&
+                dto.LeaveTiming != SelfServiceCreateLeaveDto.TimingHour)
+                throw new BusinessLogicException("Leave timing must be 'Day' or 'Hour'.");
+
+            if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay &&
+                (dto.DateTimes == null || !dto.DateTimes.Any()))
+                throw new BusinessLogicException("At least one date is required.");
+        }
+
         public async Task<bool> DeleteSelfService(int id)
         {
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
@@ -239,7 +250,7 @@ namespace AccuPay.Web.Leaves
             if (leave.Status != Leave.StatusPending)
                 throw new Exception("Only pending leave filings can be deleted.");
             if (leave.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be deleted.");
+                throw new Exception("Emailed filings can no longer be deleted.");
 
             var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
             var filingGroup = await GetFilingGroupAsync(leave);

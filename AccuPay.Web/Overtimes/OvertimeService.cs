@@ -111,7 +111,7 @@ namespace AccuPay.Web.Overtimes
             if (overtime.Status != Overtime.StatusPending)
                 throw new Exception("Only pending overtime filings can be edited.");
             if (overtime.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be edited.");
+                throw new Exception("Emailed filings can no longer be edited.");
             overtime.OTStartDate = dto.StartDate;
             overtime.OTStartTime = dto.StartTime.TimeOfDay;
             overtime.OTEndTime = dto.EndTime.TimeOfDay;
@@ -130,7 +130,7 @@ namespace AccuPay.Web.Overtimes
             if (overtime.Status != Overtime.StatusPending)
                 throw new Exception("Only pending overtime filings can be deleted.");
             if (overtime.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be edited.");
+                throw new Exception("Emailed filings can no longer be deleted.");
             await _dataService.DeleteAsync(
                 id: id,
                 currentlyLoggedInUserId: _currentUser.UserId);

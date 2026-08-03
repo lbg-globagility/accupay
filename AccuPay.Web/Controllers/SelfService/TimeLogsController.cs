@@ -62,7 +62,7 @@ namespace AccuPay.Web.Controllers.SelfService
             if (filing.Status == EmployeeTimelogFiling.StatusApproved)
                 throw new Exception("Only pending leave filings can be edited.");
             if (filing.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be edited.");
+                throw new Exception("Emailed filings can no longer be edited.");
             // Update allowed fields
             filing.EntryType = dto.EntryType;
             filing.LogDate = dto.LogDate;

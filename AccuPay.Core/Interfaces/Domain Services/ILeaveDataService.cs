@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Interfaces
@@ -11,5 +12,10 @@ namespace AccuPay.Core.Interfaces
 
         Task<PaginatedList<LeaveLedger>> GetLeaveBalancesAsync(PageOptions options, int organizationId, string searchTerm);
 
+        /// <summary>
+        /// Deletes an existing self-service filing group and saves its replacement leaves in a
+        /// single transaction, so a failure creating the replacement rolls back the deletes.
+        /// </summary>
+        Task ReplaceSelfServiceFilingGroupAsync(List<Leave> toDelete, List<Leave> toCreate, int changedByUserId);
     }
 }

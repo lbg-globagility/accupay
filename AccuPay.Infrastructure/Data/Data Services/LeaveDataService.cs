@@ -143,6 +143,32 @@ namespace AccuPay.Infrastructure.Data
             await PostSaveManyAction(updatedLeaves, oldLeaves.ToList(), SaveType.Update, changedByUserId);
         }
 
+        public async Task ReplaceSelfServiceFilingGroupAsync(List<Leave> toDelete, List<Leave> toCreate, int changedByUserId)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    foreach (var leave in toDelete)
+                    {
+                        await DeleteAsync(leave.RowID.Value, changedByUserId);
+                    }
+
+                    if (toCreate.Any())
+                    {
+                        await SaveManyAsync(toCreate, changedByUserId);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
         {
             var shifts = new List<Shift>();
@@ -165,7 +191,13 @@ namespace AccuPay.Infrastructure.Data
                 employees = await GetEmployees(employeeIds);
             }
 
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            // Reuse an ambient transaction (e.g. from ReplaceSelfServiceFilingGroupAsync) if one is
+            // already open on this context - EF Core does not allow nesting BeginTransactionAsync
+            // calls. Only commit/rollback/dispose the transaction if this method is the one that
+            // opened it.
+            var ambientTransaction = _context.Database.CurrentTransaction;
+            var transaction = ambientTransaction ?? await _context.Database.BeginTransactionAsync();
+            try
             {
                 int?[] oldRowIds = leaves.Select(x => x.RowID).ToArray();
                 try
@@ -212,11 +244,12 @@ namespace AccuPay.Infrastructure.Data
                             await ValidateLeaveBalance(shifts, unusedApprovedLeaves, employee, leave);
                         }
                     }
-                    transaction.Commit();
+
+                    if (ambientTransaction == null) transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
+                    if (ambientTransaction == null) transaction.Rollback();
                     // If the exception happens after the repository SaveAsync, leaves that are to be created will have RowIDs already
                     // by the point it reaches this catch block because of SQL Transaction. Those leaves' RowIDs should be reverted back
                     // to null
@@ -229,6 +262,10 @@ namespace AccuPay.Infrastructure.Data
                     }
                     throw;
                 }
+            }
+            finally
+            {
+                if (ambientTransaction == null) transaction.Dispose();
             }
         }
 
