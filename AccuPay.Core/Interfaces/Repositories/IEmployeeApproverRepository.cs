@@ -8,6 +8,8 @@ namespace AccuPay.Core.Interfaces
     {
         Task<ICollection<EmployeeApprover>> GetByEmployeeIdAsync(int employeeId);
 
+        Task<EmployeeApprover> GetByIdAsync(int id);
+
         Task DeleteManyAsync(IEnumerable<int> ids);
     }
 }

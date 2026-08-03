@@ -21,6 +21,14 @@ namespace AccuPay.Infrastructure.Data
                 .Where(ea => ea.EmployeeID == employeeId)
                 .ToListAsync();
         }
+
+        public async Task<EmployeeApprover> GetByIdAsync(int id)
+        {
+            return await _context.Set<EmployeeApprover>()
+                .Include(ea => ea.Approver)
+                .Include(ea => ea.Employee)
+                .FirstOrDefaultAsync(ea => ea.RowID == id);
+        }
         public async Task DeleteManyAsync(IEnumerable<int> ids)
         {
             var empApprover = await _context.EmployeeApprovers
