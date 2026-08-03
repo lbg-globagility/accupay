@@ -210,13 +210,19 @@ namespace AccuPay.Web.Account
         public async Task<UserDto> ChangeUserPassword(int userId, string password)
         {
             var user = await _users.FindByIdAsync(userId.ToString());
-            if (user.SecurityStamp == null)
+            if (user == null)
             {
-                await _users.UpdateSecurityStampAsync(user);
+                throw new BusinessLogicException("User not found.");
             }
-            user.PasswordHash = _users.PasswordHasher.HashPassword(user,password);
-           
-            await _userDataService.UpdateAsync(user, true);
+
+            var token = await _users.GeneratePasswordResetTokenAsync(user);
+            var result = await _users.ResetPasswordAsync(user, token, password);
+
+            if (!result.Succeeded)
+            {
+                throw new BusinessLogicException(result.Errors.First().Description);
+            }
+
             var userDto = new UserDto()
             {
                 Id = user.Id,

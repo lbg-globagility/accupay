@@ -1,4 +1,5 @@
 using AccuPay.Web.Account;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Users;
 using AccuPay.Web.Users.Models;
@@ -78,6 +79,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("verify")]
+        [AllowAnonymous]
         public async Task<ActionResult> Verify([FromQuery] string token)
         {
             var claims = _userTokenService.DecodeRegistrationToken(token);
@@ -87,6 +89,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Register([FromBody] VerifyRegistrationDto dto)
         {
             var userDto = await _accountService.Register(dto);
@@ -106,6 +109,7 @@ namespace AccuPay.Web.Controllers
             return await _accountService.ChangePassword(dto.OldPassword,dto.Password);
         }
         [HttpPost("change-user-password/{id}")]
+        [Permission(PermissionTypes.UserUpdate)]
         public async Task<ActionResult<UserDto>> ChangeUserPassword([FromBody] ChangePasswordDto dto,int id)
         {
             return await _accountService.ChangeUserPassword(id, dto.Password);
