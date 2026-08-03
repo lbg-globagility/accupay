@@ -19,14 +19,14 @@ namespace AccuPay.Web.Overtimes
         private const string DefaultHtmlBody =
             "<div style=\"font-family:Segoe UI, Arial, sans-serif;\">" +
             "<p>Hi {approver},</p>" +
-            "<p>{employee} filed {hours} h of overtime on {date}.</p>" +
+            "<p>{employee} filed {hours} h of overtime on {date} ({time}).</p>" +
             "<p>Reason: {reason}</p>" +
             "<p>{approveButton} {rejectButton}</p>" +
             "</div>";
 
         private const string DefaultTextBody =
             "Hi {approver},\n\n" +
-            "{employee} filed {hours} h of overtime on {date}.\n" +
+            "{employee} filed {hours} h of overtime on {date} ({time}).\n" +
             "Reason: {reason}\n\n" +
             "Approve: {approveButton}\n" +
             "Reject: {rejectButton}";
@@ -138,11 +138,18 @@ namespace AccuPay.Web.Overtimes
                 ? (filing.OTEndTimeFull.Value - filing.OTStartTimeFull.Value).TotalHours
                 : 0;
 
+            var overtimeStart = filing.OTStartTime.HasValue ? filing.OTStartTime.Value.ToString(@"hh\:mm") : "N/A";
+            var overtimeEnd = filing.OTEndTime.HasValue ? filing.OTEndTime.Value.ToString(@"hh\:mm") : "N/A";
+            var time = $"{overtimeStart} - {overtimeEnd}";
+
             return template
                 .Replace("{approver}", E(approverName))
                 .Replace("{employee}", E(employeeName))
                 .Replace("{hours}", hours.ToString("0.##"))
                 .Replace("{date}", filing.OTStartDate.ToString("yyyy-MM-dd"))
+                .Replace("{time}", time)
+                .Replace("{overtimeStart}", overtimeStart)
+                .Replace("{overtimeEnd}", overtimeEnd)
                 .Replace("{reason}", E(string.IsNullOrWhiteSpace(filing.Reason) ? "N/A" : filing.Reason))
                 .Replace("{approveButton}", approveButtonOrUrl)
                 .Replace("{rejectButton}", rejectButtonOrUrl);
