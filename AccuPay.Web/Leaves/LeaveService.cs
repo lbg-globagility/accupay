@@ -197,27 +197,49 @@ namespace AccuPay.Web.Leaves
             if (leave.Status != Leave.StatusPending)
                 throw new System.Exception($"Only pending leave filings can be {status.ToLowerInvariant()}.");
 
-            leave.Status = status;
+            // Multi-day self-service filings are saved as one Leave row per day, all sharing
+            // the same FilingGroupDate. Approving/rejecting one row should approve/reject the
+            // whole request.
+            var filingGroup = await GetFilingGroupAsync(leave);
+            var pendingInGroup = filingGroup.Where(l => l.Status == Leave.StatusPending).ToList();
 
-            if (status == Leave.StatusApproved)
-                leave.ApproverEmail = approverEmail;
+            foreach (var groupLeave in pendingInGroup)
+            {
+                groupLeave.Status = status;
+
+                if (status == Leave.StatusApproved)
+                    groupLeave.ApproverEmail = approverEmail;
+            }
 
             if (_currentUser.UserId > 0)
             {
                 // Authenticated approval/rejection: go through the normal audited save
                 // (stamps LastUpdBy and records a UserActivity entry).
-                await _dataService.SaveAsync(leave, _currentUser.UserId);
+                await _dataService.SaveManyAsync(pendingInGroup, _currentUser.UserId);
             }
             else
             {
                 // Anonymous email-link approval/rejection: there is no attributable user,
                 // so bypass the audited pipeline and leave LastUpdBy null (the column/FK
                 // support null; ApproverEmail already records who approved it).
-                leave.LastUpdBy = null;
-                await _leaveRepository.UpdateApprovalAsync(leave);
+                pendingInGroup.ForEach(l => l.LastUpdBy = null);
+                await _leaveRepository.UpdateApprovalAsync(pendingInGroup);
             }
 
             return ConvertToDto(leave);
+        }
+
+        private async Task<List<Leave>> GetFilingGroupAsync(Leave leave)
+        {
+            if (!leave.FilingGroupDate.HasValue || leave.EmployeeID == null)
+            {
+                return new List<Leave> { leave };
+            }
+
+            var groupLeaves = await _leaveRepository.GetByFilingGroupDateAsync(
+                leave.FilingGroupDate.Value, leave.EmployeeID.Value);
+
+            return groupLeaves.Any() ? groupLeaves.ToList() : new List<Leave> { leave };
         }
 
         public async Task<List<string>> GetLeaveTypes()

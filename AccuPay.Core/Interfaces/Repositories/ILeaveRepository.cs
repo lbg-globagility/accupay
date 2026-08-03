@@ -21,6 +21,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Leave> GetByIdWithEmployeeAsync(int id);
 
+        Task<ICollection<Leave>> GetByFilingGroupDateAsync(DateTime filingGroupDate, int employeeId);
+
         Task<PaginatedList<Leave>> GetPaginatedListAsync(LeavePageOptions options, int organizationId);
 
         List<string> GetStatusList();
@@ -30,5 +32,7 @@ namespace AccuPay.Core.Interfaces
         Task<ILeavePolicy> GetLeavePolicyAsync();
 
         Task UpdateApprovalAsync(Leave leave);
+
+        Task UpdateApprovalAsync(ICollection<Leave> leaves);
     }
 }

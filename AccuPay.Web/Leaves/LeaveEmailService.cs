@@ -6,6 +6,7 @@ using AccuPay.Web.TimeLogs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -86,9 +87,13 @@ namespace AccuPay.Web.Leaves
             var htmlBody = string.IsNullOrWhiteSpace(template?.HtmlBody) ? DefaultHtmlBody : template.HtmlBody;
             var textBody = string.IsNullOrWhiteSpace(template?.TextBody) ? DefaultTextBody : template.TextBody;
 
+            var filingGroup = await GetFilingGroupAsync(filing);
+            var firstDate = filingGroup.Min(l => l.StartDate);
+            var lastDate = filingGroup.Max(l => l.StartDate);
+
             var employeeName = filing.Employee?.FullName ?? "An employee";
-            filing.IsNotifyEmail = true;
-            await _leaveRepository.UpdateAsync(filing);
+            filingGroup.ForEach(l => l.IsNotifyEmail = true);
+            await _leaveRepository.SaveManyAsync(filingGroup);
             foreach (var approver in approvers)
             {
                 var approverName = $"{approver.FirstName} {approver.LastName}".Trim();
@@ -102,8 +107,8 @@ namespace AccuPay.Web.Leaves
 
                 var email = new Email(subject, approver.EmailAddress)
                 {
-                    Text = ApplyPlaceholders(textBody, filing, approverName, employeeName, approveUrl, rejectUrl, encodeValues: false),
-                    Html = ApplyPlaceholders(htmlBody, filing, approverName, employeeName, approveButtonHtml, rejectButtonHtml, encodeValues: true)
+                    Text = ApplyPlaceholders(textBody, filing, firstDate, lastDate, approverName, employeeName, approveUrl, rejectUrl, encodeValues: false),
+                    Html = ApplyPlaceholders(htmlBody, filing, firstDate, lastDate, approverName, employeeName, approveButtonHtml, rejectButtonHtml, encodeValues: true)
                 };
 
                 await _emailService.Send(email);
@@ -111,6 +116,22 @@ namespace AccuPay.Web.Leaves
 
             _logger.LogInformation("Approval email for leave filing {FilingId} sent to {Count} recipients.", filingId, approvers.Count);
             return true;
+        }
+
+        // Multi-day self-service filings are saved as one Leave row per day, all sharing the
+        // same FilingGroupDate. The approval email is sent for a single row, but the date
+        // range shown and the IsNotifyEmail flag should cover every row in the request.
+        private async Task<List<Leave>> GetFilingGroupAsync(Leave filing)
+        {
+            if (!filing.FilingGroupDate.HasValue || filing.EmployeeID == null)
+            {
+                return new List<Leave> { filing };
+            }
+
+            var groupLeaves = await _leaveRepository.GetByFilingGroupDateAsync(
+                filing.FilingGroupDate.Value, filing.EmployeeID.Value);
+
+            return groupLeaves.Any() ? groupLeaves.ToList() : new List<Leave> { filing };
         }
 
         private string CreateToken(int id, string approverEmail)
@@ -130,6 +151,8 @@ namespace AccuPay.Web.Leaves
         private static string ApplyPlaceholders(
             string template,
             Leave filing,
+            DateTime firstDate,
+            DateTime lastDate,
             string approverName,
             string employeeName,
             string approveButtonOrUrl,
@@ -142,11 +165,15 @@ namespace AccuPay.Web.Leaves
                 ? "whole day"
                 : $"{filing.StartTime.Value.ToString(@"hh\:mm")} - {filing.EndTime.Value.ToString(@"hh\:mm")}";
 
+            var date = firstDate.Date == lastDate.Date
+                ? firstDate.ToString("yyyy-MM-dd")
+                : $"{firstDate:yyyy-MM-dd} - {lastDate:yyyy-MM-dd}";
+
             return template
                 .Replace("{approver}", E(approverName))
                 .Replace("{employee}", E(employeeName))
                 .Replace("{leavetype}", E(filing.LeaveType))
-                .Replace("{date}", filing.StartDate.ToString("yyyy-MM-dd"))
+                .Replace("{date}", date)
                 .Replace("{time}", time)
                 .Replace("{reason}", E(string.IsNullOrWhiteSpace(filing.Reason) ? "N/A" : filing.Reason))
                 .Replace("{approveButton}", approveButtonOrUrl)

@@ -37,6 +37,16 @@ namespace AccuPay.Infrastructure.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateApprovalAsync(ICollection<Leave> leaves)
+        {
+            foreach (var leave in leaves)
+            {
+                _context.Entry(leave).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion Save
 
         #region Queries
@@ -53,6 +63,14 @@ namespace AccuPay.Infrastructure.Data
         #endregion Single entity
 
         #region List of entities
+
+        public async Task<ICollection<Leave>> GetByFilingGroupDateAsync(DateTime filingGroupDate, int employeeId)
+        {
+            return await _context.Leaves
+                .Where(l => l.FilingGroupDate == filingGroupDate)
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
+        }
 
         public async Task<ICollection<Leave>> GetByEmployeeAsync(int employeeId)
         {
