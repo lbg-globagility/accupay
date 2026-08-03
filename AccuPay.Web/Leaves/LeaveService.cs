@@ -4,6 +4,8 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves.Models;
+using Microsoft.VisualBasic;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,39 +108,35 @@ namespace AccuPay.Web.Leaves
 
         public async Task<List<LeaveDto>> Create(SelfServiceCreateLeaveDto dto)
         {
-            var startDate = dto.StartDate.Date;
-            var endDate = dto.EndDate.Date;
-
-            if (endDate < startDate)
-                throw new BusinessLogicException("End Date cannot be earlier than Start Date.");
-
-            var filingGroupDate = DateTime.Now;
-
             var leaves = new List<Leave>();
-
-            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            var filingGroupDate = DateTime.Now;
+            if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-                TimeSpan? dayStartTime = null;
-                TimeSpan? dayEndTime = null;
-                if (dto.StartTime != null)
-                {
-                    dayStartTime = dto.StartTime.Value.TimeOfDay;
-                }
-                if (dto.EndTime != null)
-                {
-                    dayEndTime = dto.EndTime.Value.TimeOfDay;
-                }
-
-
-
-                var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime, filingGroupDate);
-
-                leaves.Add(leave);
+              var leave = NewSelfServiceLeave(dto, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+              leaves.Add(leave);
+              await _dataService.SaveAsync(leave, _currentUser.UserId);
             }
+            else if(dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
+            {
+                var startDate = dto.DateTimes;
+                
 
-            await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
+                foreach (var date in dto.DateTimes)
+                {
+                    TimeSpan? dayStartTime = null;
+                    TimeSpan? dayEndTime = null;
+                  
+                    var leave = NewSelfServiceLeave(dto, date, dayStartTime, dayEndTime, filingGroupDate);
 
+                    leaves.Add(leave);
+                }
+
+                await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
+
+                
+            }
             return leaves.Select(x => ConvertToDto(x)).ToList();
+
         }
 
         private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
