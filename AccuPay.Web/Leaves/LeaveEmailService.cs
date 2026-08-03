@@ -95,7 +95,7 @@ namespace AccuPay.Web.Leaves
             var lastDate = filingGroup.Max(l => l.StartDate);
 
             var employeeName = filing.Employee?.FullName ?? "An employee";
-            var notifyEmailSentAt = DateTime.UtcNow;
+            var notifyEmailSentAt = DateTime.Now;
             filingGroup.ForEach(l =>
             {
                 l.IsNotifyEmail = true;

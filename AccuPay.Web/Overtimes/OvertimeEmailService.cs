@@ -98,7 +98,7 @@ namespace AccuPay.Web.Overtimes
             var domain = (_configuration["App:Domain"] ?? string.Empty).TrimEnd('/');
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
             filing.IsNotifyEmail = true;
-            filing.NotifyEmailSentAt = DateTime.UtcNow;
+            filing.NotifyEmailSentAt = DateTime.Now;
             await _overtimeRepository.UpdateAsync(filing);
             foreach (var approver in approvers)
             {

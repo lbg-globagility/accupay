@@ -116,7 +116,7 @@ namespace AccuPay.Web.TimeLogs
             var approveButtonHtml = $"<a href=\"{approveUrl}\" style=\"display:inline-block;padding:10px 16px;background:#0078d4;color:white;text-decoration:none;border-radius:4px;margin-right:8px;\">Approve</a>";
             var rejectButtonHtml = $"<a href=\"{rejectUrl}\" style=\"display:inline-block;padding:10px 16px;background:#a80000;color:white;text-decoration:none;border-radius:4px;\">Reject</a>";
             filing.IsNotifyEmail = true;
-            filing.NotifyEmailSentAt = DateTime.UtcNow;
+            filing.NotifyEmailSentAt = DateTime.Now;
             await _timeLogRepository.UpdateFilingAsync(filing);
             foreach (var approver in approvers)
             {
