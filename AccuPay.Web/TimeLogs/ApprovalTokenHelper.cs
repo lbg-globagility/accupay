@@ -25,7 +25,7 @@ namespace AccuPay.Web.TimeLogs
             if (!isNotifyEmail || !notifyEmailSentAt.HasValue) return;
 
             var expiresAt = notifyEmailSentAt.Value.Add(ttl);
-            if (DateTime.UtcNow < expiresAt)
+            if (DateTime.Now < expiresAt)
             {
                 throw new BusinessLogicException(
                     $"An approval email was already sent and its link is still valid until {expiresAt:yyyy-MM-dd HH:mm} UTC. You can resend it once that link expires.");
@@ -36,7 +36,7 @@ namespace AccuPay.Web.TimeLogs
         // token with an approver email    = "{expiryUnixSeconds}.{emailBase64Url}.{signatureBase64Url}"
         public static string GenerateToken(int filingId, string secret, TimeSpan ttl, string approverEmail = null)
         {
-            var expiry = DateTimeOffset.UtcNow.Add(ttl).ToUnixTimeSeconds();
+            var expiry = DateTimeOffset.Now.Add(ttl).ToUnixTimeSeconds();
 
             if (string.IsNullOrEmpty(approverEmail))
             {
@@ -80,7 +80,7 @@ namespace AccuPay.Web.TimeLogs
                 return false;
             }
 
-            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var now = DateTimeOffset.Now.ToUnixTimeSeconds();
             if (now > expiry)
             {
                 error = "Token has expired.";
