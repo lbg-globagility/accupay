@@ -37,6 +37,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("{payPeriodId}/employees/{employeeId}")]
+        [Permission(PermissionTypes.TimeEntryRead)]
         public async Task<ActionResult<ICollection<TimeEntryDto>>> GetAllTimeEntries(int payPeriodId, int employeeId)
         {
             var dtos = await _service.GetTimeEntries(payPeriodId, employeeId);

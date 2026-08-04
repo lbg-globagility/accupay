@@ -127,10 +127,15 @@ namespace AccuPay.Infrastructure.Data
             return new PaginatedList<Loan>(loans, count);
         }
 
-        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id)
+        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id, int? organizationId = null)
         {
             var query = _context.LoanTransactions
                 .Where(x => x.LoanID == id);
+
+            if (organizationId.HasValue)
+            {
+                query = query.Where(x => x.OrganizationID == organizationId);
+            }
 
             return await GetPaginatedLoanTransactionsList(options, query);
         }

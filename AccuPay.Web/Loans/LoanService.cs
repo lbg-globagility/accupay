@@ -85,7 +85,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory(PageOptions options, int loanId)
         {
-            var currentLoanTransactions = await _loanRepository.GetLoanTransactionsAsync(options, loanId);
+            var currentLoanTransactions = await _loanRepository.GetLoanTransactionsAsync(options, loanId, _currentUser.OrganizationId);
 
             return currentLoanTransactions.Select(x => LoanHistoryDto.Convert(x));
         }

@@ -17,7 +17,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Loan>> GetCurrentPayrollLoansAsync(int organizationId, PayPeriod payPeriod, IReadOnlyCollection<Paystub> paystubs);
 
-        Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id);
+        Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id, int? organizationId = null);
 
         Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int[] id);
 

@@ -99,6 +99,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("history/{id}")]
+        [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory([FromQuery] PageOptions options, int id)
         {
             return await _service.GetLoanHistory(options, id);
