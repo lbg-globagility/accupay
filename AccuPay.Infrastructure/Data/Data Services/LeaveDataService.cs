@@ -204,9 +204,11 @@ namespace AccuPay.Infrastructure.Data
                 {
                     foreach (var leave in leaves)
                     {
+                        var isNewFiling = leave.IsNewEntity;
+
                         await _leaveRepository.SaveAsync(leave);
 
-                        if (Validatable(leave))
+                        if (Validatable(leave, isNewFiling))
                         {
                             var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
 
@@ -241,7 +243,7 @@ namespace AccuPay.Infrastructure.Data
                                 shifts = shifts.OrderBy(s => s.DateSched).ToList();
                             }
 
-                            await ValidateLeaveBalance(shifts, unusedApprovedLeaves, employee, leave);
+                            await ValidateLeaveBalance(shifts, unusedApprovedLeaves, employee, leave, isNewFiling);
                         }
                     }
 
@@ -286,12 +288,13 @@ namespace AccuPay.Infrastructure.Data
             List<Shift> shifts,
             List<Leave> unusedApprovedLeaves,
             Employee employee,
-            Leave leave)
+            Leave leave,
+            bool isNewFiling)
         {
             if (employee.RowID == null)
                 throw new BusinessLogicException("Employee does not exists.");
 
-            if (Validatable(leave))
+            if (Validatable(leave, isNewFiling))
             {
                 var totalLeaveHours = ComputeTotalLeaveHours(
                     unusedApprovedLeaves,
@@ -315,10 +318,12 @@ namespace AccuPay.Infrastructure.Data
             }
         }
 
-        private bool Validatable(Leave leave)
+        private bool Validatable(Leave leave, bool isNewFiling)
         {
             var types = VALIDATABLE_TYPES.Select(x => x.ToTrimmedLowerCase());
-            return leave.Status.ToTrimmedLowerCase() == Leave.StatusApproved.ToTrimmedLowerCase() &&
+            var isApproved = leave.Status.ToTrimmedLowerCase() == Leave.StatusApproved.ToTrimmedLowerCase();
+
+            return (isApproved || isNewFiling) &&
                     _policy.ValidateLeaveBalance && types.Contains(leave.LeaveType.ToTrimmedLowerCase());
         }
 
