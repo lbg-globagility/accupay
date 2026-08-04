@@ -8,18 +8,15 @@ using AccuPay.Web.Files.Services;
 using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Users
 {
     public class UserService
     {
-        /// <summary>
-        /// Needs to be replaced later on with a real password
-        /// </summary>
-        private readonly string DEFAULT_PASSWORD = "password";
-
         private readonly UserManager<AspNetUser> _users;
         private readonly UserEmailService _emailService;
         private readonly ICurrentUser _currentUser;
@@ -79,7 +76,7 @@ namespace AccuPay.Web.Users
                 EmployeeId = dto.EmployeeId,
                 CreatedById = _currentUser.UserId
             };
-            var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);
+            var result = await _users.CreateAsync(user, GenerateRandomPassword());
             if (result.Succeeded)
             {
                 await _emailService.SendInvitation(user);
@@ -185,6 +182,19 @@ namespace AccuPay.Web.Users
 
             return file;
         }
+        /// <summary>
+        /// Generates a random password used only to satisfy Identity's account creation
+        /// requirements. It is never logged or returned to the caller — the account stays
+        /// unusable until the user sets their own password via the invitation link.
+        /// </summary>
+        private static string GenerateRandomPassword()
+        {
+            var bytes = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
+
         public async Task ResendInvitation(int id)
         {
             var user = await _users.FindByIdAsync(id.ToString());
