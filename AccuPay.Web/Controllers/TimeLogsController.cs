@@ -33,6 +33,14 @@ namespace AccuPay.Web.Controllers
             return await _service.ListByEmployee(options);
         }
 
+        [HttpGet("filings")]
+        [Permission(PermissionTypes.TimeLogRead)]
+        public async Task<ActionResult<PaginatedList<EmployeeTimelogFilingDto>>> ListFilings(
+            [FromQuery] TimeLogFilingPageOptions options)
+        {
+            return await _service.PaginatedListFilings(options);
+        }
+
         [HttpPost]
         [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult> Update([FromBody] ICollection<UpdateTimeLogDto> dtos)

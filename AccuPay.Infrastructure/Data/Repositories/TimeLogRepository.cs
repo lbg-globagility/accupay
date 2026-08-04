@@ -151,6 +151,55 @@ namespace AccuPay.Infrastructure.Data
             _context.Entry(filing).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<PaginatedList<EmployeeTimelogFiling>> GetFilingPaginatedListAsync(
+            TimeLogFilingPageOptions options,
+            int organizationId)
+        {
+            var query = _context.EmployeeTimelogFilings
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderByDescending(x => x.LogDate)
+                    .ThenBy(x => x.Employee.LastName)
+                    .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
+
+            if (options.HasSearchTerm)
+            {
+                var searchTerm = $"%{options.SearchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.EntryType, searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            if (options.HasDateFrom)
+            {
+                query = query.Where(x => options.DateFrom.Value.Date <= x.LogDate);
+            }
+            if (options.HasDateTo)
+            {
+                query = query.Where(x => x.LogDate <= options.DateTo.Value.Date);
+            }
+
+            if (options.HasEmployeeId)
+            {
+                query = query.Where(x => x.EmployeeID == options.EmployeeId);
+            }
+
+            if (options.HasStatus)
+            {
+                query = query.Where(x => x.Status == options.Status);
+            }
+
+            var filings = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<EmployeeTimelogFiling>(filings, count);
+        }
+
         #endregion Queries
     }
 }

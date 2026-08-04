@@ -25,5 +25,7 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<EmployeeTimelogFiling>> GetLatestFilingByEmployeeAndDatePeriodAsync(int employeeId, TimePeriod datePeriod);
 
         Task DeleteFilingAsync(EmployeeTimelogFiling filing);
+
+        Task<PaginatedList<EmployeeTimelogFiling>> GetFilingPaginatedListAsync(TimeLogFilingPageOptions options, int organizationId);
     }
 }
