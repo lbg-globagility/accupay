@@ -39,7 +39,7 @@ namespace AccuPay.Core.Entities
 
         public bool IsNotifyEmail { get; set; }
         public DateTime? NotifyEmailSentAt { get; set; }
-        public string ApproverEmail { get; set; }
+        public string DecidedBy { get; set; }
 
         // Shared timestamp stamped on every Leave row created from the same self-service
         // date-range filing, so those rows can be grouped back together as one request.

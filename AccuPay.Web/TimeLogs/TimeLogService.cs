@@ -307,7 +307,7 @@ namespace AccuPay.Web.TimeLogs
 
             return filing;
         }
-        public async Task<TimeLogDto> ApproveFiling(int filingId)
+        public async Task<TimeLogDto> ApproveFiling(int filingId, string decidedBy = null)
         {
             var filing = await _repository.GetFilingByIdAsync(filingId);
 
@@ -417,13 +417,14 @@ namespace AccuPay.Web.TimeLogs
 
             // Mark filing approved and save
             filing.Status = EmployeeTimelogFiling.StatusApproved;
+            filing.DecidedBy = decidedBy;
             filing.LastUpdBy = null;
             await _repository.UpdateFilingAsync(filing);
 
             // return DTO of affected TimeLog
             return ConvertToDto(affectedTimeLog);
         }
-        public async Task<bool> RejectFiling(int filingId)
+        public async Task<bool> RejectFiling(int filingId, string decidedBy = null)
         {
             var filing = await _repository.GetFilingByIdAsync(filingId);
 
@@ -437,6 +438,7 @@ namespace AccuPay.Web.TimeLogs
                 throw new Exception("Only pending filings can be rejected.");
 
             filing.Status = EmployeeTimelogFiling.StatusRejected;
+            filing.DecidedBy = decidedBy;
             filing.LastUpdBy = _currentUser.UserId;
 
             await _repository.UpdateFilingAsync(filing);

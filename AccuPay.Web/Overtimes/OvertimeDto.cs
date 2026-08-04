@@ -28,7 +28,7 @@ namespace AccuPay.Web.Overtimes
 
         public string Comments { get; set; }
 
-        public string ApproverEmail { get; set; }
+        public string DecidedBy { get; set; }
 
         public DateTime Created { get; set; }
 

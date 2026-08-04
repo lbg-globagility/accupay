@@ -1,5 +1,6 @@
 using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Dto;
 using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -55,10 +56,10 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("filings/{id}/approve")]
         [Permission(PermissionTypes.TimeLogUpdate)]
-        public async Task<ActionResult<TimeLogDto>> ApproveFiling(int id)
+        public async Task<ActionResult<TimeLogDto>> ApproveFiling(int id, [FromBody] ApproveFilingDto dto)
         {
-            var dto = await _service.ApproveFiling(id);
-            return dto;
+            var result = await _service.ApproveFiling(id, dto?.DecidedBy);
+            return result;
         }
 
         // Token-verified GET that approves and returns a simple HTML page (for email link)
@@ -67,7 +68,7 @@ namespace AccuPay.Web.Controllers
         public async Task<IActionResult> ApproveFilingWithToken(int id, [FromQuery] string token)
         {
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
-            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error, out var decidedBy))
             {
                 var errHtml = $"<html><body><h3>Approval failed</h3><p>{System.Net.WebUtility.HtmlEncode(error)}</p></body></html>";
                 return Content(errHtml, "text/html");
@@ -75,7 +76,7 @@ namespace AccuPay.Web.Controllers
 
             try
             {
-                await _service.ApproveFiling(id);
+                await _service.ApproveFiling(id, decidedBy);
                 var okHtml = "<html><body><h3>Filing Approved</h3><p>The timelog filing was successfully approved.</p></body></html>";
                 return Content(okHtml, "text/html");
             }
@@ -88,9 +89,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("filings/{id}/reject")]
         [Permission(PermissionTypes.TimeLogUpdate)]
-        public async Task<ActionResult> RejectFiling(int id)
+        public async Task<ActionResult> RejectFiling(int id, [FromBody] RejectFilingDto dto)
         {
-            await _service.RejectFiling(id);
+            await _service.RejectFiling(id, dto?.DecidedBy);
             return Ok();
         }
 
@@ -100,7 +101,7 @@ namespace AccuPay.Web.Controllers
         public async Task<IActionResult> RejectFilingWithToken(int id, [FromQuery] string token)
         {
             var secret = _configuration["App:ApprovalTokenSecret"] ?? string.Empty;
-            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error))
+            if (!ApprovalTokenHelper.ValidateToken(token, id, secret, out var error, out var decidedBy))
             {
                 var errHtml = $"<html><body><h3>Rejection failed</h3><p>{System.Net.WebUtility.HtmlEncode(error)}</p></body></html>";
                 return Content(errHtml, "text/html");
@@ -108,7 +109,7 @@ namespace AccuPay.Web.Controllers
 
             try
             {
-                await _service.RejectFiling(id);
+                await _service.RejectFiling(id, decidedBy);
                 var okHtml = "<html><body><h3>Filing Rejected</h3><p>The timelog filing was successfully rejected.</p></body></html>";
                 return Content(okHtml, "text/html");
             }

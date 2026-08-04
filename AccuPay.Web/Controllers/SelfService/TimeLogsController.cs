@@ -68,7 +68,7 @@ namespace AccuPay.Web.Controllers.SelfService
             filing.LogDate = dto.LogDate;
             filing.Time = dto.Time;
             filing.Reason = dto.Reason;
-            filing.ApproverEmail = dto.ApproverEmail;
+            filing.DecidedBy = dto.DecidedBy;
             
             await _timeLogRepository.UpdateFilingAsync(filing);
 

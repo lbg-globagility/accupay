@@ -138,17 +138,17 @@ namespace AccuPay.Web.Overtimes
             return true;
         }
 
-        public async Task<OvertimeDto> ApproveFiling(int id, string approverEmail)
+        public async Task<OvertimeDto> ApproveFiling(int id, string decidedBy)
         {
-            return await SetFilingStatus(id, Overtime.StatusApproved, approverEmail);
+            return await SetFilingStatus(id, Overtime.StatusApproved, decidedBy);
         }
 
-        public async Task<OvertimeDto> RejectFiling(int id)
+        public async Task<OvertimeDto> RejectFiling(int id, string decidedBy)
         {
-            return await SetFilingStatus(id, Overtime.StatusRejected);
+            return await SetFilingStatus(id, Overtime.StatusRejected, decidedBy);
         }
 
-        private async Task<OvertimeDto> SetFilingStatus(int id, string status, string approverEmail = null)
+        private async Task<OvertimeDto> SetFilingStatus(int id, string status, string decidedBy = null)
         {
             var overtime = await _repository.GetByIdWithEmployeeAsync(id);
             if (overtime == null)
@@ -161,8 +161,7 @@ namespace AccuPay.Web.Overtimes
                 throw new Exception($"Only pending overtime filings can be {status.ToLowerInvariant()}.");
 
             overtime.Status = status;
-            if (status == Overtime.StatusApproved)
-                overtime.ApproverEmail = approverEmail;
+            overtime.DecidedBy = decidedBy;
 
             if (_currentUser.UserId > 0)
             {
@@ -174,7 +173,7 @@ namespace AccuPay.Web.Overtimes
             {
                 // Anonymous email-link approval/rejection: there is no attributable user,
                 // so bypass the audited pipeline and leave LastUpdBy null (the column/FK
-                // support null; ApproverEmail already records who approved it).
+                // support null; DecidedBy already records who approved it).
                 overtime.LastUpdBy = null;
                 await _repository.UpdateApprovalAsync(overtime);
             }
@@ -205,7 +204,7 @@ namespace AccuPay.Web.Overtimes
                 Status = overtime.Status,
                 Reason = overtime.Reason,
                 Comments = overtime.Comments,
-                ApproverEmail = overtime.ApproverEmail,
+                DecidedBy = overtime.DecidedBy,
                 CreatedBy = overtime.CreatedBy,
                 LastUpd= overtime.LastUpd,
                 Created = overtime.Created,

@@ -264,17 +264,17 @@ namespace AccuPay.Web.Leaves
             return true;
         }
 
-        public async Task<LeaveDto> ApproveFiling(int id, string approverEmail)
+        public async Task<LeaveDto> ApproveFiling(int id, string decidedBy)
         {
-            return await SetFilingStatus(id, Leave.StatusApproved, approverEmail);
+            return await SetFilingStatus(id, Leave.StatusApproved, decidedBy);
         }
 
-        public async Task<LeaveDto> RejectFiling(int id)
+        public async Task<LeaveDto> RejectFiling(int id, string decidedBy)
         {
-            return await SetFilingStatus(id, Leave.StatusRejected);
+            return await SetFilingStatus(id, Leave.StatusRejected, decidedBy);
         }
 
-        private async Task<LeaveDto> SetFilingStatus(int id, string status, string approverEmail = null)
+        private async Task<LeaveDto> SetFilingStatus(int id, string status, string decidedBy = null)
         {
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
             if (leave == null)
@@ -295,9 +295,7 @@ namespace AccuPay.Web.Leaves
             foreach (var groupLeave in pendingInGroup)
             {
                 groupLeave.Status = status;
-
-                if (status == Leave.StatusApproved)
-                    groupLeave.ApproverEmail = approverEmail;
+                groupLeave.DecidedBy = decidedBy;
             }
 
             if (_currentUser.UserId > 0)
@@ -310,7 +308,7 @@ namespace AccuPay.Web.Leaves
             {
                 // Anonymous email-link approval/rejection: there is no attributable user,
                 // so bypass the audited pipeline and leave LastUpdBy null (the column/FK
-                // support null; ApproverEmail already records who approved it).
+                // support null; DecidedBy already records who approved it).
                 pendingInGroup.ForEach(l => l.LastUpdBy = null);
                 await _leaveRepository.UpdateApprovalAsync(pendingInGroup);
             }
@@ -371,7 +369,7 @@ namespace AccuPay.Web.Leaves
                 Status = leave.Status,
                 Reason = leave.Reason,
                 Comments = leave.Comments,
-                ApproverEmail = leave.ApproverEmail,
+                DecidedBy = leave.DecidedBy,
                 CreatedBy = leave.CreatedBy,
                 LastUpd = leave.LastUpd,
                 Created = leave.Created,

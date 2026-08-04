@@ -12,6 +12,6 @@ namespace AccuPay.Web.TimeLogs
 
         public string Reason { get; set; }
 
-        public string ApproverEmail { get; set; }
+        public string DecidedBy { get; set; }
     }
 }
