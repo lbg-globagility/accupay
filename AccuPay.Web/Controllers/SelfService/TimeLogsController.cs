@@ -18,12 +18,14 @@ namespace AccuPay.Web.Controllers.SelfService
         private readonly TimeLogService _service;
         private readonly TimeLogEmailService _emailService;
         private readonly ITimeLogRepository _timeLogRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository)
+        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository, ICurrentUser currentUser)
         {
             _service = service;
             _emailService = emailService;
             _timeLogRepository = timeLogRepository;
+            _currentUser = currentUser;
         }
 
         [HttpPost]
@@ -59,7 +61,8 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             var filing = await _timeLogRepository.GetFilingByIdAsync(id);
             if (filing == null) return NotFound();
-            if (filing.Status == EmployeeTimelogFiling.StatusApproved)
+            if (filing.EmployeeID != _currentUser.EmployeeId) return NotFound();
+            if (filing.Status != EmployeeTimelogFiling.StatusPending)
                 throw new Exception("Only pending leave filings can be edited.");
             if (filing.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be edited.");
@@ -79,7 +82,8 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             var filing = await _timeLogRepository.GetFilingByIdAsync(id);
             if (filing == null) return NotFound();
-            if (filing.Status == EmployeeTimelogFiling.StatusApproved)
+            if (filing.EmployeeID != _currentUser.EmployeeId) return NotFound();
+            if (filing.Status != EmployeeTimelogFiling.StatusPending)
                 throw new Exception("Only pending leave filings can be deleted.");
             if (filing.IsNotifyEmail)
                 throw new Exception("Not emailed filings can be deleted.");
