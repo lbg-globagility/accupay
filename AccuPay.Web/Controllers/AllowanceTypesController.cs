@@ -68,6 +68,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.AllowanceTypeRead)]
         public async Task<ActionResult<PaginatedList<AllowanceTypeDto>>> GetPaginatedList([FromQuery] PageOptions options, [FromQuery] string term = "")
         {
             return await _service.GetPaginatedListAsync(options, term);
