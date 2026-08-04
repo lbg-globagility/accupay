@@ -5,6 +5,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,6 +132,18 @@ namespace AccuPay.Infrastructure.Data
             {
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
             }
+
+            var doesExistQuery = _context.Overtimes
+                .Where(o => o.EmployeeID == overtime.EmployeeID)
+                .Where(o => o.OTStartDate.Date == overtime.OTStartDate.Date)
+                .Where(o => o.Status == Overtime.StatusPending);
+
+            if (overtime.IsNewEntity == false)
+                doesExistQuery = doesExistQuery.Where(o => overtime.RowID != o.RowID);
+
+            if (await doesExistQuery.AnyAsync())
+                throw new BusinessLogicException(
+                    $"Employee already has a pending overtime filing for {overtime.OTStartDate.ToShortDateString()}");
 
             overtime.UpdateEndDate();
         }
