@@ -388,37 +388,13 @@ namespace AccuPay.Web.TimeLogs
                     }
                     break;
 
-                default:
-                    // For unrecognized entry types, create a generic TimeLog with TimeIn set (fallback)
-                    if (existing == null)
-                    {
-                        affectedTimeLog = new TimeLog()
-                        {
-                            OrganizationID = filing.OrganizationID,
-                            EmployeeID = filing.EmployeeID,
-                            LogDate = date,
-                            TimeInFull = timeFull,
-                            TimeStampIn = timeFull,
-                            CreatedBy = null
-                        };
-
-                        await _repository.SaveAsync(affectedTimeLog);
-                    }
-                    else
-                    {
-                        existing.TimeInFull = timeFull;
-                        existing.TimeStampIn = timeFull;
-                        existing.LastUpdBy = null;
-
-                        await _repository.UpdateAsync(existing);
-                    }
-                    break;
+            
             }
 
             // Mark filing approved and save
             filing.Status = EmployeeTimelogFiling.StatusApproved;
             filing.DecidedBy = decidedBy;
-            filing.LastUpdBy = null;
+            filing.LastUpdBy = GetCurrentUserIdOrNull();
             await _repository.UpdateFilingAsync(filing);
 
             // return DTO of affected TimeLog
@@ -439,11 +415,18 @@ namespace AccuPay.Web.TimeLogs
 
             filing.Status = EmployeeTimelogFiling.StatusRejected;
             filing.DecidedBy = decidedBy;
-            filing.LastUpdBy = _currentUser.UserId;
+            filing.LastUpdBy = GetCurrentUserIdOrNull();
 
             await _repository.UpdateFilingAsync(filing);
 
             return true;
+        }
+
+        // Anonymous email-link approvals/rejections have no authenticated user (UserId is 0),
+        // so LastUpdBy should stay null instead of being misattributed to user 0.
+        private int? GetCurrentUserIdOrNull()
+        {
+            return _currentUser.UserId > 0 ? (int?)_currentUser.UserId : null;
         }
         public async Task<PaginatedList<EmployeeTimelogFilingDto>> ListFilingForCurrentEmployee(TimeLogsByEmployeePageOptions options)
         {
