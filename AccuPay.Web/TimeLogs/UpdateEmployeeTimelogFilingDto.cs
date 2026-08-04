@@ -8,7 +8,7 @@ namespace AccuPay.Web.TimeLogs
 
         public DateTime LogDate { get; set; }
 
-        public TimeSpan Time { get; set; }
+        public DateTime Time { get; set; }
 
         public string Reason { get; set; }
 

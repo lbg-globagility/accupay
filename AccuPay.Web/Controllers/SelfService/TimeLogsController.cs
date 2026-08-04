@@ -69,7 +69,7 @@ namespace AccuPay.Web.Controllers.SelfService
             // Update allowed fields
             filing.EntryType = dto.EntryType;
             filing.LogDate = dto.LogDate;
-            filing.Time = dto.Time;
+            filing.Time = dto.Time.TimeOfDay;
             filing.Reason = dto.Reason;
             filing.DecidedBy = dto.DecidedBy;
             

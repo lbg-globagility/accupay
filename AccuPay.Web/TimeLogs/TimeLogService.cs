@@ -332,7 +332,7 @@ namespace AccuPay.Web.TimeLogs
                 new TimePeriod(date, date))).FirstOrDefault(t => t.LogDate.Date == date);
 
             // Decide action by EntryType
-            var entryType = filing.EntryType?.Trim().ToLower();
+            var entryType = filing.EntryType;
 
             TimeLog affectedTimeLog = existing;
 
