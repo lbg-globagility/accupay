@@ -86,7 +86,7 @@ namespace AccuPay.Web.Controllers.SelfService
             if (filing.Status != EmployeeTimelogFiling.StatusPending)
                 throw new Exception("Only pending leave filings can be deleted.");
             if (filing.IsNotifyEmail)
-                throw new Exception("Not emailed filings can be deleted.");
+                throw new Exception("Emailed filings can no longer be deleted.");
 
             await _timeLogRepository.DeleteFilingAsync(filing);
 
