@@ -13,6 +13,8 @@ namespace AccuPay.Web.TimeLogs
 
         public virtual EmployeeDto Employee { get; set; }
 
+        public int EmployeeID { get; set; }
+
         public string Reason { get; set; }
 
         public string Status { get; set; }
