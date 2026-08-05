@@ -160,6 +160,7 @@ namespace AccuPay.Infrastructure.Data
         {
             var ledger =await _context.LeaveLedgers
                 .Include(t => t.Product)
+                .Include(t => t.LastTransaction)
                 .Include(t => t.LeaveTransactions)
                     .ThenInclude(lt => lt.PayPeriod)
                 .Where(t => t.EmployeeID == employeeId)
