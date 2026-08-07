@@ -387,8 +387,56 @@ namespace AccuPay.Web.TimeLogs
                         await _repository.UpdateAsync(existing);
                     }
                     break;
+                case EmployeeTimelogFiling.LunchOutType:
+                    if (existing == null)
+                    {
+                        affectedTimeLog = new TimeLog()
+                        {
+                            OrganizationID = filing.OrganizationID,
+                            EmployeeID = filing.EmployeeID,
+                            LogDate = date,
+                            LunchOutFull = timeFull,
+                            TimeStampLunchOut = timeFull,
+                            CreatedBy = null
+                        };
 
-            
+                        await _repository.SaveAsync(affectedTimeLog);
+                    }
+                    else
+                    {
+                        existing.LunchOutFull = timeFull;
+                        existing.TimeStampLunchOut = timeFull;
+                        existing.LastUpdBy = null;
+
+                        await _repository.UpdateAsync(existing);
+                    }
+                    break;
+
+                case EmployeeTimelogFiling.LunchInType:
+                    if (existing == null)
+                    {
+                        affectedTimeLog = new TimeLog()
+                        {
+                            OrganizationID = filing.OrganizationID,
+                            EmployeeID = filing.EmployeeID,
+                            LogDate = date,
+                            LunchInFull = timeFull,
+                            TimeStampLunchIn = timeFull,
+                            CreatedBy = null
+                        };
+
+                        await _repository.SaveAsync(affectedTimeLog);
+                    }
+                    else
+                    {
+                        existing.LunchInFull = timeFull;
+                        existing.TimeStampLunchIn = timeFull;
+                        existing.LastUpdBy = null;
+
+                        await _repository.UpdateAsync(existing);
+                    }
+                    break;
+
             }
 
             // Mark filing approved and save

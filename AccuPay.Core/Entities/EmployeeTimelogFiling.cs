@@ -15,6 +15,10 @@ namespace AccuPay.Core.Entities
         public const string CheckInType = "CheckIn";
 
         public const string CheckOutType = "CheckOut";
+
+        public const string LunchOutType = "LunchOut";
+
+        public const string LunchInType = "LunchIn";
         public string EntryType { get; set; }
 
         [Column("LogDate")]

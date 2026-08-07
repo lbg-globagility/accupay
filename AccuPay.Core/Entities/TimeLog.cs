@@ -12,9 +12,17 @@ namespace AccuPay.Core.Entities
 
         public TimeSpan? TimeIn { get; set; }
 
+        public TimeSpan? LunchOut { get; set; }
+
+        public TimeSpan? LunchIn { get; set; }
+
         public TimeSpan? TimeOut { get; set; }
 
         public DateTime? TimeStampIn { get; set; }
+
+        public DateTime? TimeStampLunchOut { get; set; }
+
+        public DateTime? TimeStampLunchIn { get; set; }
 
         public DateTime? TimeStampOut { get; set; }
 
@@ -49,6 +57,25 @@ namespace AccuPay.Core.Entities
                         LogDate.Date.ToMinimumHourValue().Add(TimeOut.Value);
 
             set => TimeOut = value == null ? null : value?.TimeOfDay;
+        }
+        [NotMapped]
+        public DateTime? LunchInFull
+        {
+            get => LunchIn == null ?
+                        (DateTime?)null :
+                        LogDate.Date.ToMinimumHourValue().Add(LunchIn.Value);
+
+            set => LunchIn = value == null ? null : value?.TimeOfDay;
+        }
+
+        [NotMapped]
+        public DateTime? LunchOutFull
+        {
+            get => LunchOut == null ?
+                        (DateTime?)null :
+                        LogDate.Date.ToMinimumHourValue().Add(LunchOut.Value);
+
+            set => LunchOut = value == null ? null : value?.TimeOfDay;
         }
     }
 }
