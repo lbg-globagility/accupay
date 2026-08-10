@@ -41,6 +41,19 @@ namespace AccuPay.Web.Controllers.SelfService
             var timelog = await _service.Checkout(id,dto);
             return timelog;
         }
+        [HttpPut("lunch-in/{id}")]
+        public async Task<TimeLogDto> LunchIn(int id, [FromBody] SelfServiceCreateTimeLogDto dto)
+        {
+            var timelog = await _service.LunchIn(id, dto);
+            return timelog;
+        }
+        [HttpPut("lunch-out/{id}")]
+        public async Task<TimeLogDto> LunchOut(int id, [FromBody] SelfServiceCreateTimeLogDto dto)
+        {
+            var timelog = await _service.LunchOut(id, dto);
+            return timelog;
+        }
+
 
         [HttpPost("filings")]
         public async Task<ActionResult> CreateFiling([FromBody] CreateEmployeeTimelogFilingDto dto)

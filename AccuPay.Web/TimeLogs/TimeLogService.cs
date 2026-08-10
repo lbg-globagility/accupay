@@ -287,6 +287,60 @@ namespace AccuPay.Web.TimeLogs
 
             return dto;
         }
+        internal async Task<TimeLogDto> LunchOut(int Id, SelfServiceCreateTimeLogDto timeLog)
+        {
+            var existingTimeLog = _repository.GetById(Id);
+
+            if (existingTimeLog == null)
+                throw new Exception("Time log not found.");
+
+            if (existingTimeLog.LunchOutFull != null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch out for the specified record.");
+
+            existingTimeLog.LunchOutFull = timeLog.LunchOut;
+            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.TimeStampLunchOut = timeLog.LunchOut;
+
+            await _repository.UpdateAsync(existingTimeLog);
+
+            var dto = new TimeLogDto()
+            {
+                Id = existingTimeLog.RowID,
+                EmployeeId = existingTimeLog.EmployeeID ?? 0,
+                LunchOut = existingTimeLog.LunchOutFull,
+                Date = existingTimeLog.LogDate,
+                BranchId = existingTimeLog.BranchID
+            };
+
+            return dto;
+        }
+        internal async Task<TimeLogDto> LunchIn(int Id, SelfServiceCreateTimeLogDto timeLog)
+        {
+            var existingTimeLog = _repository.GetById(Id);
+
+            if (existingTimeLog == null)
+                throw new Exception("Time log not found.");
+
+            if (existingTimeLog.LunchInFull != null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch in for the specified record.");
+
+            existingTimeLog.LunchInFull = timeLog.LunchIn;
+            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.TimeStampLunchIn = timeLog.LunchIn;
+
+            await _repository.UpdateAsync(existingTimeLog);
+
+            var dto = new TimeLogDto()
+            {
+                Id = existingTimeLog.RowID,
+                EmployeeId = existingTimeLog.EmployeeID ?? 0,
+                LunchIn = existingTimeLog.LunchInFull,
+                Date = existingTimeLog.LogDate,
+                BranchId = existingTimeLog.BranchID
+            };
+
+            return dto;
+        }
 
         public async Task<EmployeeTimelogFiling> CreateFiling(CreateEmployeeTimelogFilingDto dto)
         {
