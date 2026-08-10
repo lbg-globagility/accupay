@@ -191,7 +191,10 @@ namespace AccuPay.Web.TimeLogs
                 CreatedBy = timeLog.CreatedBy,
                 LastUpd = timeLog.LastUpd,
                 Created = timeLog.Created,
-                LastUpdBy = timeLog.LastUpdBy
+                LastUpdBy = timeLog.LastUpdBy,
+                LunchIn = timeLog.LunchInFull,
+                LunchOut = timeLog.LunchOutFull
+
             };
         }
 
