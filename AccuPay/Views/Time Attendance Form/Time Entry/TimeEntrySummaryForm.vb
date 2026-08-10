@@ -456,6 +456,8 @@ Public Class TimeEntrySummaryForm
                 ete.RowID,
                 ete.Date,
                 etd.TimeIn,
+                etd.LunchOut,
+                etd.LunchIn,
                 etd.TimeOut,
                 etd.RowID,
                 IFNULL(shiftschedules.StartTime, NULL) AS ShiftFrom,
@@ -568,6 +570,8 @@ Public Class TimeEntrySummaryForm
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
                     .EntryDate = reader.GetValue(Of Date?)("Date"),
                     .TimeIn = reader.GetValue(Of TimeSpan?)("TimeIn"),
+                    .LunchOut = reader.GetValue(Of TimeSpan?)("LunchOut"),
+                    .LunchIn = reader.GetValue(Of TimeSpan?)("LunchIn"),
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
@@ -1187,6 +1191,8 @@ Public Class TimeEntrySummaryForm
             ColumnOTEnd.DefaultCellStyle.Format = Clock12HourFormat
             ColumnOBStart.DefaultCellStyle.Format = Clock12HourFormat
             ColumnOBEnd.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnLunchOut.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnLunchIn.DefaultCellStyle.Format = Clock12HourFormat
         Else
             ColumnShiftFrom.DefaultCellStyle.Format = Clock24HourFormat
             ColumnShiftTo.DefaultCellStyle.Format = Clock24HourFormat
@@ -1196,6 +1202,8 @@ Public Class TimeEntrySummaryForm
             ColumnOTEnd.DefaultCellStyle.Format = Clock24HourFormat
             ColumnOBStart.DefaultCellStyle.Format = Clock24HourFormat
             ColumnOBEnd.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnLunchOut.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnLunchIn.DefaultCellStyle.Format = Clock24HourFormat
         End If
     End Sub
 
@@ -1255,6 +1263,8 @@ Public Class TimeEntrySummaryForm
         Public Property RowID As Integer?
         Public Property EntryDate As Date?
         Public Property TimeIn As TimeSpan?
+        Public Property LunchOut As TimeSpan?
+        Public Property LunchIn As TimeSpan?
         Public Property TimeOut As TimeSpan?
         Public Property ShiftFrom As TimeSpan?
         Public Property ShiftTo As TimeSpan?
@@ -1355,6 +1365,16 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property TimeOutDisplay As Date?
             Get
                 Return ConvertToDate(TimeOut)
+            End Get
+        End Property
+        Public ReadOnly Property LunchOutDisplay As Date?
+            Get
+                Return ConvertToDate(LunchOut)
+            End Get
+        End Property
+        Public ReadOnly Property LunchInDisplay As Date?
+            Get
+                Return ConvertToDate(LunchIn)
             End Get
         End Property
 
@@ -1587,6 +1607,18 @@ Public Class TimeEntrySummaryForm
             Dim dateTimeOut = ObjectUtils.
                 ToNullableDateTime(currentRow.Cells(ColumnTimeStampOut.Index).Value)
 
+            Dim lunchOut = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnLunchOut.Index).Value)
+
+            Dim LunchIn = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnLunchIn.Index).Value)
+
+            Dim dateTimeLunchIn = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColTimeStampLunchIn.Index).Value)
+
+            Dim dateTimeLunchOut = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColTimeStampLunchOut.Index).Value)
+
             If timeIn IsNot Nothing Then
 
                 Dim actualTimeIn As Date
@@ -1640,6 +1672,42 @@ Public Class TimeEntrySummaryForm
                     New TimeAttendanceLog With {
                         .IsTimeIn = False,
                         .TimeStamp = actualTimeOut
+                })
+            End If
+
+            If lunchOut IsNot Nothing Then
+
+                Dim actualLunchOut As Date
+
+                If dateTimeLunchOut IsNot Nothing Then
+
+                    actualLunchOut = dateTimeLunchOut.Value.
+                                    ToMinimumHourValue.
+                                    Add(lunchOut.Value.TimeOfDay)
+                End If
+
+                timeAttendanceLogs.Add(
+                    New TimeAttendanceLog With {
+                        .IsTimeIn = False,
+                        .TimeStamp = actualLunchOut
+                })
+            End If
+
+            If LunchIn IsNot Nothing Then
+
+                Dim actualLunchIn As Date
+
+                If dateTimeLunchIn IsNot Nothing Then
+
+                    actualLunchIn = dateTimeLunchIn.Value.
+                                    ToMinimumHourValue.
+                                    Add(LunchIn.Value.TimeOfDay)
+                End If
+
+                timeAttendanceLogs.Add(
+                    New TimeAttendanceLog With {
+                        .IsTimeIn = False,
+                        .TimeStamp = actualLunchIn
                 })
             End If
 
