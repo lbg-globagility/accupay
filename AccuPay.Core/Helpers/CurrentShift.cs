@@ -87,6 +87,10 @@ namespace AccuPay.Core.Helpers
 
         public TimeSpan? EndTime => _shift?.EndTime;
 
+        public TimeSpan? BreakStartTime => _shift?.BreakStartTime;
+
+        public decimal BreakLength => _shift?.BreakLength ?? 0;
+
         public void SetDefaultRestDay(int? dayOfWeek) => _defaultRestDay = dayOfWeek;
 
         public override string ToString()

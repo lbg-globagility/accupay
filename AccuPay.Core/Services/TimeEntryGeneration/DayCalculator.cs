@@ -152,7 +152,7 @@ namespace AccuPay.Core.Services
 
                     if (dutyPeriod != null)
                     {
-                        ComputeWorkingPeriodHours(timeEntry, leaves, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, dutyPeriod);
+                        ComputeWorkingPeriodHours(timeEntry, leaves, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, dutyPeriod, timeLog);
 
                         ComputeExtraPeriodHours(currentDate, timeEntry, overtimes, currentShift, previousDay, calculator, logPeriod, dutyPeriod);
                     }
@@ -178,7 +178,8 @@ namespace AccuPay.Core.Services
             IList<BreakTimeBracket> breakTimeBrackets,
             CurrentShift currentShift,
             TimeEntryCalculator calculator,
-            TimePeriod dutyPeriod)
+            TimePeriod dutyPeriod,
+            TimeLog timeLog)
         {
             timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate);
 
@@ -207,6 +208,8 @@ namespace AccuPay.Core.Services
 
             OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod);
             UpdateLateHoursByPolicies(timeEntry, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, coveredPeriod);
+
+            timeEntry.ApplyLunchBreakDeviation(timeLog?.LunchOut, timeLog?.LunchIn, currentShift.BreakStartTime, currentShift.BreakLength);
 
             timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
 

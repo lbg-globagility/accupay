@@ -1,5 +1,6 @@
 ﻿using AccuPay.Core.Helpers;
 using AccuPay.Utilities.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
@@ -89,6 +90,28 @@ namespace AccuPay.Core.Entities
                 case var type when string.Equals(type, ProductConstant.OTHERS_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     OtherLeaveHours = leaveHours;
                     break;
+            }
+        }
+
+        // LateHours/UndertimeHours already reflect TimeIn/TimeOut vs shift start/end;
+        // this adds lateness returning from break and undertime from leaving for break early.
+        public void ApplyLunchBreakDeviation(TimeSpan? lunchOut, TimeSpan? lunchIn, TimeSpan? breakStartTime, decimal breakLength)
+        {
+            if (lunchOut == null || lunchIn == null || breakStartTime == null)
+            {
+                return;
+            }
+
+            var expectedBreakEnd = breakStartTime.Value.Add(TimeSpan.FromHours((double)breakLength));
+
+            if (lunchIn.Value > expectedBreakEnd)
+            {
+                LateHours += (decimal)(lunchIn.Value - expectedBreakEnd).TotalHours;
+            }
+
+            if (lunchOut.Value < breakStartTime.Value)
+            {
+                UndertimeHours += (decimal)(breakStartTime.Value - lunchOut.Value).TotalHours;
             }
         }
 
