@@ -73,6 +73,10 @@ namespace AccuPay.Infrastructure.Data
                     query = query.Where(e => e.EmploymentStatus != "Resigned" && e.EmploymentStatus != "Terminated");
                 }
             }
+            if (options.HasEmployeeId)
+            {
+                query = query.Where(t => t.RowID == options.EmployeeId);
+            }
 
             query = query
                 .OrderBy(x => x.LastName)

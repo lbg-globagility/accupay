@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace AccuPay.Core.Helpers
 {
@@ -15,5 +15,9 @@ namespace AccuPay.Core.Helpers
         public string Status { get; set; }
 
         public bool HasStatus => !string.IsNullOrWhiteSpace(Status);
+
+        public int? EmployeeId { get; set; }
+
+        public bool HasEmployeeId => EmployeeId.HasValue;
     }
 }
