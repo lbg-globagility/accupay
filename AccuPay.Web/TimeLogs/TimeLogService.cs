@@ -222,6 +222,8 @@ namespace AccuPay.Web.TimeLogs
                 Date = timeLog.LogDate,
                 StartTime = timeLog.TimeInFull,
                 EndTime = timeLog.TimeOutFull,
+                LunchIn = timeLog.LunchInFull,
+                LunchOut = timeLog.LunchOutFull,
             };
 
             return dto;

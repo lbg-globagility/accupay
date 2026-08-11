@@ -32,6 +32,10 @@ namespace AccuPay.Web.TimeLogs
             public int? BranchId { get; set; }
 
             public string BranchName { get; set; }
+
+            public DateTime? LunchOut { get; set; }
+
+            public DateTime? LunchIn { get; set; }
         }
     }
 }
