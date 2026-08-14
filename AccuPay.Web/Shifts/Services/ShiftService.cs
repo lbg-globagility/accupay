@@ -42,6 +42,21 @@ namespace AccuPay.Web.Shifts.Services
             return new PaginatedList<EmployeeShiftsDto>(dtos, total, ++options.PageIndex, options.PageSize);
         }
 
+        internal async Task<EmployeeDutyScheduleDto> GetTodayShift()
+        {
+            if (!_currentUser.EmployeeId.HasValue)
+                throw new Exception("Current user is not associated with an employee.");
+
+            var today = DateTime.Today;
+
+            var shifts = await _repository.GetByEmployeeAndDatePeriodAsync(
+                _currentUser.OrganizationId, _currentUser.EmployeeId.Value, new TimePeriod(today, today));
+
+            var shift = shifts.FirstOrDefault();
+
+            return shift == null ? null : EmployeeDutyScheduleDto.Convert(shift);
+        }
+
         internal async Task BatchApply(ICollection<ShiftDto> dtos)
         {
             var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
@@ -77,7 +92,8 @@ namespace AccuPay.Web.Shifts.Services
                             EndTimeFull = dto.EndTime,
                             ShiftBreakStartTimeFull = dto.BreakStartTime,
                             BreakLength = dto.BreakLength,
-                            IsRestDay = dto.IsOffset
+                            IsRestDay = dto.IsOffset,
+                            RequiresLunchInOut = dto.RequiresLunchInOut
                         };
 
                         added.Add(newShift);
@@ -92,6 +108,7 @@ namespace AccuPay.Web.Shifts.Services
                         existingShift.ShiftBreakStartTimeFull = dto.BreakStartTime;
                         existingShift.BreakLength = dto.BreakLength;
                         existingShift.IsRestDay = dto.IsOffset;
+                        existingShift.RequiresLunchInOut = dto.RequiresLunchInOut;
 
                         updated.Add(existingShift);
                     }

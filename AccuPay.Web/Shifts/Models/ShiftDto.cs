@@ -25,5 +25,7 @@ namespace AccuPay.Web.Shifts.Models
         public decimal BreakLength { get; set; }
 
         public bool IsOffset { get; set; }
+
+        public bool RequiresLunchInOut { get; set; }
     }
 }

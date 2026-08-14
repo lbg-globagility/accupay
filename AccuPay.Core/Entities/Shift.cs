@@ -57,6 +57,8 @@ namespace AccuPay.Core.Entities
 
         public int? GracePeriod { get; set; }
 
+        public bool RequiresLunchInOut { get; set; }
+
         /// <summary>
         /// Computes the shift hours and also update the work hours.
         /// </summary>

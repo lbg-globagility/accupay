@@ -13,6 +13,7 @@ namespace AccuPay.Web.Shifts.Models
         public DateTime? BreakStartTime { get; set; }
         public decimal BreakLength { get; set; }
         public bool IsOffset { get; set; }
+        public bool RequiresLunchInOut { get; set; }
         public decimal ShiftHours { get; internal set; }
         public decimal WorkHours { get; internal set; }
 
@@ -26,6 +27,7 @@ namespace AccuPay.Web.Shifts.Models
                 EmployeeId = dutySchedule.EmployeeID,
                 EndTime = dutySchedule.EndTimeFull,
                 IsOffset = dutySchedule.IsRestDay,
+                RequiresLunchInOut = dutySchedule.RequiresLunchInOut,
                 Id = dutySchedule.RowID,
                 ShiftHours = dutySchedule.ShiftHours,
                 StartTime = dutySchedule.StartTimeFull,

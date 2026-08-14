@@ -30,5 +30,16 @@ namespace AccuPay.Web.Controllers.SelfService
 
             return dtos;
         }
+
+        [HttpGet("today")]
+        public async Task<ActionResult<EmployeeDutyScheduleDto>> GetToday()
+        {
+            var dto = await _shiftService.GetTodayShift();
+
+            if (dto == null)
+                return NotFound();
+
+            return dto;
+        }
     }
 }
