@@ -23,41 +23,44 @@ Partial Class ShiftForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle59 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle60 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ShiftForm))
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle61 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle62 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle63 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle64 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle65 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle66 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle73 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle74 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle75 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle76 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle77 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle78 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle79 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle80 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle81 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle82 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle83 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.tcSchedule = New System.Windows.Forms.TabControl()
         Me.tabRange = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.numGracePeriod = New System.Windows.Forms.NumericUpDown()
+        Me.chkMarkedAsWholeDay = New System.Windows.Forms.CheckBox()
         Me.btnDiscard1 = New System.Windows.Forms.Button()
         Me.btnApply1 = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -104,21 +107,6 @@ Partial Class ShiftForm
         Me.tsBtnImport = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grid = New System.Windows.Forms.DataGridView()
-        Me.colId = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colEmployeeId = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colEmployeeNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDayName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colBreakTimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colBreakLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colIsRestDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.colIsExisting = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colMarkAsWholeDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.colGracePeriod = New DevComponents.DotNetBar.Controls.DataGridViewIntegerInputColumn()
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.PasteToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label16 = New System.Windows.Forms.Label()
@@ -148,14 +136,28 @@ Partial Class ShiftForm
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.chkMarkedAsWholeDay = New System.Windows.Forms.CheckBox()
-        Me.numGracePeriod = New System.Windows.Forms.NumericUpDown()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.colId = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colEmployeeId = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colEmployeeNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDayName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBreakTimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBreakLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colIsRestDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.colRequiredLunch = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.colIsExisting = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colMarkAsWholeDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.colGracePeriod = New DevComponents.DotNetBar.Controls.DataGridViewIntegerInputColumn()
         Me.Panel1.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.tcSchedule.SuspendLayout()
         Me.tabRange.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
+        CType(Me.numGracePeriod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         CType(Me.txtBreakLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabWeekCycle.SuspendLayout()
@@ -174,7 +176,6 @@ Partial Class ShiftForm
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
-        CType(Me.numGracePeriod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -244,6 +245,34 @@ Partial Class ShiftForm
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Tag = ""
         Me.GroupBox2.Text = "Duty Shift"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.BackColor = System.Drawing.Color.Transparent
+        Me.Label2.Location = New System.Drawing.Point(386, 32)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(72, 13)
+        Me.Label2.TabIndex = 350
+        Me.Label2.Text = "Grace Period"
+        '
+        'numGracePeriod
+        '
+        Me.numGracePeriod.Location = New System.Drawing.Point(389, 48)
+        Me.numGracePeriod.Name = "numGracePeriod"
+        Me.numGracePeriod.Size = New System.Drawing.Size(46, 22)
+        Me.numGracePeriod.TabIndex = 4
+        Me.numGracePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'chkMarkedAsWholeDay
+        '
+        Me.chkMarkedAsWholeDay.AutoSize = True
+        Me.chkMarkedAsWholeDay.Location = New System.Drawing.Point(297, 53)
+        Me.chkMarkedAsWholeDay.Name = "chkMarkedAsWholeDay"
+        Me.chkMarkedAsWholeDay.Size = New System.Drawing.Size(86, 17)
+        Me.chkMarkedAsWholeDay.TabIndex = 3
+        Me.chkMarkedAsWholeDay.Text = "Whole day?"
+        Me.chkMarkedAsWholeDay.UseVisualStyleBackColor = True
         '
         'btnDiscard1
         '
@@ -397,9 +426,9 @@ Partial Class ShiftForm
         '
         'Column6
         '
-        DataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle57.NullValue = "Enabled"
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle57
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle1.NullValue = "Enabled"
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle1
         Me.Column6.FillWeight = 102.2831!
         Me.Column6.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Column6.HeaderText = ""
@@ -410,8 +439,8 @@ Partial Class ShiftForm
         'Column1
         '
         Me.Column1.DataPropertyName = "DateValue"
-        DataGridViewCellStyle58.Format = "ddd"
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle58
+        DataGridViewCellStyle2.Format = "ddd"
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle2
         Me.Column1.FillWeight = 53.8867!
         Me.Column1.HeaderText = "Day"
         Me.Column1.Name = "Column1"
@@ -459,8 +488,8 @@ Partial Class ShiftForm
         'gridWeekBreakLength
         '
         Me.gridWeekBreakLength.DataPropertyName = "BreakLength"
-        DataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.gridWeekBreakLength.DefaultCellStyle = DataGridViewCellStyle59
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.gridWeekBreakLength.DefaultCellStyle = DataGridViewCellStyle3
         Me.gridWeekBreakLength.FillWeight = 125.6051!
         Me.gridWeekBreakLength.HeaderText = "Break Length"
         Me.gridWeekBreakLength.Name = "gridWeekBreakLength"
@@ -493,8 +522,8 @@ Partial Class ShiftForm
         Me.GracePeriod.BackgroundStyle.Class = "DataGridViewNumericBorder"
         Me.GracePeriod.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.GracePeriod.DataPropertyName = "GracePeriod"
-        DataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.GracePeriod.DefaultCellStyle = DataGridViewCellStyle60
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.GracePeriod.DefaultCellStyle = DataGridViewCellStyle4
         Me.GracePeriod.HeaderText = "Grace Period"
         Me.GracePeriod.Name = "GracePeriod"
         Me.GracePeriod.Visible = False
@@ -690,7 +719,7 @@ Partial Class ShiftForm
         Me.grid.AllowUserToResizeRows = False
         Me.grid.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colId, Me.colEmployeeId, Me.colEmployeeNo, Me.colFullName, Me.colDayName, Me.colDate, Me.colTimeFrom, Me.colTimeTo, Me.colBreakTimeFrom, Me.colBreakLength, Me.colIsRestDay, Me.colIsExisting, Me.colHasChanged, Me.colMarkAsWholeDay, Me.colGracePeriod})
+        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colId, Me.colEmployeeId, Me.colEmployeeNo, Me.colFullName, Me.colDayName, Me.colDate, Me.colTimeFrom, Me.colTimeTo, Me.colBreakTimeFrom, Me.colBreakLength, Me.colIsRestDay, Me.colRequiredLunch, Me.colIsExisting, Me.colHasChanged, Me.colMarkAsWholeDay, Me.colGracePeriod})
         Me.grid.ContextMenuStrip = Me.ContextMenuStrip2
         Me.grid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.grid.Location = New System.Drawing.Point(0, 0)
@@ -700,174 +729,6 @@ Partial Class ShiftForm
         Me.grid.ShowCellToolTips = False
         Me.grid.Size = New System.Drawing.Size(900, 309)
         Me.grid.TabIndex = 335
-        '
-        'colId
-        '
-        Me.colId.DataPropertyName = "RowID"
-        Me.colId.HeaderText = "RowID"
-        Me.colId.Name = "colId"
-        Me.colId.ReadOnly = True
-        Me.colId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colId.Visible = False
-        Me.colId.Width = 46
-        '
-        'colEmployeeId
-        '
-        Me.colEmployeeId.DataPropertyName = "EmployeeId"
-        Me.colEmployeeId.HeaderText = "EmployeeId"
-        Me.colEmployeeId.Name = "colEmployeeId"
-        Me.colEmployeeId.ReadOnly = True
-        Me.colEmployeeId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colEmployeeId.Visible = False
-        Me.colEmployeeId.Width = 68
-        '
-        'colEmployeeNo
-        '
-        Me.colEmployeeNo.DataPropertyName = "EmployeeNo"
-        Me.colEmployeeNo.FillWeight = 79.47702!
-        Me.colEmployeeNo.HeaderText = "Employee No"
-        Me.colEmployeeNo.Name = "colEmployeeNo"
-        Me.colEmployeeNo.ReadOnly = True
-        Me.colEmployeeNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colEmployeeNo.Width = 80
-        '
-        'colFullName
-        '
-        Me.colFullName.DataPropertyName = "FullName"
-        Me.colFullName.FillWeight = 243.6548!
-        Me.colFullName.HeaderText = "Employee Name"
-        Me.colFullName.Name = "colFullName"
-        Me.colFullName.ReadOnly = True
-        Me.colFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colFullName.Width = 262
-        '
-        'colDayName
-        '
-        Me.colDayName.DataPropertyName = "DateValue"
-        DataGridViewCellStyle33.Format = "ddd"
-        Me.colDayName.DefaultCellStyle = DataGridViewCellStyle33
-        Me.colDayName.FillWeight = 79.48299!
-        Me.colDayName.HeaderText = "Day"
-        Me.colDayName.Name = "colDayName"
-        Me.colDayName.ReadOnly = True
-        Me.colDayName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDayName.Width = 34
-        '
-        'colDate
-        '
-        Me.colDate.DataPropertyName = "DateValue"
-        DataGridViewCellStyle61.Format = "MM/dd/yyyy"
-        DataGridViewCellStyle61.NullValue = Nothing
-        Me.colDate.DefaultCellStyle = DataGridViewCellStyle61
-        Me.colDate.FillWeight = 79.47702!
-        Me.colDate.HeaderText = "Date"
-        Me.colDate.Name = "colDate"
-        Me.colDate.ReadOnly = True
-        Me.colDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDate.Width = 66
-        '
-        'colTimeFrom
-        '
-        Me.colTimeFrom.DataPropertyName = "TimeFrom"
-        DataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle62.Format = "HH:mm"
-        DataGridViewCellStyle62.NullValue = Nothing
-        Me.colTimeFrom.DefaultCellStyle = DataGridViewCellStyle62
-        Me.colTimeFrom.FillWeight = 79.47702!
-        Me.colTimeFrom.HeaderText = "Time From"
-        Me.colTimeFrom.MaxInputLength = 16
-        Me.colTimeFrom.Name = "colTimeFrom"
-        Me.colTimeFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTimeFrom.Width = 65
-        '
-        'colTimeTo
-        '
-        Me.colTimeTo.DataPropertyName = "TimeTo"
-        DataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle63.Format = "HH:mm"
-        Me.colTimeTo.DefaultCellStyle = DataGridViewCellStyle63
-        Me.colTimeTo.FillWeight = 79.47702!
-        Me.colTimeTo.HeaderText = "Time To"
-        Me.colTimeTo.MaxInputLength = 16
-        Me.colTimeTo.Name = "colTimeTo"
-        Me.colTimeTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTimeTo.Width = 65
-        '
-        'colBreakTimeFrom
-        '
-        Me.colBreakTimeFrom.DataPropertyName = "BreakFrom"
-        DataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle64.Format = "HH:mm"
-        Me.colBreakTimeFrom.DefaultCellStyle = DataGridViewCellStyle64
-        Me.colBreakTimeFrom.FillWeight = 79.47702!
-        Me.colBreakTimeFrom.HeaderText = "Break From"
-        Me.colBreakTimeFrom.MaxInputLength = 16
-        Me.colBreakTimeFrom.Name = "colBreakTimeFrom"
-        Me.colBreakTimeFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colBreakTimeFrom.Width = 65
-        '
-        'colBreakLength
-        '
-        Me.colBreakLength.DataPropertyName = "BreakLength"
-        DataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        DataGridViewCellStyle65.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.colBreakLength.DefaultCellStyle = DataGridViewCellStyle65
-        Me.colBreakLength.HeaderText = "Break Length"
-        Me.colBreakLength.Name = "colBreakLength"
-        Me.colBreakLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colBreakLength.Width = 65
-        '
-        'colIsRestDay
-        '
-        Me.colIsRestDay.DataPropertyName = "IsRestDay"
-        Me.colIsRestDay.HeaderText = "Offset"
-        Me.colIsRestDay.Name = "colIsRestDay"
-        Me.colIsRestDay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colIsRestDay.Width = 48
-        '
-        'colIsExisting
-        '
-        Me.colIsExisting.DataPropertyName = "IsExisting"
-        Me.colIsExisting.HeaderText = "IsExisting"
-        Me.colIsExisting.Name = "colIsExisting"
-        Me.colIsExisting.ReadOnly = True
-        Me.colIsExisting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colIsExisting.Visible = False
-        Me.colIsExisting.Width = 32
-        '
-        'colHasChanged
-        '
-        Me.colHasChanged.DataPropertyName = "HasChanged"
-        Me.colHasChanged.HeaderText = "HasChanged"
-        Me.colHasChanged.Name = "colHasChanged"
-        Me.colHasChanged.ReadOnly = True
-        Me.colHasChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colHasChanged.Visible = False
-        Me.colHasChanged.Width = 32
-        '
-        'colMarkAsWholeDay
-        '
-        Me.colMarkAsWholeDay.DataPropertyName = "MarkedAsWholeDay"
-        Me.colMarkAsWholeDay.HeaderText = "Whole day?"
-        Me.colMarkAsWholeDay.Name = "colMarkAsWholeDay"
-        Me.colMarkAsWholeDay.Visible = False
-        Me.colMarkAsWholeDay.Width = 48
-        '
-        'colGracePeriod
-        '
-        '
-        '
-        '
-        Me.colGracePeriod.BackgroundStyle.Class = "DataGridViewNumericBorder"
-        Me.colGracePeriod.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.colGracePeriod.DataPropertyName = "GracePeriod"
-        DataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colGracePeriod.DefaultCellStyle = DataGridViewCellStyle66
-        Me.colGracePeriod.HeaderText = "Grace Period"
-        Me.colGracePeriod.Name = "colGracePeriod"
-        Me.colGracePeriod.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colGracePeriod.Visible = False
-        Me.colGracePeriod.Width = 54
         '
         'ContextMenuStrip2
         '
@@ -952,8 +813,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "RowID"
-        DataGridViewCellStyle39.Format = "ddd"
-        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle39
+        DataGridViewCellStyle12.Format = "ddd"
+        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn1.FillWeight = 53.8867!
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
@@ -985,9 +846,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "DateFrom"
-        DataGridViewCellStyle67.Format = "d"
-        DataGridViewCellStyle67.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle67
+        DataGridViewCellStyle13.Format = "d"
+        DataGridViewCellStyle13.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn4.FillWeight = 243.6548!
         Me.DataGridViewTextBoxColumn4.HeaderText = "Effective Date From"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
@@ -998,9 +859,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "DateTo"
-        DataGridViewCellStyle68.Format = "d"
-        DataGridViewCellStyle68.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle68
+        DataGridViewCellStyle14.Format = "d"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn5.FillWeight = 79.48299!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Effective Date To"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
@@ -1012,8 +873,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "TimeFrom"
-        DataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle69
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn6.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn6.HeaderText = "Time From"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
@@ -1024,8 +885,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "TimeTo"
-        DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle70
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn7.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn7.HeaderText = "Time To"
         Me.DataGridViewTextBoxColumn7.MaxInputLength = 16
@@ -1038,8 +899,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "BreakFrom"
-        DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle71
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn8.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn8.HeaderText = "Breaktime From"
         Me.DataGridViewTextBoxColumn8.MaxInputLength = 16
@@ -1052,8 +913,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.DataPropertyName = "BreakTo"
-        DataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle72
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn9.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn9.HeaderText = "Breaktime To"
         Me.DataGridViewTextBoxColumn9.MaxInputLength = 16
@@ -1066,8 +927,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "BreakTo"
-        DataGridViewCellStyle73.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle73
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn10.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn10.HeaderText = "Breaktime To"
         Me.DataGridViewTextBoxColumn10.MaxInputLength = 16
@@ -1080,9 +941,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "IsRestDay"
-        DataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle74.Format = "HH:mm"
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle74
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle20.Format = "HH:mm"
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn11.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn11.HeaderText = "Rest Day"
         Me.DataGridViewTextBoxColumn11.MaxInputLength = 16
@@ -1095,8 +956,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "DateValue"
-        DataGridViewCellStyle75.Format = "ddd"
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle75
+        DataGridViewCellStyle21.Format = "ddd"
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle21
         Me.DataGridViewTextBoxColumn12.FillWeight = 79.48299!
         Me.DataGridViewTextBoxColumn12.HeaderText = "Time From"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
@@ -1108,9 +969,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "DateValue"
-        DataGridViewCellStyle76.Format = "MM/dd/yyyy"
-        DataGridViewCellStyle76.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle76
+        DataGridViewCellStyle22.Format = "MM/dd/yyyy"
+        DataGridViewCellStyle22.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle22
         Me.DataGridViewTextBoxColumn13.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn13.HeaderText = "Time To"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
@@ -1122,10 +983,10 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "TimeFrom"
-        DataGridViewCellStyle77.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle77.Format = "HH:mm"
-        DataGridViewCellStyle77.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle77
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle23.Format = "HH:mm"
+        DataGridViewCellStyle23.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridViewTextBoxColumn14.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn14.HeaderText = "Break From"
         Me.DataGridViewTextBoxColumn14.MaxInputLength = 16
@@ -1137,9 +998,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "TimeTo"
-        DataGridViewCellStyle78.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle78.Format = "HH:mm"
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle78
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle24.Format = "HH:mm"
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridViewTextBoxColumn15.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn15.HeaderText = "Break To"
         Me.DataGridViewTextBoxColumn15.MaxInputLength = 16
@@ -1151,9 +1012,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "BreakFrom"
-        DataGridViewCellStyle79.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle79.Format = "HH:mm"
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle79
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle25.Format = "HH:mm"
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle25
         Me.DataGridViewTextBoxColumn16.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn16.HeaderText = "Break To"
         Me.DataGridViewTextBoxColumn16.MaxInputLength = 16
@@ -1164,8 +1025,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "BreakLength"
-        DataGridViewCellStyle80.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle80
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle26
         Me.DataGridViewTextBoxColumn17.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn17.HeaderText = "Break To"
         Me.DataGridViewTextBoxColumn17.MaxInputLength = 16
@@ -1176,9 +1037,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn18
         '
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "BreakTo"
-        DataGridViewCellStyle81.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle81.Format = "HH:mm"
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle81
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle27.Format = "HH:mm"
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle27
         Me.DataGridViewTextBoxColumn18.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn18.HeaderText = "Break To"
         Me.DataGridViewTextBoxColumn18.MaxInputLength = 16
@@ -1190,8 +1051,8 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "IsExisting"
-        DataGridViewCellStyle82.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle82
+        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle28
         Me.DataGridViewTextBoxColumn19.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn19.HeaderText = "IsExisting"
         Me.DataGridViewTextBoxColumn19.MaxInputLength = 16
@@ -1204,9 +1065,9 @@ Partial Class ShiftForm
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "HasChanged"
-        DataGridViewCellStyle83.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle83.Format = "HH:mm"
-        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle83
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle29.Format = "HH:mm"
+        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle29
         Me.DataGridViewTextBoxColumn20.FillWeight = 79.47702!
         Me.DataGridViewTextBoxColumn20.HeaderText = "HasChanged"
         Me.DataGridViewTextBoxColumn20.MaxInputLength = 16
@@ -1236,33 +1097,181 @@ Partial Class ShiftForm
         Me.DataGridViewTextBoxColumn22.Visible = False
         Me.DataGridViewTextBoxColumn22.Width = 32
         '
-        'chkMarkedAsWholeDay
+        'colId
         '
-        Me.chkMarkedAsWholeDay.AutoSize = True
-        Me.chkMarkedAsWholeDay.Location = New System.Drawing.Point(297, 53)
-        Me.chkMarkedAsWholeDay.Name = "chkMarkedAsWholeDay"
-        Me.chkMarkedAsWholeDay.Size = New System.Drawing.Size(86, 17)
-        Me.chkMarkedAsWholeDay.TabIndex = 3
-        Me.chkMarkedAsWholeDay.Text = "Whole day?"
-        Me.chkMarkedAsWholeDay.UseVisualStyleBackColor = True
+        Me.colId.DataPropertyName = "RowID"
+        Me.colId.HeaderText = "RowID"
+        Me.colId.Name = "colId"
+        Me.colId.ReadOnly = True
+        Me.colId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colId.Visible = False
+        Me.colId.Width = 46
         '
-        'numGracePeriod
+        'colEmployeeId
         '
-        Me.numGracePeriod.Location = New System.Drawing.Point(389, 48)
-        Me.numGracePeriod.Name = "numGracePeriod"
-        Me.numGracePeriod.Size = New System.Drawing.Size(46, 22)
-        Me.numGracePeriod.TabIndex = 4
-        Me.numGracePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.colEmployeeId.DataPropertyName = "EmployeeId"
+        Me.colEmployeeId.HeaderText = "EmployeeId"
+        Me.colEmployeeId.Name = "colEmployeeId"
+        Me.colEmployeeId.ReadOnly = True
+        Me.colEmployeeId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colEmployeeId.Visible = False
+        Me.colEmployeeId.Width = 68
         '
-        'Label2
+        'colEmployeeNo
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.Transparent
-        Me.Label2.Location = New System.Drawing.Point(386, 32)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(72, 13)
-        Me.Label2.TabIndex = 350
-        Me.Label2.Text = "Grace Period"
+        Me.colEmployeeNo.DataPropertyName = "EmployeeNo"
+        Me.colEmployeeNo.FillWeight = 79.47702!
+        Me.colEmployeeNo.HeaderText = "Employee No"
+        Me.colEmployeeNo.Name = "colEmployeeNo"
+        Me.colEmployeeNo.ReadOnly = True
+        Me.colEmployeeNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colEmployeeNo.Width = 80
+        '
+        'colFullName
+        '
+        Me.colFullName.DataPropertyName = "FullName"
+        Me.colFullName.FillWeight = 243.6548!
+        Me.colFullName.HeaderText = "Employee Name"
+        Me.colFullName.Name = "colFullName"
+        Me.colFullName.ReadOnly = True
+        Me.colFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colFullName.Width = 262
+        '
+        'colDayName
+        '
+        Me.colDayName.DataPropertyName = "DateValue"
+        DataGridViewCellStyle5.Format = "ddd"
+        Me.colDayName.DefaultCellStyle = DataGridViewCellStyle5
+        Me.colDayName.FillWeight = 79.48299!
+        Me.colDayName.HeaderText = "Day"
+        Me.colDayName.Name = "colDayName"
+        Me.colDayName.ReadOnly = True
+        Me.colDayName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDayName.Width = 34
+        '
+        'colDate
+        '
+        Me.colDate.DataPropertyName = "DateValue"
+        DataGridViewCellStyle6.Format = "MM/dd/yyyy"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.colDate.DefaultCellStyle = DataGridViewCellStyle6
+        Me.colDate.FillWeight = 79.47702!
+        Me.colDate.HeaderText = "Date"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDate.Width = 66
+        '
+        'colTimeFrom
+        '
+        Me.colTimeFrom.DataPropertyName = "TimeFrom"
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle7.Format = "HH:mm"
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.colTimeFrom.DefaultCellStyle = DataGridViewCellStyle7
+        Me.colTimeFrom.FillWeight = 79.47702!
+        Me.colTimeFrom.HeaderText = "Time From"
+        Me.colTimeFrom.MaxInputLength = 16
+        Me.colTimeFrom.Name = "colTimeFrom"
+        Me.colTimeFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTimeFrom.Width = 65
+        '
+        'colTimeTo
+        '
+        Me.colTimeTo.DataPropertyName = "TimeTo"
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle8.Format = "HH:mm"
+        Me.colTimeTo.DefaultCellStyle = DataGridViewCellStyle8
+        Me.colTimeTo.FillWeight = 79.47702!
+        Me.colTimeTo.HeaderText = "Time To"
+        Me.colTimeTo.MaxInputLength = 16
+        Me.colTimeTo.Name = "colTimeTo"
+        Me.colTimeTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTimeTo.Width = 65
+        '
+        'colBreakTimeFrom
+        '
+        Me.colBreakTimeFrom.DataPropertyName = "BreakFrom"
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle9.Format = "HH:mm"
+        Me.colBreakTimeFrom.DefaultCellStyle = DataGridViewCellStyle9
+        Me.colBreakTimeFrom.FillWeight = 79.47702!
+        Me.colBreakTimeFrom.HeaderText = "Break From"
+        Me.colBreakTimeFrom.MaxInputLength = 16
+        Me.colBreakTimeFrom.Name = "colBreakTimeFrom"
+        Me.colBreakTimeFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colBreakTimeFrom.Width = 65
+        '
+        'colBreakLength
+        '
+        Me.colBreakLength.DataPropertyName = "BreakLength"
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.colBreakLength.DefaultCellStyle = DataGridViewCellStyle10
+        Me.colBreakLength.HeaderText = "Break Length"
+        Me.colBreakLength.Name = "colBreakLength"
+        Me.colBreakLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colBreakLength.Width = 65
+        '
+        'colIsRestDay
+        '
+        Me.colIsRestDay.DataPropertyName = "IsRestDay"
+        Me.colIsRestDay.HeaderText = "Offset"
+        Me.colIsRestDay.Name = "colIsRestDay"
+        Me.colIsRestDay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colIsRestDay.Width = 48
+        '
+        'colRequiredLunch
+        '
+        Me.colRequiredLunch.DataPropertyName = "RequiresLunchInOut"
+        Me.colRequiredLunch.HeaderText = "Req. Lunch"
+        Me.colRequiredLunch.Name = "colRequiredLunch"
+        Me.colRequiredLunch.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colRequiredLunch.Width = 48
+        '
+        'colIsExisting
+        '
+        Me.colIsExisting.DataPropertyName = "IsExisting"
+        Me.colIsExisting.HeaderText = "IsExisting"
+        Me.colIsExisting.Name = "colIsExisting"
+        Me.colIsExisting.ReadOnly = True
+        Me.colIsExisting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colIsExisting.Visible = False
+        Me.colIsExisting.Width = 32
+        '
+        'colHasChanged
+        '
+        Me.colHasChanged.DataPropertyName = "HasChanged"
+        Me.colHasChanged.HeaderText = "HasChanged"
+        Me.colHasChanged.Name = "colHasChanged"
+        Me.colHasChanged.ReadOnly = True
+        Me.colHasChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colHasChanged.Visible = False
+        Me.colHasChanged.Width = 32
+        '
+        'colMarkAsWholeDay
+        '
+        Me.colMarkAsWholeDay.DataPropertyName = "MarkedAsWholeDay"
+        Me.colMarkAsWholeDay.HeaderText = "Whole day?"
+        Me.colMarkAsWholeDay.Name = "colMarkAsWholeDay"
+        Me.colMarkAsWholeDay.Visible = False
+        Me.colMarkAsWholeDay.Width = 48
+        '
+        'colGracePeriod
+        '
+        '
+        '
+        '
+        Me.colGracePeriod.BackgroundStyle.Class = "DataGridViewNumericBorder"
+        Me.colGracePeriod.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.colGracePeriod.DataPropertyName = "GracePeriod"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colGracePeriod.DefaultCellStyle = DataGridViewCellStyle11
+        Me.colGracePeriod.HeaderText = "Grace Period"
+        Me.colGracePeriod.Name = "colGracePeriod"
+        Me.colGracePeriod.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colGracePeriod.Visible = False
+        Me.colGracePeriod.Width = 54
         '
         'ShiftForm
         '
@@ -1285,6 +1294,7 @@ Partial Class ShiftForm
         Me.tabRange.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
+        CType(Me.numGracePeriod, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         CType(Me.txtBreakLength, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1306,7 +1316,6 @@ Partial Class ShiftForm
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
-        CType(Me.numGracePeriod, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1378,21 +1387,6 @@ Partial Class ShiftForm
     Friend WithEvents Button2 As Button
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents FilterButton As Button
-    Friend WithEvents colId As DataGridViewTextBoxColumn
-    Friend WithEvents colEmployeeId As DataGridViewTextBoxColumn
-    Friend WithEvents colEmployeeNo As DataGridViewTextBoxColumn
-    Friend WithEvents colFullName As DataGridViewTextBoxColumn
-    Friend WithEvents colDayName As DataGridViewTextBoxColumn
-    Friend WithEvents colDate As DataGridViewTextBoxColumn
-    Friend WithEvents colTimeFrom As DataGridViewTextBoxColumn
-    Friend WithEvents colTimeTo As DataGridViewTextBoxColumn
-    Friend WithEvents colBreakTimeFrom As DataGridViewTextBoxColumn
-    Friend WithEvents colBreakLength As DataGridViewTextBoxColumn
-    Friend WithEvents colIsRestDay As DataGridViewCheckBoxColumn
-    Friend WithEvents colIsExisting As DataGridViewTextBoxColumn
-    Friend WithEvents colHasChanged As DataGridViewTextBoxColumn
-    Friend WithEvents colMarkAsWholeDay As DataGridViewCheckBoxColumn
-    Friend WithEvents colGracePeriod As DevComponents.DotNetBar.Controls.DataGridViewIntegerInputColumn
     Friend WithEvents Column6 As DataGridViewButtonColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
@@ -1408,4 +1402,20 @@ Partial Class ShiftForm
     Friend WithEvents numGracePeriod As NumericUpDown
     Friend WithEvents chkMarkedAsWholeDay As CheckBox
     Friend WithEvents Label2 As Label
+    Friend WithEvents colId As DataGridViewTextBoxColumn
+    Friend WithEvents colEmployeeId As DataGridViewTextBoxColumn
+    Friend WithEvents colEmployeeNo As DataGridViewTextBoxColumn
+    Friend WithEvents colFullName As DataGridViewTextBoxColumn
+    Friend WithEvents colDayName As DataGridViewTextBoxColumn
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colTimeFrom As DataGridViewTextBoxColumn
+    Friend WithEvents colTimeTo As DataGridViewTextBoxColumn
+    Friend WithEvents colBreakTimeFrom As DataGridViewTextBoxColumn
+    Friend WithEvents colBreakLength As DataGridViewTextBoxColumn
+    Friend WithEvents colIsRestDay As DataGridViewCheckBoxColumn
+    Friend WithEvents colRequiredLunch As DataGridViewCheckBoxColumn
+    Friend WithEvents colIsExisting As DataGridViewTextBoxColumn
+    Friend WithEvents colHasChanged As DataGridViewTextBoxColumn
+    Friend WithEvents colMarkAsWholeDay As DataGridViewCheckBoxColumn
+    Friend WithEvents colGracePeriod As DevComponents.DotNetBar.Controls.DataGridViewIntegerInputColumn
 End Class

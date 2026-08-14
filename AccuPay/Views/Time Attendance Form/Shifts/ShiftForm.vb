@@ -140,6 +140,7 @@ Public Class ShiftForm
             .IsRestDay = update.IsRestDay
             .MarkedAsWholeDay = update.MarkedAsWholeDay
             .GracePeriod = update.GracePeriod
+            .RequiresLunchInOut = update.RequiresLunchInOut
         End With
     End Sub
 
@@ -362,7 +363,7 @@ Public Class ShiftForm
     Private Function IsShiftSchedCellParseable(dataGrid As DataGridView, columnIndexNumber As Integer) As Boolean
         Dim editableColumnIndexes() = New Integer() {}
         If dataGrid.Name = grid.Name Then
-            editableColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index, colMarkAsWholeDay.Index, colGracePeriod.Index}
+            editableColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index, colRequiredLunch.Index, colMarkAsWholeDay.Index, colGracePeriod.Index}
             If _isShiftBasedAutoOvertimeEnabled Then editableColumnIndexes = editableColumnIndexes.Concat({colTimeTo.Index}).ToArray()
         ElseIf dataGrid.Name = gridWeek.Name Then
             editableColumnIndexes = New Integer() {colStartTime.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index, MarkedAsWholeDay.Index, GracePeriod.Index}
@@ -514,6 +515,7 @@ Public Class ShiftForm
         Private _origMarkAsWholeDay As Boolean
         Private _origGracePeriod As Integer
         Private _origBreakLength As Decimal
+        Private _origRequiresLunchInOut As Boolean
         Private _isNew, _madeChanges, _isValid As Boolean
         Private _eds As Shift
         Private _markedAsWholeDay As Boolean
@@ -555,6 +557,8 @@ Public Class ShiftForm
 
             _GracePeriod = If(ess.GracePeriod, 0)
 
+            _RequiresLunchInOut = ess.RequiresLunchInOut
+
             _origStartTime = _TimeFrom
             _origEndTime = _TimeTo
 
@@ -565,6 +569,7 @@ Public Class ShiftForm
 
             _origMarkAsWholeDay = _markedAsWholeDay
             _origGracePeriod = _GracePeriod
+            _origRequiresLunchInOut = _RequiresLunchInOut
         End Sub
 
         Private Sub AssignEmployee(employee As Employee)
@@ -605,6 +610,8 @@ Public Class ShiftForm
 
         Public Property GracePeriod As Integer
 
+        Public Property RequiresLunchInOut As Boolean
+
         Public ReadOnly Property DayName As String
             Get
                 Return GetDayName(DateValue)
@@ -638,7 +645,8 @@ Public Class ShiftForm
                     OrElse Not Equals(_origBreakLength, _BreakLength) _
                     OrElse Not Equals(_origOffset, _IsRestDay) _
                     OrElse _origMarkAsWholeDay <> _markedAsWholeDay _
-                    OrElse _origGracePeriod <> _GracePeriod
+                    OrElse _origGracePeriod <> _GracePeriod _
+                    OrElse _origRequiresLunchInOut <> _RequiresLunchInOut
 
                 Return _madeChanges
             End Get
@@ -707,6 +715,7 @@ Public Class ShiftForm
                     .IsRestDay = _IsRestDay
                     .MarkedAsWholeDay = _markedAsWholeDay
                     .GracePeriod = _GracePeriod
+                    .RequiresLunchInOut = _RequiresLunchInOut
                 End With
 
                 Return _eds
@@ -721,6 +730,7 @@ Public Class ShiftForm
             _origBreakLength = _BreakLength
 
             _origOffset = _IsRestDay
+            _origRequiresLunchInOut = _RequiresLunchInOut
         End Sub
 
         Public ReadOnly Property IsEmptyTimeTo As Boolean
@@ -1248,7 +1258,7 @@ Public Class ShiftForm
     End Sub
 
     Private Sub grid_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles grid.CellPainting
-        Dim isSatisfy = {colIsRestDay.Index, colMarkAsWholeDay.Index}.Contains(e.ColumnIndex) AndAlso e.RowIndex > -1
+        Dim isSatisfy = {colIsRestDay.Index, colRequiredLunch.Index, colMarkAsWholeDay.Index}.Contains(e.ColumnIndex) AndAlso e.RowIndex > -1
         If isSatisfy Then
             Dim isFormattedValue = If(CBool(e.FormattedValue), ButtonState.Checked, ButtonState.Normal)
 
@@ -1504,7 +1514,7 @@ Public Class ShiftForm
 
         Dim currentColumn = grid.Columns(currentColumnIndex)
 
-        If currentColumn IsNot colIsRestDay Then Return
+        If currentColumn IsNot colIsRestDay AndAlso currentColumn IsNot colRequiredLunch Then Return
 
         grid.EndEdit()
 
