@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports Microsoft.Win32
 
@@ -47,7 +47,7 @@ Namespace Desktop.Helpers
 
         Public Shared Function GetCurrent() As ConnectionStringRegistry
 
-            Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
+            Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\AccessOffshoring", True)
 
             Dim server As String = ""
             Dim userId As String = ""

@@ -1,4 +1,4 @@
-﻿Imports Microsoft.Win32
+Imports Microsoft.Win32
 Imports System.IO
 
 Public Class DataBaseConnection
@@ -74,15 +74,15 @@ Public Class DataBaseConnection
 
         Try
 
-            regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
+            regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\AccessOffshoring", True)
 
             If regKey Is Nothing Then
 
                 regKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", True)
 
-                regKey.CreateSubKey("Globagility\DBConn\GoldWings")
+                regKey.CreateSubKey("Globagility\DBConn\AccessOffshoring")
 
-                regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
+                regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\AccessOffshoring", True)
 
                 regKey.SetValue("server", "localhost")
 
@@ -142,7 +142,7 @@ Public Class DataBaseConnection
                                       Environment.NewLine &
                                       ";Created by Globagility, Inc." & Environment.NewLine &
                                       Environment.NewLine &
-                                      "[HKEY_LOCAL_MACHINE\SOFTWARE\Globagility\DBConn\GoldWings]" & Environment.NewLine &
+                                      "[HKEY_LOCAL_MACHINE\SOFTWARE\Globagility\DBConn\AccessOffshoring]" & Environment.NewLine &
                                       """apppath""=""" & Application.StartupPath & """" & Environment.NewLine &
                                       """database""=""" & sys_db & """" & Environment.NewLine &
                                       """password""=""" & sys_password & """" & Environment.NewLine &
