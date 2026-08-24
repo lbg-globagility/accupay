@@ -328,6 +328,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DailyAttendanceReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PayPeriodGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3130,7 +3131,7 @@ Partial Class PayStubForm
         '
         'OthersToolStripMenuItem
         '
-        Me.OthersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Include13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.PayLoansUsing13thMonthToolStripMenuItem})
+        Me.OthersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Include13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.PayLoansUsing13thMonthToolStripMenuItem, Me.DailyAttendanceReportToolStripMenuItem})
         Me.OthersToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
@@ -3418,6 +3419,12 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
+        '
+        'DailyAttendanceReportToolStripMenuItem
+        '
+        Me.DailyAttendanceReportToolStripMenuItem.Name = "DailyAttendanceReportToolStripMenuItem"
+        Me.DailyAttendanceReportToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
+        Me.DailyAttendanceReportToolStripMenuItem.Text = "Daily Attendance Report"
         '
         'PayStubForm
         '
@@ -3756,4 +3763,5 @@ Partial Class PayStubForm
     Friend WithEvents CostCenterReportByBranchActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RecalculateThirteenthMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PayLoansUsing13thMonthToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DailyAttendanceReportToolStripMenuItem As ToolStripMenuItem
 End Class

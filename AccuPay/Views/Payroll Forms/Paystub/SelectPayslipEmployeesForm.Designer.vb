@@ -61,6 +61,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.DARbtn = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -259,7 +260,7 @@ Partial Class SelectPayslipEmployeesForm
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton, Me.DARbtn})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
@@ -278,13 +279,13 @@ Partial Class SelectPayslipEmployeesForm
         'PreviewDeclaredToolStripMenuItem
         '
         Me.PreviewDeclaredToolStripMenuItem.Name = "PreviewDeclaredToolStripMenuItem"
-        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PreviewDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PreviewActualToolStripMenuItem
         '
         Me.PreviewActualToolStripMenuItem.Name = "PreviewActualToolStripMenuItem"
-        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PreviewActualToolStripMenuItem.Text = "Actual"
         '
         'SendEmailToolStripDropDownButton
@@ -299,13 +300,13 @@ Partial Class SelectPayslipEmployeesForm
         'SendEmailDeclaredToolStripMenuItem
         '
         Me.SendEmailDeclaredToolStripMenuItem.Name = "SendEmailDeclaredToolStripMenuItem"
-        Me.SendEmailDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SendEmailDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.SendEmailDeclaredToolStripMenuItem.Text = "Declared"
         '
         'SendEmailActualToolStripMenuItem
         '
         Me.SendEmailActualToolStripMenuItem.Name = "SendEmailActualToolStripMenuItem"
-        Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.SendEmailActualToolStripMenuItem.Text = "Actual"
         '
         'PreviewToolStripButton
@@ -336,13 +337,13 @@ Partial Class SelectPayslipEmployeesForm
         'ResetEmailsToolStripMenuItem
         '
         Me.ResetEmailsToolStripMenuItem.Name = "ResetEmailsToolStripMenuItem"
-        Me.ResetEmailsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ResetEmailsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ResetEmailsToolStripMenuItem.Text = "Reset All"
         '
         'RefreshEmailStatusToolStripMenuItem
         '
         Me.RefreshEmailStatusToolStripMenuItem.Name = "RefreshEmailStatusToolStripMenuItem"
-        Me.RefreshEmailStatusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RefreshEmailStatusToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.RefreshEmailStatusToolStripMenuItem.Text = "Refresh Status"
         '
         'RefreshEmailServiceToolStripButton
@@ -352,6 +353,14 @@ Partial Class SelectPayslipEmployeesForm
         Me.RefreshEmailServiceToolStripButton.Name = "RefreshEmailServiceToolStripButton"
         Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
         Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
+        '
+        'DARbtn
+        '
+        Me.DARbtn.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.DARbtn.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DARbtn.Name = "DARbtn"
+        Me.DARbtn.Size = New System.Drawing.Size(157, 22)
+        Me.DARbtn.Text = "Daily Attendance Record"
         '
         'SelectPayslipEmployeesForm
         '
@@ -410,4 +419,5 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents PayslipTypeColumn As DataGridViewTextBoxColumn
     Friend WithEvents ResetEmailButtonColumn As DataGridViewLinkColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
+    Friend WithEvents DARbtn As ToolStripButton
 End Class

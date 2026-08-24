@@ -1738,11 +1738,7 @@ Public Class PayStubForm
             Return
         End If
 
-        If sender Is ManageEmailPayslipsToolStripMenuItem Then
-            form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True)
-        Else
-            form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=False)
-        End If
+        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, "Email")
 
         form.ShowDialog()
 
@@ -1958,4 +1954,17 @@ Public Class PayStubForm
         End If
     End Sub
 
+    Private Sub DailyAttendanceReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DailyAttendanceReportToolStripMenuItem.Click
+        Dim form As SelectPayslipEmployeesForm
+
+        If _currentPayperiodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
+        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=False, reportType:="DAR")
+
+        form.ShowDialog()
+    End Sub
 End Class

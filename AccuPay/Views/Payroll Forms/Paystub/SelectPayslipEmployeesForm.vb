@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
@@ -34,11 +35,21 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _paystubEmailHistoryRepository As IPaystubEmailHistoryRepository
 
-    Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
+    Private ReadOnly _reportType As String
+
+    Private _reportDailyAttendaceRecordBuilder As IDailyAttendanceReport
+
+    Private _paystubs As List(Of Paystub)
+
+    Private _tickedPaystubIDs As IList(Of Integer)
+
+    Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional reportType As String = "Payslip")
 
         InitializeComponent()
 
         _isEmail = isEmail
+
+        _reportType = reportType
 
         _currentPayPeriodId = currentPayPeriodId
 
@@ -56,6 +67,8 @@ Public Class SelectPayslipEmployeesForm
 
         _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailHistoryRepository)
 
+        _reportDailyAttendaceRecordBuilder = MainServiceProvider.GetRequiredService(Of IDailyAttendanceReport)
+
     End Sub
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -66,7 +79,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowOrHideToolStripButtonsBasedOnPayPeriod()
 
-        Await ShowEmployees()
+        Await Load()
 
         If _policyHelper.ShowActual Then
 
@@ -82,7 +95,23 @@ Public Class SelectPayslipEmployeesForm
 
     End Sub
 
+    Private Async Function Load() As Task
+        _paystubs = Await LoadPaystubs()
+        _tickedPaystubIDs = _paystubs.Select(Function(x) x.RowID.Value).ToList()
+        ShowEmployees(_paystubs)
+    End Function
+    Private Async Function LoadPaystubs() As Task(Of List(Of Paystub))
+        Return (Await _paystubRepository.
+            GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)).ToList()
+    End Function
     Private Sub ShowOrHideToolStripButtonsBasedOnFormAction()
+        If (_reportType = "Payslip") Then
+            PreviewToolStripDropDownButton.Visible = True
+            DARbtn.Visible = False
+        ElseIf (_reportType = "DAR") Then
+            PreviewToolStripDropDownButton.Visible = False
+            DARbtn.Visible = True
+        End If
         SendEmailToolStripDropDownButton.Visible = _isEmail
         SendEmailToolStripButton.Visible = _isEmail
 
@@ -94,6 +123,7 @@ Public Class SelectPayslipEmployeesForm
         EmailStatusColumn.Visible = _isEmail
         ResetEmailButtonColumn.Visible = _isEmail
         ErrorLogMessageColumn.Visible = _isEmail
+
     End Sub
 
     Private Async Function ShowOrHideToolStripButtonsBasedOnPayPeriod() As Task
@@ -120,10 +150,8 @@ Public Class SelectPayslipEmployeesForm
         ResetEmailButtonColumn.Visible = False
     End Sub
 
-    Private Async Function ShowEmployees() As Task
+    Private Async Function ShowEmployees(employees As ICollection(Of Paystub)) As Task
 
-        Dim employees = Await _paystubRepository.
-            GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)
 
         Dim employeeModels As New List(Of EmployeeModel)
 
@@ -298,7 +326,6 @@ Public Class SelectPayslipEmployeesForm
         Dim isActual = sender Is PreviewActualToolStripMenuItem
 
         DisableAllButtons()
-
         Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
             Async Function()
                 Dim employeeIds = _employeeModels.
@@ -319,6 +346,7 @@ Public Class SelectPayslipEmployeesForm
             End Function)
 
         DisableAllButtons(disable:=False)
+
 
     End Sub
 
@@ -541,4 +569,47 @@ Public Class SelectPayslipEmployeesForm
         Public Property ErrorLogMessage As String
     End Class
 
+    Private Async Sub DARbtn_Click(sender As Object, e As EventArgs) Handles DARbtn.Click
+        Try
+            Dim reportName As String = "CertificationOfDTR"
+
+            Dim defaultFileName = GetDefaultFileName(reportName)
+
+            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+
+            If saveFileDialogHelperOutPut.IsSuccess = False Then
+                Return
+            End If
+
+            Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+
+            Dim employeeIds = _paystubs.
+            Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+            Select(Function(m) m.EmployeeID.Value).
+            ToArray()
+
+            Await _reportDailyAttendaceRecordBuilder.CreateReport(
+                organizationId:=z_OrganizationID,
+                payPeriodId:=_currentPayPeriod.RowID.Value,
+                employeeIds:=employeeIds,
+                saveFilePath:=saveFilePath)
+
+            Process.Start(saveFilePath)
+        Catch ex As IOException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
+        Catch ex As Exception
+
+            MsgBox(getErrExcptn(ex, Me.Name))
+        End Try
+    End Sub
+    Private Function GetDefaultFileName(
+      reportName As String) As String
+
+        Return String.Concat(
+            orgNam, " ",
+            reportName, " ",
+            DateTime.Now.ToString("MMddyyyy"),
+            ".xlsx")
+    End Function
 End Class
