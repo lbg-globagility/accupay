@@ -141,6 +141,20 @@ Public Class EditSoloParentBenefitForm
                         Dim transactionDate = If(Await _payPeriodRepository.GetCurrentOpenAsync(_orgId),
                             Await _payPeriodRepository.GetMostRecentAsync(_orgId))
 
+                        If leaveLedger Is Nothing Then
+                            Await leaveLedgerRepository.CreateBeginningBalanceAsync(
+                                employeeId:=If(_employee.RowID, 0),
+                                leaveTypeId:=leaveType.RowID.Value,
+                                organizationId:=_orgId,
+                                userId:=_userId,
+                                balance:=0,
+                                description:="Revoke Solo Parent Benefit",
+                                transactionDate:=transactionDate.PayToDate)
+
+                            leaveLedgers = Await leaveLedgerRepository.GetAllByEmployee(_employee.RowID)
+                            leaveLedger = leaveLedgers.FirstOrDefault(Function(l) Equals(l.ProductID, leaveType.RowID))
+                        End If
+
                         Dim lt = LeaveTransaction.NewLeaveTransaction(userId:=_userId,
                             organizationId:=_orgId,
                             employeeId:=_employee.RowID,
