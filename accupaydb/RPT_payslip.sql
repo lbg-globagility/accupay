@@ -250,8 +250,8 @@ LEFT JOIN (SELECT ete.EmployeeID
 			  ,SUM(ete.HoursLateAmount) `HoursLateAmount`
 			  ,SUM(ete.UndertimeHours) `UndertimeHours`
 			  ,SUM(ete.UndertimeHoursAmount) `UndertimeHoursAmount`
-			  ,SUM(ete.OvertimeHoursWorked) `OvertimeHoursWorked`
-			  ,SUM(ete.OvertimeHoursAmount) `OvertimeHoursAmount`
+			  ,SUM(ete.OvertimeHoursWorked + ete.SpecialHolidayOTHours + ete.RegularHolidayOTHours + ete.RestDayOTHours) `OvertimeHoursWorked`
+			  ,SUM(ete.OvertimeHoursAmount + ete.SpecialHolidayOTPay + ete.RegularHolidayOTPay + ete.RestDayOTPay) `OvertimeHoursAmount`
 			  ,SUM(ete.NightDifferentialHours) `NightDifferentialHours`
            ,SUM(ete.NightDiffHoursAmount) `NightDiffHoursAmount`
            ,SUM(ete.HolidayPayAmount) `HolidayPayAmount`
