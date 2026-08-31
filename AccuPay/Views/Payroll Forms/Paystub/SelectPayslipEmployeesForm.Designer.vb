@@ -1,9 +1,9 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class SelectPayslipEmployeesForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class SelectPayslipEmployeesForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -61,7 +61,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.DARbtn = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -260,7 +259,7 @@ Partial Class SelectPayslipEmployeesForm
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton, Me.DARbtn})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
@@ -279,13 +278,13 @@ Partial Class SelectPayslipEmployeesForm
         'PreviewDeclaredToolStripMenuItem
         '
         Me.PreviewDeclaredToolStripMenuItem.Name = "PreviewDeclaredToolStripMenuItem"
-        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PreviewDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PreviewActualToolStripMenuItem
         '
         Me.PreviewActualToolStripMenuItem.Name = "PreviewActualToolStripMenuItem"
-        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PreviewActualToolStripMenuItem.Text = "Actual"
         '
         'SendEmailToolStripDropDownButton
@@ -354,14 +353,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
         Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
-        'DARbtn
-        '
-        Me.DARbtn.Image = Global.AccuPay.My.Resources.Resources.documents7
-        Me.DARbtn.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DARbtn.Name = "DARbtn"
-        Me.DARbtn.Size = New System.Drawing.Size(157, 22)
-        Me.DARbtn.Text = "Daily Attendance Record"
-        '
         'SelectPayslipEmployeesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -419,5 +410,4 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents PayslipTypeColumn As DataGridViewTextBoxColumn
     Friend WithEvents ResetEmailButtonColumn As DataGridViewLinkColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
-    Friend WithEvents DARbtn As ToolStripButton
 End Class

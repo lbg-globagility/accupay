@@ -1,4 +1,5 @@
-﻿using System;
+using AccuPay.Utilities.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace AccuPay.Core.Entities
         public string ErrorLogMessage { get; private set; }
         public string Status { get; private set; }
         public bool IsActual { get; private set; }
+        [ColumnName("type")]
+        public string Type { get; private set; }
 
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; private set; }
@@ -54,14 +57,16 @@ namespace AccuPay.Core.Entities
             ProcessingStarted = null;
         }
 
-        public static PaystubEmail Create(int createdByUserId, int paystubId, bool isActual)
+        public static PaystubEmail Create(int createdByUserId, int paystubId, bool isActual, string type)
         {
             return new PaystubEmail()
             {
                 CreatedBy = createdByUserId,
                 PaystubID = paystubId,
                 Status = StatusWaiting,
-                IsActual = isActual
+                IsActual = isActual,
+                Type = type
+
             };
         }
     }

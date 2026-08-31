@@ -1738,7 +1738,7 @@ Public Class PayStubForm
             Return
         End If
 
-        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, "Email")
+        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, "Payslip")
 
         form.ShowDialog()
 
@@ -1963,7 +1963,7 @@ Public Class PayStubForm
             Return
         End If
 
-        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=False, reportType:="DAR")
+        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, reportType:="DailyAttendanceReport")
 
         form.ShowDialog()
     End Sub

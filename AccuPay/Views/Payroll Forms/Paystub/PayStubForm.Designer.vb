@@ -290,6 +290,7 @@ Partial Class PayStubForm
         Me.CashOutUnusedLeavesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayLoansUsing13thMonthToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DailyAttendanceReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GeneratePayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -328,7 +329,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DailyAttendanceReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PayPeriodGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -2955,13 +2955,13 @@ Partial Class PayStubForm
         'ManagePrintPayslipsToolStripMenuItem
         '
         Me.ManagePrintPayslipsToolStripMenuItem.Name = "ManagePrintPayslipsToolStripMenuItem"
-        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ManagePrintPayslipsToolStripMenuItem.Text = "Print Payslips"
         '
         'ManageEmailPayslipsToolStripMenuItem
         '
         Me.ManageEmailPayslipsToolStripMenuItem.Name = "ManageEmailPayslipsToolStripMenuItem"
-        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ManageEmailPayslipsToolStripMenuItem.Text = "Email Payslips"
         '
         'PrintPaySlipToolStripMenuItem
@@ -3161,6 +3161,12 @@ Partial Class PayStubForm
         Me.PayLoansUsing13thMonthToolStripMenuItem.Name = "PayLoansUsing13thMonthToolStripMenuItem"
         Me.PayLoansUsing13thMonthToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
         Me.PayLoansUsing13thMonthToolStripMenuItem.Text = "Pay Loans using 13th Month"
+        '
+        'DailyAttendanceReportToolStripMenuItem
+        '
+        Me.DailyAttendanceReportToolStripMenuItem.Name = "DailyAttendanceReportToolStripMenuItem"
+        Me.DailyAttendanceReportToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
+        Me.DailyAttendanceReportToolStripMenuItem.Text = "Daily Attendance Report"
         '
         'GeneratePayrollToolStripButton
         '
@@ -3419,12 +3425,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
-        '
-        'DailyAttendanceReportToolStripMenuItem
-        '
-        Me.DailyAttendanceReportToolStripMenuItem.Name = "DailyAttendanceReportToolStripMenuItem"
-        Me.DailyAttendanceReportToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
-        Me.DailyAttendanceReportToolStripMenuItem.Text = "Daily Attendance Report"
         '
         'PayStubForm
         '

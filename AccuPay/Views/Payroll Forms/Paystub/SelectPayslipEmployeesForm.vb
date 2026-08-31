@@ -105,13 +105,8 @@ Public Class SelectPayslipEmployeesForm
             GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)).ToList()
     End Function
     Private Sub ShowOrHideToolStripButtonsBasedOnFormAction()
-        If (_reportType = "Payslip") Then
-            PreviewToolStripDropDownButton.Visible = True
-            DARbtn.Visible = False
-        ElseIf (_reportType = "DAR") Then
-            PreviewToolStripDropDownButton.Visible = False
-            DARbtn.Visible = True
-        End If
+        PreviewToolStripDropDownButton.Visible = True
+
         SendEmailToolStripDropDownButton.Visible = _isEmail
         SendEmailToolStripButton.Visible = _isEmail
 
@@ -323,29 +318,68 @@ Public Class SelectPayslipEmployeesForm
         PreviewDeclaredToolStripMenuItem.Click,
         PreviewActualToolStripMenuItem.Click
 
-        Dim isActual = sender Is PreviewActualToolStripMenuItem
+        If (_reportType = "Payslip") Then
+            Dim isActual = sender Is PreviewActualToolStripMenuItem
 
-        DisableAllButtons()
-        Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
-            Async Function()
-                Dim employeeIds = _employeeModels.
-                    Where(Function(m) m.IsSelected).
-                    Select(Function(m) m.EmployeeId).
-                    ToArray()
+            DisableAllButtons()
+            Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
+                Async Function()
+                    Dim employeeIds = _employeeModels.
+                        Where(Function(m) m.IsSelected).
+                        Select(Function(m) m.EmployeeId).
+                        ToArray()
 
-                Dim reportDocument = Await _payslipCreator.CreateReportDocumentAsync(
+                    Dim reportDocument = Await _payslipCreator.CreateReportDocumentAsync(
+                        payPeriodId:=_currentPayPeriod.RowID.Value,
+                        isActual:=isActual,
+                        employeeIds:=employeeIds)
+
+                    Dim crvwr As New CrysRepForm
+                    crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+                    crvwr.Show()
+
+                    DisableAllButtons(disable:=False)
+                End Function)
+
+            DisableAllButtons(disable:=False)
+
+        ElseIf (_reportType = "DailyAttendanceReport") Then
+            Try
+                Dim reportName As String = "DailyAttendanceReport"
+
+                Dim defaultFileName = GetDefaultFileName(reportName)
+
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+
+                If saveFileDialogHelperOutPut.IsSuccess = False Then
+                    Return
+                End If
+
+                Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+
+                Dim employeeIds = _paystubs.
+                Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+                Select(Function(m) m.EmployeeID.Value).
+                ToArray()
+
+                Await _reportDailyAttendaceRecordBuilder.CreateReport(
+                    organizationId:=z_OrganizationID,
                     payPeriodId:=_currentPayPeriod.RowID.Value,
-                    isActual:=isActual,
-                    employeeIds:=employeeIds)
+                    employeeIds:=employeeIds,
+                    saveFilePath:=saveFilePath)
 
-                Dim crvwr As New CrysRepForm
-                crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-                crvwr.Show()
+                Process.Start(saveFilePath)
+            Catch ex As IOException
 
-                DisableAllButtons(disable:=False)
-            End Function)
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            Catch ex As Exception
 
-        DisableAllButtons(disable:=False)
+                MsgBox(getErrExcptn(ex, Me.Name))
+            End Try
+        End If
+
+
+
 
 
     End Sub
@@ -380,7 +414,8 @@ Public Class SelectPayslipEmployeesForm
             paystubEmails.Add(PaystubEmail.Create(
                createdByUserId:=z_User,
                paystubId:=employee.PaystubId,
-               isActual:=isActual))
+               isActual:=isActual,
+               type:=_reportType))
         Next
 
         DisableAllButtons()
@@ -569,7 +604,7 @@ Public Class SelectPayslipEmployeesForm
         Public Property ErrorLogMessage As String
     End Class
 
-    Private Async Sub DARbtn_Click(sender As Object, e As EventArgs) Handles DARbtn.Click
+    Private Async Sub DARbtn_Click(sender As Object, e As EventArgs)
         Try
             Dim reportName As String = "CertificationOfDTR"
 
