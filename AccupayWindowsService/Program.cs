@@ -1,6 +1,7 @@
 using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports;
 using AccuPay.Infrastructure.Data;
+using AccuPay.Infrastructure.Reports.Customize;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -46,11 +47,16 @@ namespace AccupayWindowsService
             services.AddScoped<IPayPeriodRepository, PayPeriodRepository>();
             services.AddScoped<IPaystubEmailRepository, PaystubEmailRepository>();
             services.AddScoped<IPaystubEmailHistoryRepository, PaystubEmailHistoryRepository>();
+            services.AddScoped<IPaystubRepository, PaystubRepository>();
+            services.AddScoped<ISalaryRepository, SalaryRepository>();
+            services.AddScoped<ITimeLogRepository, TimeLogRepository>();
+            services.AddScoped<IShiftRepository, ShiftRepository>();
 
             services.AddScoped<IPaystubEmailDataService, PaystubEmailDataService>();
             services.AddScoped<IPayslipDataService, PayslipDataService>();
             services.AddScoped<ISystemOwnerService, SystemOwnerService>();
             services.AddScoped<IPayslipBuilder, PayslipBuilder>();
+            services.AddScoped<IDailyAttendanceReport, DailyAttendanceReport>();
 
             var serviceProvider = services.BuildServiceProvider();
             return serviceProvider;

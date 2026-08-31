@@ -15,6 +15,9 @@ namespace AccuPay.Core.Entities
         public const string StatusProcessing = "PROCESSING";
         public const string StatusFailed = "FAILED";
 
+        public const string TypePayslip = "Payslip";
+        public const string TypeDailyAttendanceReport = "DailyAttendanceReport";
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; private set; }

@@ -43,7 +43,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private _tickedPaystubIDs As IList(Of Integer)
 
-    Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional reportType As String = "Payslip")
+    Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional reportType As String = PaystubEmail.TypePayslip)
 
         InitializeComponent()
 
@@ -318,7 +318,7 @@ Public Class SelectPayslipEmployeesForm
         PreviewDeclaredToolStripMenuItem.Click,
         PreviewActualToolStripMenuItem.Click
 
-        If (_reportType = "Payslip") Then
+        If (_reportType = PaystubEmail.TypePayslip) Then
             Dim isActual = sender Is PreviewActualToolStripMenuItem
 
             DisableAllButtons()
@@ -343,7 +343,7 @@ Public Class SelectPayslipEmployeesForm
 
             DisableAllButtons(disable:=False)
 
-        ElseIf (_reportType = "DailyAttendanceReport") Then
+        ElseIf (_reportType = PaystubEmail.TypeDailyAttendanceReport) Then
             Try
                 Dim reportName As String = "DailyAttendanceReport"
 

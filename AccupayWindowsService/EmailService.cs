@@ -37,6 +37,7 @@ namespace AccupayWindowsService
         private EmailSender _emailSender;
 
         private const string PayslipsFolderName = "Payslips";
+        private const string DailyAttendanceReportsFolderName = "DailyAttendanceReports";
         private const string LogsFolderName = "Logs";
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -72,9 +73,10 @@ namespace AccupayWindowsService
                 var repository = serviceScope.ServiceProvider.GetRequiredService<IPaystubEmailRepository>();
                 var dataservice = serviceScope.ServiceProvider.GetRequiredService<IPaystubEmailDataService>();
                 var payslipBuilder = serviceScope.ServiceProvider.GetRequiredService<IPayslipBuilder>();
+                var dailyAttendanceReportBuilder = serviceScope.ServiceProvider.GetRequiredService<IDailyAttendanceReport>();
                 var systemOwnerService = serviceScope.ServiceProvider.GetRequiredService<ISystemOwnerService>();
 
-                await ExecuteSendEmail(repository, dataservice, payslipBuilder, systemOwnerService);
+                await ExecuteSendEmail(repository, dataservice, payslipBuilder, dailyAttendanceReportBuilder, systemOwnerService);
             }
         }
 
@@ -82,6 +84,7 @@ namespace AccupayWindowsService
             IPaystubEmailRepository repository,
             IPaystubEmailDataService dataService,
             IPayslipBuilder payslipBuilder,
+            IDailyAttendanceReport dailyAttendanceReportBuilder,
             ISystemOwnerService systemOwnerService)
         {
             PaystubEmail paystubEmail = null;
@@ -109,33 +112,39 @@ namespace AccupayWindowsService
                 var employee = paystubEmail.Paystub?.Employee;
                 var organizationId = paystubEmail.Paystub?.OrganizationID;
 
-                string validationErrorMessage;
                 if (!(await Validate(paystubEmail, errorTitle, currentPayPeriod, employeeId, employee, organizationId, dataService)))
                 {
                     return;
                 }
 
                 DateTime payDate = GetPayDate(currentPayPeriod);
-                var employeeIds = new int[] { employeeId.Value };
 
-                var builder = await payslipBuilder.CreateReportDocumentAsync(
-                    payPeriodId: currentPayPeriod.RowID.Value,
-                    isActual: paystubEmail.IsActual,
-                    employeeIds: employeeIds);
-
-                if (builder.CheckIfEmployeeExists(employeeId.Value) == false)
+                if (paystubEmail.Type == PaystubEmail.TypeDailyAttendanceReport)
                 {
-                    validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
-                    WriteToFile(validationErrorMessage);
-                    await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
-                    return;
+                    await SendDailyAttendanceReportEmail(
+                        dailyAttendanceReportBuilder,
+                        paystubEmail,
+                        paystubEmailLog,
+                        payDate,
+                        employee,
+                        organizationId.Value,
+                        currentPayPeriod.RowID.Value,
+                        dataService);
                 }
-
-                var employeeNumber = employee.EmployeeNo ?? "";
-                var fileName = $"Payslip-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
-                var pdfFile = CreatePDF(builder, employee.BirthDate, fileName);
-
-                await SendEmail(paystubEmail, paystubEmailLog, payDate, employee.EmailAddress, pdfFile, fileName, systemOwnerService, dataService);
+                else
+                {
+                    await SendPayslipEmail(
+                        payslipBuilder,
+                        paystubEmail,
+                        paystubEmailLog,
+                        errorTitle,
+                        payDate,
+                        employee,
+                        employeeId.Value,
+                        currentPayPeriod.RowID.Value,
+                        systemOwnerService,
+                        dataService);
+                }
             }
             catch (Exception ex)
             {
@@ -148,6 +157,83 @@ namespace AccupayWindowsService
                     await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                 }
             }
+        }
+
+        private async Task SendPayslipEmail(
+            IPayslipBuilder payslipBuilder,
+            PaystubEmail paystubEmail,
+            string paystubEmailLog,
+            string errorTitle,
+            DateTime payDate,
+            Employee employee,
+            int employeeId,
+            int payPeriodId,
+            ISystemOwnerService systemOwnerService,
+            IPaystubEmailDataService dataService)
+        {
+            var employeeIds = new int[] { employeeId };
+
+            var builder = await payslipBuilder.CreateReportDocumentAsync(
+                payPeriodId: payPeriodId,
+                isActual: paystubEmail.IsActual,
+                employeeIds: employeeIds);
+
+            if (builder.CheckIfEmployeeExists(employeeId) == false)
+            {
+                var validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
+                WriteToFile(validationErrorMessage);
+                await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
+                return;
+            }
+
+            var employeeNumber = employee.EmployeeNo ?? "";
+            var fileName = $"Payslip-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
+            var pdfFile = CreatePDF(builder, employee.BirthDate, fileName);
+
+            await SendEmail(paystubEmail, paystubEmailLog, payDate, employee.EmailAddress, pdfFile, fileName, systemOwnerService, dataService);
+        }
+
+        private async Task SendDailyAttendanceReportEmail(
+            IDailyAttendanceReport dailyAttendanceReportBuilder,
+            PaystubEmail paystubEmail,
+            string paystubEmailLog,
+            DateTime payDate,
+            Employee employee,
+            int organizationId,
+            int payPeriodId,
+            IPaystubEmailDataService dataService)
+        {
+            var employeeNumber = employee.EmployeeNo ?? "";
+            var fileName = $"DailyAttendanceReport-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.xlsx";
+
+            var saveFolderPath = GetOrCreateDirectory(DailyAttendanceReportsFolderName);
+            var filePath = Path.Combine(saveFolderPath, fileName);
+
+            await dailyAttendanceReportBuilder.CreateReport(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId,
+                employeeIds: new int[] { employee.RowID.Value },
+                saveFilePath: filePath);
+
+            var cutoffDate = payDate.ToString("MMMM d, yyyy");
+
+            var subject = $"Daily Attendance Report for {cutoffDate}";
+
+            var body = $"Please see attached Daily Attendance Report for {cutoffDate}." +
+                $"\n\n" +
+                $"Thank you," +
+                $"\n" +
+                $"HRD";
+
+            var attachments = new string[] { filePath };
+
+            WriteToFile($"{paystubEmailLog} Sending...");
+
+            _emailSender.SendEmail(employee.EmailAddress, subject, body, attachments);
+
+            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
+
+            await dataService.Finish(paystubEmail.RowID, fileName, employee.EmailAddress);
         }
 
         private async Task<bool> Validate(
