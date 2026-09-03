@@ -8,6 +8,7 @@ Imports AccuPay.Core.Interfaces
 Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Core.Interfaces.Reports.Customize
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -36,6 +37,8 @@ Public Class SelectPayslipEmployeesForm
     Private ReadOnly _paystubEmailHistoryRepository As IPaystubEmailHistoryRepository
 
     Private ReadOnly _reportType As String
+
+    Private _reportAccessOffshoringPayslipBuilder As IAccessOffshoringPayslip
 
     Private _reportDailyAttendaceRecordBuilder As IDailyAttendanceReport
 
@@ -68,6 +71,8 @@ Public Class SelectPayslipEmployeesForm
         _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailHistoryRepository)
 
         _reportDailyAttendaceRecordBuilder = MainServiceProvider.GetRequiredService(Of IDailyAttendanceReport)
+
+        _reportAccessOffshoringPayslipBuilder = MainServiceProvider.GetRequiredService(Of IAccessOffshoringPayslip)
 
     End Sub
 
@@ -317,31 +322,44 @@ Public Class SelectPayslipEmployeesForm
         PreviewToolStripButton.Click,
         PreviewDeclaredToolStripMenuItem.Click,
         PreviewActualToolStripMenuItem.Click
+        Dim isActual = sender Is PreviewActualToolStripMenuItem
 
+        DisableAllButtons()
         If (_reportType = PaystubEmail.TypePayslip) Then
-            Dim isActual = sender Is PreviewActualToolStripMenuItem
 
-            DisableAllButtons()
-            Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
-                Async Function()
-                    Dim employeeIds = _employeeModels.
-                        Where(Function(m) m.IsSelected).
-                        Select(Function(m) m.EmployeeId).
-                        ToArray()
+            'For PaySlip
+            Try
+                Dim reportName As String = "PaySlip"
 
-                    Dim reportDocument = Await _payslipCreator.CreateReportDocumentAsync(
+                Dim defaultFileName = GetDefaultFileName(reportName)
+
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+
+                If saveFileDialogHelperOutPut.IsSuccess = False Then
+                    Return
+                End If
+
+                Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+
+                Dim employeeIds = _paystubs.
+                    Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+                    Select(Function(m) m.EmployeeID.Value).
+                    ToArray()
+
+                Await _reportAccessOffshoringPayslipBuilder.CreateReport(
+                        organizationId:=z_OrganizationID,
                         payPeriodId:=_currentPayPeriod.RowID.Value,
-                        isActual:=isActual,
-                        employeeIds:=employeeIds)
+                        employeeIds:=employeeIds,
+                        saveFilePath:=saveFilePath)
 
-                    Dim crvwr As New CrysRepForm
-                    crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-                    crvwr.Show()
+                Process.Start(saveFilePath)
+            Catch ex As IOException
 
-                    DisableAllButtons(disable:=False)
-                End Function)
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            Catch ex As Exception
 
-            DisableAllButtons(disable:=False)
+                MsgBox(getErrExcptn(ex, Me.Name))
+            End Try
 
         ElseIf (_reportType = PaystubEmail.TypeDailyAttendanceReport) Then
             Try

@@ -57,7 +57,7 @@ namespace AccupayWindowsService
             services.AddScoped<ISystemOwnerService, SystemOwnerService>();
             services.AddScoped<IPayslipBuilder, PayslipBuilder>();
             services.AddScoped<IDailyAttendanceReport, DailyAttendanceReport>();
-
+            services.AddScoped<IAccessOffshoringPayslip, AccessOffshoringPayslip>();
             var serviceProvider = services.BuildServiceProvider();
             return serviceProvider;
         }
