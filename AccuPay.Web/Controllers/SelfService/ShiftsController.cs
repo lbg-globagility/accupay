@@ -6,6 +6,7 @@ using AccuPay.Web.Shifts.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers.SelfService
@@ -40,6 +41,12 @@ namespace AccuPay.Web.Controllers.SelfService
                 return NotFound();
 
             return dto;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<List<EmployeeDutyScheduleDto>>> Create([FromBody] SelfServiceCreateShiftDto dto)
+        {
+            return await _shiftService.CreateRange(dto);
         }
     }
 }

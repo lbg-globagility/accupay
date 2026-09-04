@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
@@ -21,17 +22,58 @@ namespace AccuPay.Web.Shifts.Services
         private readonly IShiftDataService _service;
         private readonly IShiftImportParser _importParser;
         private readonly ICurrentUser _currentUser;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public ShiftService(
             IShiftRepository repository,
             IShiftDataService service,
             IShiftImportParser importParser,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IEmployeeRepository employeeRepository)
         {
             _repository = repository;
             _service = service;
             _importParser = importParser;
             _currentUser = currentUser;
+            _employeeRepository = employeeRepository;
+        }
+
+        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null)
+                throw new BusinessLogicException($"Employee number '{employeeNumber}' was not found.");
+
+            return employee.RowID.Value;
+        }
+
+        internal async Task<List<EmployeeDutyScheduleDto>> CreateRange(SelfServiceCreateShiftDto dto)
+        {
+            if (dto.DateFrom.Date > dto.DateTo.Date)
+                throw new BusinessLogicException("Date From must not be later than Date To.");
+
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
+            var shifts = new List<Shift>();
+            for (var date = dto.DateFrom.Date; date <= dto.DateTo.Date; date = date.AddDays(1))
+            {
+                shifts.Add(new Shift()
+                {
+                    OrganizationID = _currentUser.OrganizationId,
+                    EmployeeID = employeeId,
+                    DateSched = date,
+                    StartTimeFull = dto.StartTime,
+                    EndTimeFull = dto.EndTime,
+                    ShiftBreakStartTimeFull = dto.BreakStartTime,
+                    BreakLength = dto.BreakLength,
+                    IsRestDay = dto.IsRestDay,
+                    RequiresLunchInOut = dto.RequiresLunchInOut
+                });
+            }
+
+            await _service.SaveManyAsync(shifts, _currentUser.UserId);
+
+            return shifts.Select(EmployeeDutyScheduleDto.Convert).ToList();
         }
 
         internal async Task<PaginatedList<EmployeeShiftsDto>> ListByEmployee(ShiftsByEmployeePageOptions options)
