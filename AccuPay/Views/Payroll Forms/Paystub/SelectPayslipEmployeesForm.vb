@@ -325,7 +325,7 @@ Public Class SelectPayslipEmployeesForm
         Dim isActual = sender Is PreviewActualToolStripMenuItem
 
         DisableAllButtons()
-        If (_reportType = PaystubEmail.TypePayslip) Then
+        If (_reportType = PaystubEmail.TypeAccessOffshoringPayslip) Then
 
             'For PaySlip
             Try

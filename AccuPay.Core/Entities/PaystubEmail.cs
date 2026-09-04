@@ -17,6 +17,7 @@ namespace AccuPay.Core.Entities
 
         public const string TypePayslip = "Payslip";
         public const string TypeDailyAttendanceReport = "DailyAttendanceReport";
+        public const string TypeAccessOffshoringPayslip = "AccessOffshoringPayslip";
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

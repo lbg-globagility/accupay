@@ -1737,7 +1737,7 @@ Public Class PayStubForm
             MessageBoxHelper.Warning("Please select a pay period first.")
             Return
         End If
-        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=False, "Payslip")
+        form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, PaystubEmail.TypeAccessOffshoringPayslip)
 
         form.ShowDialog()
 

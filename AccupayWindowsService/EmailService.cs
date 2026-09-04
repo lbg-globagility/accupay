@@ -38,6 +38,7 @@ namespace AccupayWindowsService
 
         private const string PayslipsFolderName = "Payslips";
         private const string DailyAttendanceReportsFolderName = "DailyAttendanceReports";
+        private const string AccessOffshoringPayslipsFolderName = "AccessOffshoringPayslips";
         private const string LogsFolderName = "Logs";
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -74,9 +75,10 @@ namespace AccupayWindowsService
                 var dataservice = serviceScope.ServiceProvider.GetRequiredService<IPaystubEmailDataService>();
                 var payslipBuilder = serviceScope.ServiceProvider.GetRequiredService<IPayslipBuilder>();
                 var dailyAttendanceReportBuilder = serviceScope.ServiceProvider.GetRequiredService<IDailyAttendanceReport>();
+                var accessOffshoringPayslipBuilder = serviceScope.ServiceProvider.GetRequiredService<IAccessOffshoringPayslip>();
                 var systemOwnerService = serviceScope.ServiceProvider.GetRequiredService<ISystemOwnerService>();
 
-                await ExecuteSendEmail(repository, dataservice, payslipBuilder, dailyAttendanceReportBuilder, systemOwnerService);
+                await ExecuteSendEmail(repository, dataservice, payslipBuilder, dailyAttendanceReportBuilder, accessOffshoringPayslipBuilder, systemOwnerService);
             }
         }
 
@@ -85,6 +87,7 @@ namespace AccupayWindowsService
             IPaystubEmailDataService dataService,
             IPayslipBuilder payslipBuilder,
             IDailyAttendanceReport dailyAttendanceReportBuilder,
+            IAccessOffshoringPayslip accessOffshoringPayslipBuilder,
             ISystemOwnerService systemOwnerService)
         {
             PaystubEmail paystubEmail = null;
@@ -123,6 +126,18 @@ namespace AccupayWindowsService
                 {
                     await SendDailyAttendanceReportEmail(
                         dailyAttendanceReportBuilder,
+                        paystubEmail,
+                        paystubEmailLog,
+                        payDate,
+                        employee,
+                        organizationId.Value,
+                        currentPayPeriod.RowID.Value,
+                        dataService);
+                }
+                else if (paystubEmail.Type == PaystubEmail.TypeAccessOffshoringPayslip)
+                {
+                    await SendAccessOffshoringPayslipEmail(
+                        accessOffshoringPayslipBuilder,
                         paystubEmail,
                         paystubEmailLog,
                         payDate,
@@ -220,6 +235,49 @@ namespace AccupayWindowsService
             var subject = $"Daily Attendance Report for {cutoffDate}";
 
             var body = $"Please see attached Daily Attendance Report for {cutoffDate}." +
+                $"\n\n" +
+                $"Thank you," +
+                $"\n" +
+                $"HRD";
+
+            var attachments = new string[] { filePath };
+
+            WriteToFile($"{paystubEmailLog} Sending...");
+
+            _emailSender.SendEmail(employee.EmailAddress, subject, body, attachments);
+
+            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
+
+            await dataService.Finish(paystubEmail.RowID, fileName, employee.EmailAddress);
+        }
+
+        private async Task SendAccessOffshoringPayslipEmail(
+            IAccessOffshoringPayslip accessOffshoringPayslipBuilder,
+            PaystubEmail paystubEmail,
+            string paystubEmailLog,
+            DateTime payDate,
+            Employee employee,
+            int organizationId,
+            int payPeriodId,
+            IPaystubEmailDataService dataService)
+        {
+            var employeeNumber = employee.EmployeeNo ?? "";
+            var fileName = $"Payslip-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.xlsx";
+
+            var saveFolderPath = GetOrCreateDirectory(AccessOffshoringPayslipsFolderName);
+            var filePath = Path.Combine(saveFolderPath, fileName);
+
+            await accessOffshoringPayslipBuilder.CreateReport(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId,
+                employeeIds: new int[] { employee.RowID.Value },
+                saveFilePath: filePath);
+
+            var cutoffDate = payDate.ToString("MMMM d, yyyy");
+
+            var subject = $"Payslip for {cutoffDate}";
+
+            var body = $"Please see attached payslip for {cutoffDate}." +
                 $"\n\n" +
                 $"Thank you," +
                 $"\n" +
