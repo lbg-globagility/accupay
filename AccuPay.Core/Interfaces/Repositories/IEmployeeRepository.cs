@@ -34,6 +34,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId);
 
+        Task<Employee> GetByEmployeeNumberAsync(string employeeNumber);
+
         Task<ICollection<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers, int organizationId);
 
         Task<ICollection<Employee>> GetByMultipleIdAsync(int[] employeeIdList);

@@ -18,17 +18,29 @@ namespace AccuPay.Web.OfficialBusinesses
         private readonly IOfficialBusinessRepository _repository;
         private readonly ICurrentUser _currentUser;
         private readonly IOfficialBusinessImportParser _importParser;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public OfficialBusinessService(
             IOfficialBusinessDataService dataService,
             IOfficialBusinessRepository repository,
             ICurrentUser currentUser,
-            IOfficialBusinessImportParser importParser)
+            IOfficialBusinessImportParser importParser,
+            IEmployeeRepository employeeRepository)
         {
             _dataService = dataService;
             _currentUser = currentUser;
             _repository = repository;
             _importParser = importParser;
+            _employeeRepository = employeeRepository;
+        }
+
+        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null)
+                throw new Exception($"Employee number '{employeeNumber}' was not found.");
+
+            return employee.RowID.Value;
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(OfficialBusinessPageOptions options)
@@ -64,9 +76,11 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> Create(SelfServiceCreateOfficialBusinessDto dto)
         {
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var officialBusiness = new OfficialBusiness()
             {
-                EmployeeID = _currentUser.EmployeeId,
+                EmployeeID = employeeId,
                 OrganizationID = _currentUser.OrganizationId
             };
 

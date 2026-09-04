@@ -145,6 +145,13 @@ namespace AccuPay.Infrastructure.Data
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Employee> FirstOrDefaultAsync()
+        {
+            return await _query
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
         private IEmployeeQueryBuilder ResolveOrganizationIdQuery(int? organizationId)
         {
             if (organizationId != null)

@@ -6,6 +6,9 @@ namespace AccuPay.Web.Overtimes
     public class SelfServiceUpdateOvertimeDto
     {
         [Required]
+        public string EmployeeNumber { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
 
         [Required]

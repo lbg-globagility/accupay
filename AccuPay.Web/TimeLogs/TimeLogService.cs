@@ -23,19 +23,31 @@ namespace AccuPay.Web.TimeLogs
         private readonly ICurrentUser _currentUser;
         private readonly ITimeLogRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public TimeLogService(
             ITimeLogDataService service,
             ITimeLogImportParser importParser,
             ICurrentUser currentUser,
             ITimeLogRepository repository,
-            IMapper mapper)
+            IMapper mapper,
+            IEmployeeRepository employeeRepository)
         {
             _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
             _mapper = mapper;
+            _employeeRepository = employeeRepository;
+        }
+
+        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null)
+                throw new Exception($"Employee number '{employeeNumber}' was not found.");
+
+            return employee.RowID.Value;
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
@@ -233,8 +245,10 @@ namespace AccuPay.Web.TimeLogs
             if (timeLog == null) throw new ArgumentNullException(nameof(timeLog));
             var date = timeLog.Date.Date;
 
+            var employeeId = await ResolveEmployeeIdAsync(timeLog.EmployeeNumber);
+
             var existingForDate = await _repository.GetLatestByEmployeeAndDatePeriodAsync(
-                timeLog.EmployeeId,
+                employeeId,
                 new TimePeriod(date, date));
 
             if (existingForDate != null && existingForDate.Any(t => t.TimeInFull != null))
@@ -243,7 +257,7 @@ namespace AccuPay.Web.TimeLogs
             }
 
             var newTimelog = new TimeLog();
-            newTimelog.EmployeeID = timeLog.EmployeeId;
+            newTimelog.EmployeeID = employeeId;
             newTimelog.TimeInFull = timeLog.StartTime;
             newTimelog.LogDate = date;
             newTimelog.CreatedBy = _currentUser.UserId;
@@ -348,9 +362,11 @@ namespace AccuPay.Web.TimeLogs
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
 
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var filing = new EmployeeTimelogFiling
             {
-                EmployeeID = dto.EmployeeId,
+                EmployeeID = employeeId,
                 OrganizationID = _currentUser.OrganizationId,
                 EntryType = dto.EntryType,
                 LogDate = dto.LogDate,

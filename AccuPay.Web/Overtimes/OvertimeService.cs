@@ -19,17 +19,29 @@ namespace AccuPay.Web.Overtimes
         private readonly ICurrentUser _currentUser;
         private readonly IOvertimeDataService _dataService;
         private readonly IOvertimeImportParser _importParser;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public OvertimeService(
             IOvertimeRepository repository,
             IOvertimeDataService dataService,
             ICurrentUser currentUser,
-            IOvertimeImportParser importParser)
+            IOvertimeImportParser importParser,
+            IEmployeeRepository employeeRepository)
         {
             _repository = repository;
             _currentUser = currentUser;
             _importParser = importParser;
             _dataService = dataService;
+            _employeeRepository = employeeRepository;
+        }
+
+        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null)
+                throw new Exception($"Employee number '{employeeNumber}' was not found.");
+
+            return employee.RowID.Value;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(OvertimePageOptions options)
@@ -65,9 +77,11 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(SelfServiceCreateOvertimeDto dto)
         {
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var overtime = Overtime.NewOvertime(
                 organizationId: _currentUser.OrganizationId,
-                employeeId: _currentUser.EmployeeId.Value,
+                employeeId: employeeId,
                 startDate: dto.StartDate,
                 startTime: dto.StartTime.TimeOfDay,
                 endTime: dto.EndTime.TimeOfDay,
@@ -105,8 +119,10 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> UpdateSelfService(int id, SelfServiceUpdateOvertimeDto dto)
         {
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var overtime = await _repository.GetByIdWithEmployeeAsync(id);
-            if (overtime == null || overtime.EmployeeID != _currentUser.EmployeeId) return null;
+            if (overtime == null || overtime.EmployeeID != employeeId) return null;
 
             if (overtime.Status != Overtime.StatusPending)
                 throw new Exception("Only pending overtime filings can be edited.");

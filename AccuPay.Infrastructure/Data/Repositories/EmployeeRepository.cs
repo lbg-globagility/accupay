@@ -326,6 +326,15 @@ namespace AccuPay.Infrastructure.Data
                 .FirstOrDefaultAsync(organizationId);
         }
 
+        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .ByEmployeeNumber(employeeNumber)
+                .IsActive()
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<string> GetImagePathByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);

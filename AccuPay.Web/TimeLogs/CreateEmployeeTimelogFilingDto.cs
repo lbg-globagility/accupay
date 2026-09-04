@@ -4,7 +4,7 @@ namespace AccuPay.Web.TimeLogs
 {
     public class CreateEmployeeTimelogFilingDto
     {
-        public int EmployeeId { get; set; }
+        public string EmployeeNumber { get; set; }
 
         public string EntryType { get; set; }
 

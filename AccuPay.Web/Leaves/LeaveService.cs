@@ -28,19 +28,31 @@ namespace AccuPay.Web.Leaves
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly ILeaveDataService _dataService;
         private readonly ICurrentUser _currentUser;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public LeaveService(
             ILeaveRepository leaveRepository,
             IProductRepository productRepository,
             ILeaveLedgerRepository leaveLedgerRepository,
             ILeaveDataService dataService,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IEmployeeRepository employeeRepository)
         {
             _leaveRepository = leaveRepository;
             _productRepository = productRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _dataService = dataService;
             _currentUser = currentUser;
+            _employeeRepository = employeeRepository;
+        }
+
+        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null)
+                throw new BusinessLogicException($"Employee number '{employeeNumber}' was not found.");
+
+            return employee.RowID.Value;
         }
 
         public async Task<PaginatedList<LeaveDto>> PaginatedList(LeavePageOptions options)
@@ -115,23 +127,25 @@ namespace AccuPay.Web.Leaves
         {
             ValidateSelfServiceDto(dto);
 
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var leaves = new List<Leave>();
             var filingGroupDate = DateTime.Now;
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-              var leave = NewSelfServiceLeave(dto, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+              var leave = NewSelfServiceLeave(dto, employeeId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
               leaves.Add(leave);
               await _dataService.SaveAsync(leave, _currentUser.UserId);
             }
             else if(dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
                 var startDate = dto.DateTimes;
-                
+
 
                 foreach (var date in dto.DateTimes)
                 {
-                  
-                    var leave = NewSelfServiceLeave(dto, date, null, null, filingGroupDate);
+
+                    var leave = NewSelfServiceLeave(dto, employeeId, date, null, null, filingGroupDate);
 
                     leaves.Add(leave);
                 }
@@ -150,11 +164,11 @@ namespace AccuPay.Web.Leaves
             }).ToList();
         }
 
-        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
+        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
         {
             return new Leave()
             {
-                EmployeeID = _currentUser.EmployeeId,
+                EmployeeID = employeeId,
                 OrganizationID = _currentUser.OrganizationId,
                 LeaveType = dto.LeaveType,
                 StartDate = date,
@@ -188,8 +202,10 @@ namespace AccuPay.Web.Leaves
 
         public async Task<List<LeaveDto>> UpdateSelfService(int id, SelfServiceCreateLeaveDto dto)
         {
+            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
-            if (leave == null || leave.EmployeeID != _currentUser.EmployeeId) return null;
+            if (leave == null || leave.EmployeeID != employeeId) return null;
 
             if (leave.Status != Leave.StatusPending)
                 throw new Exception("Only pending leave filings can be edited.");
@@ -204,14 +220,14 @@ namespace AccuPay.Web.Leaves
             var leaves = new List<Leave>();
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-                var newLeave = NewSelfServiceLeave(dto, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+                var newLeave = NewSelfServiceLeave(dto, employeeId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
                 leaves.Add(newLeave);
             }
             else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
                 foreach (var date in dto.DateTimes)
                 {
-                    var newLeave = NewSelfServiceLeave(dto, date, null, null, filingGroupDate);
+                    var newLeave = NewSelfServiceLeave(dto, employeeId, date, null, null, filingGroupDate);
                     leaves.Add(newLeave);
                 }
             }

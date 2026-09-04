@@ -9,6 +9,10 @@ namespace AccuPay.Web.Leaves
         public const string TimingDay = "Day";
 
         public const string TimingHour = "Hour";
+
+        [Required]
+        public string EmployeeNumber { get; set; }
+
         [Required]
         public string LeaveType { get; set; }
         public DateTime StartDate { get; set; }

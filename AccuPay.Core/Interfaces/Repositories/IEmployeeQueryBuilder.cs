@@ -14,6 +14,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Employee> FirstOrDefaultAsync(int organizationId);
 
+        Task<Employee> FirstOrDefaultAsync();
+
         Task<Employee> GetByIdAsync(int employeeId, int? organizationId);
 
         IEmployeeQueryBuilder ByEmployeeNumber(string employeeNumber);

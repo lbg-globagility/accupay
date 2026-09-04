@@ -6,7 +6,7 @@ namespace AccuPay.Web.TimeLogs
     public class SelfServiceCreateTimeLogDto
     {
         [Required]
-        public int EmployeeId { get; set; }
+        public string EmployeeNumber { get; set; }
 
         [Required]
         public DateTime Date { get; set; }

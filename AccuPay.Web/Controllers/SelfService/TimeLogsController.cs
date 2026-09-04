@@ -19,13 +19,15 @@ namespace AccuPay.Web.Controllers.SelfService
         private readonly TimeLogEmailService _emailService;
         private readonly ITimeLogRepository _timeLogRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository, ICurrentUser currentUser)
+        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository, ICurrentUser currentUser, IEmployeeRepository employeeRepository)
         {
             _service = service;
             _emailService = emailService;
             _timeLogRepository = timeLogRepository;
             _currentUser = currentUser;
+            _employeeRepository = employeeRepository;
         }
 
         [HttpPost]
@@ -72,9 +74,12 @@ namespace AccuPay.Web.Controllers.SelfService
         [HttpPut("filings/{id}")]
         public async Task<ActionResult> UpdateFiling(int id, [FromBody] UpdateEmployeeTimelogFilingDto dto)
         {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(dto.EmployeeNumber);
+            if (employee == null) return NotFound();
+
             var filing = await _timeLogRepository.GetFilingByIdAsync(id);
             if (filing == null) return NotFound();
-            if (filing.EmployeeID != _currentUser.EmployeeId) return NotFound();
+            if (filing.EmployeeID != employee.RowID) return NotFound();
             if (filing.Status != EmployeeTimelogFiling.StatusPending)
                 throw new Exception("Only pending leave filings can be edited.");
             if (filing.IsNotifyEmail)
