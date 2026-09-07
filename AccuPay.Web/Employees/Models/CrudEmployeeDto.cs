@@ -44,12 +44,5 @@ namespace AccuPay.Web.Employees.Models
 
         public DateTime? RegularizationDate { get; set; }
 
-        public int? EmploymentPolicyId { get; set; }
-
-        public int? PositionId { get; set; }
-
-        // List of approver IDs to associate with the employee.
-        // When provided, EmployeeService will sync Employee.EmployeeApprovers to match these IDs.
-        public int[] ApproverIds { get; set; }
     }
 }

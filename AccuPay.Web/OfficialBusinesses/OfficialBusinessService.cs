@@ -34,13 +34,13 @@ namespace AccuPay.Web.OfficialBusinesses
             _employeeRepository = employeeRepository;
         }
 
-        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null)
                 throw new Exception($"Employee number '{employeeNumber}' was not found.");
 
-            return employee.RowID.Value;
+            return (employee.RowID.Value, employee.OrganizationID.Value);
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(OfficialBusinessPageOptions options)
@@ -76,12 +76,12 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> Create(SelfServiceCreateOfficialBusinessDto dto)
         {
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = employeeId,
-                OrganizationID = _currentUser.OrganizationId
+                OrganizationID = organizationId
             };
 
             officialBusiness.StartDate = dto.Date;
@@ -89,7 +89,7 @@ namespace AccuPay.Web.OfficialBusinesses
             officialBusiness.EndTime = dto.EndTime?.TimeOfDay;
             officialBusiness.Reason = dto.Reason;
 
-            await _dataService.SaveAsync(officialBusiness, _currentUser.UserId);
+            await _dataService.SaveAsync(officialBusiness, SelfServiceUser.Id);
 
             return ConvertToDto(officialBusiness);
         }

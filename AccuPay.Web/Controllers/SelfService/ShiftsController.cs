@@ -13,7 +13,6 @@ namespace AccuPay.Web.Controllers.SelfService
 {
     [Route("api/self-service/[controller]")]
     [ApiController]
-    [Authorize]
     public class ShiftsController : ControllerBase
     {
         private readonly ICurrentUser _currentUser;

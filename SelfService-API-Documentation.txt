@@ -1,0 +1,308 @@
+====================================================================
+ACCUPAY SELF-SERVICE API DOCUMENTATION
+Create / Filing endpoints
+====================================================================
+
+Base URL   : /api/self-service
+Auth       : Authorization: Bearer <token>   (all endpoints below require [Authorize])
+Content-Type: application/json
+
+General notes
+--------------------------------------------------------------------
+- "EmployeeNumber" is the employee's EmployeeNo (e.g. "EMP-0001"). The
+  server looks it up via IEmployeeRepository.GetByEmployeeNumberAsync,
+  which matches an ACTIVE employee only, regardless of organization.
+  An unknown/inactive EmployeeNumber returns an error - it is not
+  silently ignored.
+- Date-only fields (Date, StartDate, DateFrom/DateTo, LogDate) accept
+  either "yyyy-MM-dd" or a full ISO 8601 datetime; only the date part
+  is used.
+- Date+time fields (StartTime, EndTime, Time, etc.) accept full ISO
+  8601 datetimes; only the time-of-day part is used together with the
+  related date field.
+- Fields marked (required) are enforced by [Required] model validation
+  and will return HTTP 400 if missing.
+
+
+====================================================================
+1. EMPLOYEE - Create
+====================================================================
+POST /api/self-service/employees
+
+No permission check is enforced beyond being authenticated (no
+"EmployeeCreate" permission required).
+
+Request body (CreateEmployeeDto):
+  employeeNo          string    (required)
+  firstName           string    (required)
+  lastName            string    (required)
+  middleName          string
+  birthdate           date      (required)
+  address             string
+  landlineNo          string
+  mobileNo            string
+  emailAddress        string
+  tin                 string
+  sssNo               string
+  philHealthNo        string
+  pagIbigNo           string
+  employmentStatus    string    (required)
+  employmentPolicy    string
+  startDate           date
+  regularizationDate  date
+  employmentPolicyId  int       (id of an existing EmploymentPolicy)
+  positionId          int       (id of an existing Position)
+  approverIds         int[]     (approver employee ids, optional)
+
+Example:
+{
+  "employeeNo": "EMP-0001",
+  "firstName": "Juan",
+  "lastName": "Dela Cruz",
+  "middleName": "Santos",
+  "birthdate": "1995-04-12",
+  "address": "123 Rizal St., Quezon City",
+  "landlineNo": "028123456",
+  "mobileNo": "09171234567",
+  "emailAddress": "juan.delacruz@example.com",
+  "tin": "123-456-789-000",
+  "sssNo": "34-1234567-8",
+  "philHealthNo": "12-345678901-2",
+  "pagIbigNo": "1234-5678-9012",
+  "employmentStatus": "Regular",
+  "startDate": "2026-09-01",
+  "regularizationDate": "2026-12-01"
+}
+
+Response: EmployeeDto of the created employee.
+
+
+====================================================================
+2. LEAVE - File a leave
+====================================================================
+POST /api/self-service/leaves
+PUT  /api/self-service/leaves/{id}     (edit a pending leave filing)
+
+Request body (SelfServiceCreateLeaveDto):
+  employeeNumber   string          (required)
+  leaveType        string          (required)
+  leaveTiming      "Day" | "Hour"  (required)
+  dateTimes        date[]          (required when leaveTiming = "Day")
+  startDate        date            (used when leaveTiming = "Hour")
+  startTime        datetime        (used when leaveTiming = "Hour")
+  endTime          datetime        (used when leaveTiming = "Hour")
+  reason           string
+
+Example - whole day(s), one Leave row is created per date in dateTimes:
+{
+  "employeeNumber": "EMP-0001",
+  "leaveType": "Vacation Leave",
+  "leaveTiming": "Day",
+  "dateTimes": ["2026-09-10", "2026-09-11"],
+  "reason": "Family trip"
+}
+
+Example - partial day (hourly):
+{
+  "employeeNumber": "EMP-0001",
+  "leaveType": "Sick Leave",
+  "leaveTiming": "Hour",
+  "startDate": "2026-09-10",
+  "startTime": "2026-09-10T13:00:00",
+  "endTime": "2026-09-10T17:00:00",
+  "reason": "Doctor's appointment"
+}
+
+Response: list of LeaveDto (one per date created/updated).
+
+Notes:
+- Update (PUT) only works while the filing's Status is "Pending" and
+  it has not already been emailed; the request body must include the
+  same employeeNumber as the original filing (used as an ownership
+  check) or the request returns 404.
+
+
+====================================================================
+3. OVERTIME - File an overtime
+====================================================================
+POST /api/self-service/overtimes
+PUT  /api/self-service/overtimes/{id}     (edit a pending overtime filing)
+
+Request body for POST (SelfServiceCreateOvertimeDto):
+  employeeNumber   string    (required)
+  startDate        date      (required)
+  startTime        datetime  (required)
+  endTime          datetime  (required)
+  reason           string
+  status           string    (ignored on create; new filings are always "Pending")
+
+Request body for PUT (SelfServiceUpdateOvertimeDto) - same as above
+minus "status":
+  employeeNumber   string    (required)
+  startDate        date      (required)
+  startTime        datetime  (required)
+  endTime          datetime  (required)
+  reason           string
+
+Example (POST):
+{
+  "employeeNumber": "EMP-0001",
+  "startDate": "2026-09-10",
+  "startTime": "2026-09-10T18:00:00",
+  "endTime": "2026-09-10T21:00:00",
+  "reason": "Month-end closing"
+}
+
+Response: OvertimeDto.
+
+
+====================================================================
+4. SHIFT - Create a schedule across a date range
+====================================================================
+POST /api/self-service/shifts
+
+Creates one Shift row per calendar day from dateFrom to dateTo
+(inclusive), all using the same start/end/break settings. Only the
+time-of-day portion of startTime/endTime/breakStartTime is used; the
+actual date comes from each day in the range.
+
+Request body (SelfServiceCreateShiftDto):
+  employeeNumber      string    (required)
+  dateFrom            date      (required)
+  dateTo              date      (required, must not be before dateFrom)
+  startTime           datetime  (required)
+  endTime             datetime  (required)
+  breakStartTime       datetime
+  breakLength          decimal   (hours)
+  isRestDay            bool
+  requiresLunchInOut   bool
+
+Example:
+{
+  "employeeNumber": "EMP-0001",
+  "dateFrom": "2026-09-08",
+  "dateTo": "2026-09-12",
+  "startTime": "2026-09-08T08:00:00",
+  "endTime": "2026-09-08T17:00:00",
+  "breakStartTime": "2026-09-08T12:00:00",
+  "breakLength": 1,
+  "isRestDay": false,
+  "requiresLunchInOut": true
+}
+
+Response: list of EmployeeDutyScheduleDto, one per date created.
+
+
+====================================================================
+5. TIMELOG - Check In / Lunch Out / Lunch In / Check Out
+====================================================================
+POST /api/self-service/timelogs                       (Check In)
+PUT  /api/self-service/timelogs/{id}                   (Check Out)
+PUT  /api/self-service/timelogs/lunch-out/{id}         (Lunch Out)
+PUT  /api/self-service/timelogs/lunch-in/{id}          (Lunch In)
+
+{id} is the TimeLog record's RowID, returned in the response of the
+Check In call. All four actions share the same request DTO
+(SelfServiceCreateTimeLogDto); each action only reads the field(s)
+relevant to it, but employeeNumber and date are always required by
+model validation.
+
+Request body (SelfServiceCreateTimeLogDto):
+  employeeNumber   string    (required)
+  date             date      (required)
+  startTime        datetime  (used by Check In)
+  endTime          datetime  (used by Check Out)
+  lunchOut         datetime  (used by Lunch Out)
+  lunchIn          datetime  (used by Lunch In)
+  branchId         int       (used by Check In)
+
+Example - Check In:
+POST /api/self-service/timelogs
+{
+  "employeeNumber": "EMP-0001",
+  "date": "2026-09-04",
+  "startTime": "2026-09-04T08:00:00",
+  "branchId": 1
+}
+Response includes "id" - use this id for the following calls.
+
+Example - Lunch Out:
+PUT /api/self-service/timelogs/lunch-out/123
+{
+  "employeeNumber": "EMP-0001",
+  "date": "2026-09-04",
+  "lunchOut": "2026-09-04T12:00:00"
+}
+
+Example - Lunch In:
+PUT /api/self-service/timelogs/lunch-in/123
+{
+  "employeeNumber": "EMP-0001",
+  "date": "2026-09-04",
+  "lunchIn": "2026-09-04T13:00:00"
+}
+
+Example - Check Out:
+PUT /api/self-service/timelogs/123
+{
+  "employeeNumber": "EMP-0001",
+  "date": "2026-09-04",
+  "endTime": "2026-09-04T17:00:00"
+}
+
+Response: TimeLogDto.
+
+Note: Check In rejects a duplicate check-in for the same employee and
+date (employee already has a TimeIn recorded for that date).
+
+
+====================================================================
+6. TIMELOG FILING - Create / Update
+====================================================================
+POST /api/self-service/timelogs/filings
+PUT  /api/self-service/timelogs/filings/{id}     (edit a pending filing)
+
+Used to file a manual correction/request (e.g. forgot to time in/out)
+that requires approval, as opposed to a live Check In/Out.
+
+Request body for POST (CreateEmployeeTimelogFilingDto):
+  employeeNumber   string
+  entryType        string    (free text, e.g. "Time In" / "Time Out")
+  logDate          date
+  time             datetime
+  reason           string
+
+Example:
+{
+  "employeeNumber": "EMP-0001",
+  "entryType": "Time In",
+  "logDate": "2026-09-04",
+  "time": "2026-09-04T08:05:00",
+  "reason": "Forgot to time in due to system downtime"
+}
+
+Response: { "id": <filingId>, "status": "Pending" }
+
+Request body for PUT /filings/{id} (UpdateEmployeeTimelogFilingDto):
+  employeeNumber   string   (must match the filing's own employee)
+  entryType        string
+  logDate          date
+  time             datetime
+  reason           string
+  decidedBy        string
+
+Example:
+{
+  "employeeNumber": "EMP-0001",
+  "entryType": "Time In",
+  "logDate": "2026-09-04",
+  "time": "2026-09-04T08:00:00",
+  "reason": "Corrected time"
+}
+
+Notes:
+- Only filings with Status = "Pending" that have not already been
+  emailed for approval can be edited; otherwise the API throws an
+  error.
+- employeeNumber on the PUT body is used as an ownership check
+  against the filing being edited - a mismatch returns 404.

@@ -35,13 +35,13 @@ namespace AccuPay.Web.Overtimes
             _employeeRepository = employeeRepository;
         }
 
-        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null)
                 throw new Exception($"Employee number '{employeeNumber}' was not found.");
 
-            return employee.RowID.Value;
+            return (employee.RowID.Value, employee.OrganizationID.Value);
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(OvertimePageOptions options)
@@ -77,10 +77,10 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(SelfServiceCreateOvertimeDto dto)
         {
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var overtime = Overtime.NewOvertime(
-                organizationId: _currentUser.OrganizationId,
+                organizationId: organizationId,
                 employeeId: employeeId,
                 startDate: dto.StartDate,
                 startTime: dto.StartTime.TimeOfDay,
@@ -88,7 +88,7 @@ namespace AccuPay.Web.Overtimes
                 reason: dto.Reason,
                 status: Overtime.StatusPending);
 
-            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+            await _dataService.SaveAsync(overtime, SelfServiceUser.Id);
 
             return ConvertToDto(overtime);
         }
@@ -119,7 +119,7 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> UpdateSelfService(int id, SelfServiceUpdateOvertimeDto dto)
         {
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, _) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var overtime = await _repository.GetByIdWithEmployeeAsync(id);
             if (overtime == null || overtime.EmployeeID != employeeId) return null;
@@ -133,7 +133,7 @@ namespace AccuPay.Web.Overtimes
             overtime.OTEndTime = dto.EndTime.TimeOfDay;
             overtime.Reason = dto.Reason;
 
-            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+            await _dataService.SaveAsync(overtime, SelfServiceUser.Id);
 
             return ConvertToDto(overtime);
         }
@@ -149,7 +149,7 @@ namespace AccuPay.Web.Overtimes
                 throw new Exception("Emailed filings can no longer be deleted.");
             await _dataService.DeleteAsync(
                 id: id,
-                currentlyLoggedInUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: SelfServiceUser.Id);
 
             return true;
         }

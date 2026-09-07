@@ -213,6 +213,9 @@ namespace AccuPay.Core.Entities
                 RowID = null,
                 OrganizationID = organizationId,
                 PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId,
+                PositionID= 1,
+                EmploymentPolicyId=1,
+                DayOfRest =1, //default sunday
                 CalcHoliday = true,
                 CalcNightDiff = true,
                 CalcRestDay = true,

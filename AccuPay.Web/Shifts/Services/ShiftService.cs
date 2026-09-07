@@ -38,13 +38,13 @@ namespace AccuPay.Web.Shifts.Services
             _employeeRepository = employeeRepository;
         }
 
-        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null)
                 throw new BusinessLogicException($"Employee number '{employeeNumber}' was not found.");
 
-            return employee.RowID.Value;
+            return (employee.RowID.Value, employee.OrganizationID.Value);
         }
 
         internal async Task<List<EmployeeDutyScheduleDto>> CreateRange(SelfServiceCreateShiftDto dto)
@@ -52,14 +52,14 @@ namespace AccuPay.Web.Shifts.Services
             if (dto.DateFrom.Date > dto.DateTo.Date)
                 throw new BusinessLogicException("Date From must not be later than Date To.");
 
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var shifts = new List<Shift>();
             for (var date = dto.DateFrom.Date; date <= dto.DateTo.Date; date = date.AddDays(1))
             {
                 shifts.Add(new Shift()
                 {
-                    OrganizationID = _currentUser.OrganizationId,
+                    OrganizationID = organizationId,
                     EmployeeID = employeeId,
                     DateSched = date,
                     StartTimeFull = dto.StartTime,
@@ -71,7 +71,7 @@ namespace AccuPay.Web.Shifts.Services
                 });
             }
 
-            await _service.SaveManyAsync(shifts, _currentUser.UserId);
+            await _service.SaveManyAsync(shifts, SelfServiceUser.Id);
 
             return shifts.Select(EmployeeDutyScheduleDto.Convert).ToList();
         }

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace AccuPay.Web.Controllers.SelfService
 {
     [Route("api/self-service/[controller]")]
-    [Authorize]
     [ApiController]
     public class TimeLogsController : ControllerBase
     {
@@ -90,7 +89,8 @@ namespace AccuPay.Web.Controllers.SelfService
             filing.Time = dto.Time.TimeOfDay;
             filing.Reason = dto.Reason;
             filing.DecidedBy = dto.DecidedBy;
-            
+            filing.LastUpdBy = SelfServiceUser.Id;
+
             await _timeLogRepository.UpdateFilingAsync(filing);
 
             return Ok();

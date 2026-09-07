@@ -41,13 +41,13 @@ namespace AccuPay.Web.TimeLogs
             _employeeRepository = employeeRepository;
         }
 
-        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null)
                 throw new Exception($"Employee number '{employeeNumber}' was not found.");
 
-            return employee.RowID.Value;
+            return (employee.RowID.Value, employee.OrganizationID.Value);
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
@@ -245,7 +245,7 @@ namespace AccuPay.Web.TimeLogs
             if (timeLog == null) throw new ArgumentNullException(nameof(timeLog));
             var date = timeLog.Date.Date;
 
-            var employeeId = await ResolveEmployeeIdAsync(timeLog.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
 
             var existingForDate = await _repository.GetLatestByEmployeeAndDatePeriodAsync(
                 employeeId,
@@ -260,8 +260,8 @@ namespace AccuPay.Web.TimeLogs
             newTimelog.EmployeeID = employeeId;
             newTimelog.TimeInFull = timeLog.StartTime;
             newTimelog.LogDate = date;
-            newTimelog.CreatedBy = _currentUser.UserId;
-            newTimelog.OrganizationID = _currentUser.OrganizationId;
+            newTimelog.CreatedBy = SelfServiceUser.Id;
+            newTimelog.OrganizationID = organizationId;
             newTimelog.TimeStampIn = timeLog.StartTime;
             newTimelog.BranchID = timeLog.BranchId;
             await _repository.SaveAsync(newTimelog);
@@ -287,7 +287,7 @@ namespace AccuPay.Web.TimeLogs
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log already checked out for the specified record.");
 
             existingTimeLog.TimeOutFull = timeLog.EndTime;
-            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.LastUpdBy = SelfServiceUser.Id;
             existingTimeLog.TimeStampOut = timeLog.EndTime;
 
             await _repository.UpdateAsync(existingTimeLog);
@@ -314,7 +314,7 @@ namespace AccuPay.Web.TimeLogs
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch out for the specified record.");
 
             existingTimeLog.LunchOutFull = timeLog.LunchOut;
-            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.LastUpdBy = SelfServiceUser.Id;
             existingTimeLog.TimeStampLunchOut = timeLog.LunchOut;
 
             await _repository.UpdateAsync(existingTimeLog);
@@ -341,7 +341,7 @@ namespace AccuPay.Web.TimeLogs
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch in for the specified record.");
 
             existingTimeLog.LunchInFull = timeLog.LunchIn;
-            existingTimeLog.LastUpdBy = _currentUser.UserId;
+            existingTimeLog.LastUpdBy = SelfServiceUser.Id;
             existingTimeLog.TimeStampLunchIn = timeLog.LunchIn;
 
             await _repository.UpdateAsync(existingTimeLog);
@@ -362,12 +362,12 @@ namespace AccuPay.Web.TimeLogs
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
 
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var filing = new EmployeeTimelogFiling
             {
                 EmployeeID = employeeId,
-                OrganizationID = _currentUser.OrganizationId,
+                OrganizationID = organizationId,
                 EntryType = dto.EntryType,
                 LogDate = dto.LogDate,
                 Time = dto.Time.TimeOfDay,
@@ -376,7 +376,7 @@ namespace AccuPay.Web.TimeLogs
             };
 
             // Set audit created by
-            filing.CreatedBy = _currentUser.UserId;
+            filing.CreatedBy = SelfServiceUser.Id;
 
             await _repository.CreateFilingAsync(filing);
 

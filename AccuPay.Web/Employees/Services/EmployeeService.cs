@@ -76,13 +76,13 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task<EmployeeDto> Create(CreateEmployeeDto dto)
         {
-            var employee = Employee.NewEmployee(_currentUser.OrganizationId);
+            var employee = Employee.NewEmployee(organizationId:1);
 
             Map(dto, employee);
-            await _dataService.SaveAsync(employee, _currentUser.UserId);
+            await _dataService.SaveAsync(employee, currentlyLoggedInUserId: 1);
 
             employee.OriginalImageId = (await CreateOriginalImage(employee)).Id;
-            await _dataService.SaveAsync(employee, _currentUser.UserId);
+            await _dataService.SaveAsync(employee,currentlyLoggedInUserId: 1);
 
             return EmployeeDto.Convert(employee);
         }
@@ -125,7 +125,7 @@ namespace AccuPay.Web.Employees.Services
             employee.FirstName = dto.FirstName;
             employee.LastName = dto.LastName;
             employee.BirthDate = dto.Birthdate;
-
+            employee.MiddleName = dto.MiddleName;
             employee.HomeAddress = dto.Address;
             employee.HomePhone = dto.LandlineNo;
             employee.MobilePhone = dto.MobileNo;
@@ -139,9 +139,6 @@ namespace AccuPay.Web.Employees.Services
             employee.EmploymentStatus = dto.EmploymentStatus;
             employee.StartDate = dto.StartDate;
             employee.DateRegularized = dto.RegularizationDate;
-            employee.EmploymentPolicyId = dto.EmploymentPolicyId;
-
-            employee.PositionID = dto.PositionId;
         }
 
         private async Task<AccuPay.Core.Entities.File> CreateOriginalImage(Employee employee)
@@ -158,8 +155,8 @@ namespace AccuPay.Web.Employees.Services
                 mediaType: "image/jpeg",
                 size: virtualFile.Size);
 
-            file.CreatedById = _currentUser.UserId;
-            file.UpdatedById = file.CreatedById;
+            file.CreatedById = 1;
+            file.UpdatedById = 1;
 
             await _fileRepository.Create(file);
 

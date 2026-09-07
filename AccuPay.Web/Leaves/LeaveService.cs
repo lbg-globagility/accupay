@@ -46,13 +46,13 @@ namespace AccuPay.Web.Leaves
             _employeeRepository = employeeRepository;
         }
 
-        private async Task<int> ResolveEmployeeIdAsync(string employeeNumber)
+        private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null)
                 throw new BusinessLogicException($"Employee number '{employeeNumber}' was not found.");
 
-            return employee.RowID.Value;
+            return (employee.RowID.Value, employee.OrganizationID.Value);
         }
 
         public async Task<PaginatedList<LeaveDto>> PaginatedList(LeavePageOptions options)
@@ -127,15 +127,15 @@ namespace AccuPay.Web.Leaves
         {
             ValidateSelfServiceDto(dto);
 
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var leaves = new List<Leave>();
             var filingGroupDate = DateTime.Now;
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-              var leave = NewSelfServiceLeave(dto, employeeId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+              var leave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
               leaves.Add(leave);
-              await _dataService.SaveAsync(leave, _currentUser.UserId);
+              await _dataService.SaveAsync(leave, SelfServiceUser.Id);
             }
             else if(dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
@@ -145,12 +145,12 @@ namespace AccuPay.Web.Leaves
                 foreach (var date in dto.DateTimes)
                 {
 
-                    var leave = NewSelfServiceLeave(dto, employeeId, date, null, null, filingGroupDate);
+                    var leave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate);
 
                     leaves.Add(leave);
                 }
 
-                await _dataService.SaveManyAsync(leaves, _currentUser.UserId);
+                await _dataService.SaveManyAsync(leaves, SelfServiceUser.Id);
 
 
             }
@@ -164,12 +164,12 @@ namespace AccuPay.Web.Leaves
             }).ToList();
         }
 
-        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
+        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, int organizationId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
         {
             return new Leave()
             {
                 EmployeeID = employeeId,
-                OrganizationID = _currentUser.OrganizationId,
+                OrganizationID = organizationId,
                 LeaveType = dto.LeaveType,
                 StartDate = date,
                 EndDate = date,
@@ -202,7 +202,7 @@ namespace AccuPay.Web.Leaves
 
         public async Task<List<LeaveDto>> UpdateSelfService(int id, SelfServiceCreateLeaveDto dto)
         {
-            var employeeId = await ResolveEmployeeIdAsync(dto.EmployeeNumber);
+            var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
             if (leave == null || leave.EmployeeID != employeeId) return null;
@@ -220,14 +220,14 @@ namespace AccuPay.Web.Leaves
             var leaves = new List<Leave>();
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-                var newLeave = NewSelfServiceLeave(dto, employeeId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+                var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
                 leaves.Add(newLeave);
             }
             else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
                 foreach (var date in dto.DateTimes)
                 {
-                    var newLeave = NewSelfServiceLeave(dto, employeeId, date, null, null, filingGroupDate);
+                    var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate);
                     leaves.Add(newLeave);
                 }
             }
@@ -236,7 +236,7 @@ namespace AccuPay.Web.Leaves
             // transaction: the old rows still hold these dates, so create-then-delete would
             // trip SanitizeEntity's duplicate-date check, and delete-then-create without a
             // transaction risks losing the request entirely if the create half fails.
-            await _dataService.ReplaceSelfServiceFilingGroupAsync(filingGroup, leaves, _currentUser.UserId);
+            await _dataService.ReplaceSelfServiceFilingGroupAsync(filingGroup, leaves, SelfServiceUser.Id);
 
             var dateTimes = leaves.Select(x => x.StartDate).ToList();
             return leaves.Select(x =>
@@ -274,7 +274,7 @@ namespace AccuPay.Web.Leaves
             {
                 await _dataService.DeleteAsync(
                     id: groupLeave.RowID.Value,
-                    currentlyLoggedInUserId: _currentUser.UserId);
+                    currentlyLoggedInUserId: SelfServiceUser.Id);
             }
 
             return true;
