@@ -91,7 +91,7 @@ namespace AccuPay.Web
                 x => !x.Request.Path.Value.StartsWith("/api"),
                 builder => builder.UseSpa(spa => { }));
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseMiddleware<ErrorLoggingMiddleware>();
 
