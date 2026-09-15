@@ -21,6 +21,7 @@ namespace AccuPay.Core.Entities
         public string ReferenceNumber { get; set; }
         public string EmailAddress { get; set; }
         public bool IsActual { get; set; }
+        public string Type { get; set; }
 
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }

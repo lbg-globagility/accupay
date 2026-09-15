@@ -206,11 +206,11 @@ Public Class SelectPayslipEmployeesForm
             Dim resetEmailCell As DataGridViewLinkCell = CType(row.Cells(ResetEmailButtonColumn.Index), DataGridViewLinkCell)
 
             Dim history = paystubEmailHistories.
-                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId AndAlso h.Type = _reportType)
 
             Dim queue = paystubEmails.
                 OrderByDescending(Function(h) h.Created).
-                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId AndAlso h.Type = _reportType)
 
             checkBoxCell.Style.BackColor = Color.White
             checkBoxCell.ReadOnly = False
