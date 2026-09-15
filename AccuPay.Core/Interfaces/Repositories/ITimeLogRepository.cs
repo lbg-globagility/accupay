@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace AccuPay.Core.Interfaces
         Task CreateFilingAsync(EmployeeTimelogFiling filing);
 
         Task<EmployeeTimelogFiling> GetFilingByIdAsync(int filingId);
+
+        Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeDateAndEntryTypeAsync(int employeeId, DateTime date, string entryType);
 
         Task UpdateFilingAsync(EmployeeTimelogFiling filing);
 

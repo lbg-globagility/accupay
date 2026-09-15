@@ -129,6 +129,17 @@ namespace AccuPay.Infrastructure.Data
                 .FirstOrDefaultAsync(f => f.RowID == filingId);
         }
 
+        public async Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeDateAndEntryTypeAsync(int employeeId, DateTime date, string entryType)
+        {
+            return await _context.Set<EmployeeTimelogFiling>()
+                .Include(f => f.Employee)
+                .Where(f => f.EmployeeID == employeeId)
+                .Where(f => f.LogDate == date.Date)
+                .Where(f => f.EntryType == entryType)
+                .Where(f => f.Status == EmployeeTimelogFiling.StatusPending)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task UpdateFilingAsync(EmployeeTimelogFiling filing)
         {
             _context.Entry(filing).State = EntityState.Modified;

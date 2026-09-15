@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,8 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<Overtime>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod);
 
         Task<Overtime> GetByIdWithEmployeeAsync(int id);
+
+        Task<Overtime> GetPendingByEmployeeAndDateAsync(int employeeId, DateTime date);
 
         Task<PaginatedList<Overtime>> GetPaginatedListAsync(OvertimePageOptions options, int organizationId);
 

@@ -80,15 +80,23 @@ Response: EmployeeDto of the created employee.
 ====================================================================
 2. LEAVE - File a leave
 ====================================================================
-POST /api/self-service/leaves
-PUT  /api/self-service/leaves/{id}     (edit a pending leave filing)
+POST   /api/self-service/leaves
+PUT    /api/self-service/leaves     (edit a pending leave filing)
+DELETE /api/self-service/leaves     (delete a pending leave filing)
 
-Request body (SelfServiceCreateLeaveDto):
+There is no {id} in the URL for PUT/DELETE. The target Leave filing is
+looked up by employeeNumber + startDate instead (must match a Leave
+row that is still Status = "Pending" - there is only ever one per
+employee per calendar day).
+
+Request body (SelfServiceCreateLeaveDto) for POST and PUT:
   employeeNumber   string          (required)
   leaveType        string          (required)
   leaveTiming      "Day" | "Hour"  (required)
   dateTimes        date[]          (required when leaveTiming = "Day")
-  startDate        date            (used when leaveTiming = "Hour")
+  startDate        date            (used when leaveTiming = "Hour";
+                                     on PUT this also identifies which
+                                     existing filing to edit)
   startTime        datetime        (used when leaveTiming = "Hour")
   endTime          datetime        (used when leaveTiming = "Hour")
   reason           string
@@ -115,18 +123,27 @@ Example - partial day (hourly):
 
 Response: list of LeaveDto (one per date created/updated).
 
+Example - Delete:
+DELETE /api/self-service/leaves?employeeNumber=EMP-0001&date=2026-09-10
+
 Notes:
-- Update (PUT) only works while the filing's Status is "Pending" and
-  it has not already been emailed; the request body must include the
-  same employeeNumber as the original filing (used as an ownership
-  check) or the request returns 404.
+- Update/Delete only work while the filing's Status is "Pending" and
+  it has not already been emailed; if no matching pending filing is
+  found for that employeeNumber + date, the request returns 404.
 
 
 ====================================================================
 3. OVERTIME - File an overtime
 ====================================================================
-POST /api/self-service/overtimes
-PUT  /api/self-service/overtimes/{id}     (edit a pending overtime filing)
+POST   /api/self-service/overtimes
+PUT    /api/self-service/overtimes     (edit a pending overtime filing)
+DELETE /api/self-service/overtimes     (delete a pending overtime filing)
+
+There is no {id} in the URL for PUT/DELETE. The target Overtime filing
+is looked up by employeeNumber + startDate instead (must match an
+Overtime row that is still Status = "Pending" - only one per employee
+per calendar day). On PUT, startDate identifies the existing filing
+to edit; it cannot be used to move the filing to a different date.
 
 Request body for POST (SelfServiceCreateOvertimeDto):
   employeeNumber   string    (required)
@@ -154,6 +171,12 @@ Example (POST):
 }
 
 Response: OvertimeDto.
+
+Example - Delete:
+DELETE /api/self-service/overtimes?employeeNumber=EMP-0001&date=2026-09-10
+
+Note: if no matching pending filing is found for that employeeNumber +
+date, PUT/DELETE return 404.
 
 
 ====================================================================
@@ -196,13 +219,15 @@ Response: list of EmployeeDutyScheduleDto, one per date created.
 ====================================================================
 5. TIMELOG - Check In / Lunch Out / Lunch In / Check Out
 ====================================================================
-POST /api/self-service/timelogs                       (Check In)
-PUT  /api/self-service/timelogs/{id}                   (Check Out)
-PUT  /api/self-service/timelogs/lunch-out/{id}         (Lunch Out)
-PUT  /api/self-service/timelogs/lunch-in/{id}          (Lunch In)
+POST /api/self-service/timelogs                  (Check In)
+PUT  /api/self-service/timelogs                   (Check Out)
+PUT  /api/self-service/timelogs/lunch-out         (Lunch Out)
+PUT  /api/self-service/timelogs/lunch-in          (Lunch In)
 
-{id} is the TimeLog record's RowID, returned in the response of the
-Check In call. All four actions share the same request DTO
+There is no {id} in the URL. Check Out/Lunch Out/Lunch In all locate
+the existing TimeLog row via employeeNumber + date in the request body
+(there is only ever one TimeLog row per employee per calendar day,
+created by Check In). All four actions share the same request DTO
 (SelfServiceCreateTimeLogDto); each action only reads the field(s)
 relevant to it, but employeeNumber and date are always required by
 model validation.
@@ -224,10 +249,9 @@ POST /api/self-service/timelogs
   "startTime": "2026-09-04T08:00:00",
   "branchId": 1
 }
-Response includes "id" - use this id for the following calls.
 
 Example - Lunch Out:
-PUT /api/self-service/timelogs/lunch-out/123
+PUT /api/self-service/timelogs/lunch-out
 {
   "employeeNumber": "EMP-0001",
   "date": "2026-09-04",
@@ -235,7 +259,7 @@ PUT /api/self-service/timelogs/lunch-out/123
 }
 
 Example - Lunch In:
-PUT /api/self-service/timelogs/lunch-in/123
+PUT /api/self-service/timelogs/lunch-in
 {
   "employeeNumber": "EMP-0001",
   "date": "2026-09-04",
@@ -243,7 +267,7 @@ PUT /api/self-service/timelogs/lunch-in/123
 }
 
 Example - Check Out:
-PUT /api/self-service/timelogs/123
+PUT /api/self-service/timelogs
 {
   "employeeNumber": "EMP-0001",
   "date": "2026-09-04",
@@ -257,13 +281,20 @@ date (employee already has a TimeIn recorded for that date).
 
 
 ====================================================================
-6. TIMELOG FILING - Create / Update
+6. TIMELOG FILING - Create / Update / Delete
 ====================================================================
-POST /api/self-service/timelogs/filings
-PUT  /api/self-service/timelogs/filings/{id}     (edit a pending filing)
+POST   /api/self-service/timelogs/filings
+PUT    /api/self-service/timelogs/filings     (edit a pending filing)
+DELETE /api/self-service/timelogs/filings     (delete a pending filing)
 
 Used to file a manual correction/request (e.g. forgot to time in/out)
 that requires approval, as opposed to a live Check In/Out.
+
+There is no {id} in the URL for PUT/DELETE. The target filing is
+looked up by employeeNumber + logDate + entryType instead (must match
+a filing that is still Status = "Pending" - only one per employee per
+day per entryType, since an employee could have separate pending
+filings for e.g. "Time In" and "Time Out" on the same date).
 
 Request body for POST (CreateEmployeeTimelogFilingDto):
   employeeNumber   string
@@ -283,15 +314,18 @@ Example:
 
 Response: { "id": <filingId>, "status": "Pending" }
 
-Request body for PUT /filings/{id} (UpdateEmployeeTimelogFilingDto):
-  employeeNumber   string   (must match the filing's own employee)
-  entryType        string
-  logDate          date
+Request body for PUT (UpdateEmployeeTimelogFilingDto) - employeeNumber,
+logDate and entryType together identify which existing filing to
+update, so entryType cannot itself be changed by this call:
+  employeeNumber   string
+  entryType        string    (identifies the filing; not changed)
+  logDate          date      (identifies the filing)
   time             datetime
   reason           string
   decidedBy        string
 
 Example:
+PUT /api/self-service/timelogs/filings
 {
   "employeeNumber": "EMP-0001",
   "entryType": "Time In",
@@ -300,9 +334,12 @@ Example:
   "reason": "Corrected time"
 }
 
+Example - Delete:
+DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04&entryType=Time%20In
+
 Notes:
 - Only filings with Status = "Pending" that have not already been
-  emailed for approval can be edited; otherwise the API throws an
-  error.
-- employeeNumber on the PUT body is used as an ownership check
-  against the filing being edited - a mismatch returns 404.
+  emailed for approval can be edited/deleted; otherwise the API throws
+  an error.
+- If no matching pending filing is found for that employeeNumber +
+  logDate + entryType, PUT/DELETE return 404.

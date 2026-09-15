@@ -21,6 +21,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<Leave> GetByIdWithEmployeeAsync(int id);
 
+        Task<Leave> GetPendingByEmployeeAndDateAsync(int employeeId, DateTime date);
+
         Task<ICollection<Leave>> GetByFilingGroupDateAsync(DateTime filingGroupDate, int employeeId);
 
         Task<PaginatedList<Leave>> GetPaginatedListAsync(LeavePageOptions options, int organizationId);

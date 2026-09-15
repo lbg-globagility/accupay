@@ -1,4 +1,3 @@
-using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
@@ -17,15 +16,13 @@ namespace AccuPay.Web.Controllers.SelfService
         private readonly TimeLogService _service;
         private readonly TimeLogEmailService _emailService;
         private readonly ITimeLogRepository _timeLogRepository;
-        private readonly ICurrentUser _currentUser;
         private readonly IEmployeeRepository _employeeRepository;
 
-        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository, ICurrentUser currentUser, IEmployeeRepository employeeRepository)
+        public TimeLogsController(TimeLogService service, TimeLogEmailService emailService, ITimeLogRepository timeLogRepository, IEmployeeRepository employeeRepository)
         {
             _service = service;
             _emailService = emailService;
             _timeLogRepository = timeLogRepository;
-            _currentUser = currentUser;
             _employeeRepository = employeeRepository;
         }
 
@@ -36,22 +33,22 @@ namespace AccuPay.Web.Controllers.SelfService
             return timelog;
         }
 
-        [HttpPut("{id}")]
-        public async Task<TimeLogDto> CheckOut(int id,[FromBody] SelfServiceCreateTimeLogDto dto)
+        [HttpPut]
+        public async Task<TimeLogDto> CheckOut([FromBody] SelfServiceCreateTimeLogDto dto)
         {
-            var timelog = await _service.Checkout(id,dto);
+            var timelog = await _service.Checkout(dto);
             return timelog;
         }
-        [HttpPut("lunch-in/{id}")]
-        public async Task<TimeLogDto> LunchIn(int id, [FromBody] SelfServiceCreateTimeLogDto dto)
+        [HttpPut("lunch-in")]
+        public async Task<TimeLogDto> LunchIn([FromBody] SelfServiceCreateTimeLogDto dto)
         {
-            var timelog = await _service.LunchIn(id, dto);
+            var timelog = await _service.LunchIn(dto);
             return timelog;
         }
-        [HttpPut("lunch-out/{id}")]
-        public async Task<TimeLogDto> LunchOut(int id, [FromBody] SelfServiceCreateTimeLogDto dto)
+        [HttpPut("lunch-out")]
+        public async Task<TimeLogDto> LunchOut([FromBody] SelfServiceCreateTimeLogDto dto)
         {
-            var timelog = await _service.LunchOut(id, dto);
+            var timelog = await _service.LunchOut(dto);
             return timelog;
         }
 
@@ -69,22 +66,17 @@ namespace AccuPay.Web.Controllers.SelfService
             if (!success) return NotFound();
             return Ok();
         }
-        // NEW: Update filing endpoint
-        [HttpPut("filings/{id}")]
-        public async Task<ActionResult> UpdateFiling(int id, [FromBody] UpdateEmployeeTimelogFilingDto dto)
+        [HttpPut("filings")]
+        public async Task<ActionResult> UpdateFiling([FromBody] UpdateEmployeeTimelogFilingDto dto)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(dto.EmployeeNumber);
             if (employee == null) return NotFound();
 
-            var filing = await _timeLogRepository.GetFilingByIdAsync(id);
+            var filing = await _timeLogRepository.GetPendingFilingByEmployeeDateAndEntryTypeAsync(employee.RowID.Value, dto.LogDate, dto.EntryType);
             if (filing == null) return NotFound();
-            if (filing.EmployeeID != employee.RowID) return NotFound();
-            if (filing.Status != EmployeeTimelogFiling.StatusPending)
-                throw new Exception("Only pending leave filings can be edited.");
             if (filing.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be edited.");
             // Update allowed fields
-            filing.EntryType = dto.EntryType;
             filing.LogDate = dto.LogDate;
             filing.Time = dto.Time.TimeOfDay;
             filing.Reason = dto.Reason;
@@ -95,14 +87,14 @@ namespace AccuPay.Web.Controllers.SelfService
 
             return Ok();
         }
-        [HttpDelete("filings/{id}")]
-        public async Task<ActionResult> DeleteFiling(int id)
+        [HttpDelete("filings")]
+        public async Task<ActionResult> DeleteFiling([FromQuery] string employeeNumber, [FromQuery] DateTime date, [FromQuery] string entryType)
         {
-            var filing = await _timeLogRepository.GetFilingByIdAsync(id);
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
+            if (employee == null) return NotFound();
+
+            var filing = await _timeLogRepository.GetPendingFilingByEmployeeDateAndEntryTypeAsync(employee.RowID.Value, date, entryType);
             if (filing == null) return NotFound();
-            if (filing.EmployeeID != _currentUser.EmployeeId) return NotFound();
-            if (filing.Status != EmployeeTimelogFiling.StatusPending)
-                throw new Exception("Only pending leave filings can be deleted.");
             if (filing.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be deleted.");
 

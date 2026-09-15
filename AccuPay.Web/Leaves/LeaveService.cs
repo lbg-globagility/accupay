@@ -200,15 +200,13 @@ namespace AccuPay.Web.Leaves
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
-        public async Task<List<LeaveDto>> UpdateSelfService(int id, SelfServiceCreateLeaveDto dto)
+        public async Task<List<LeaveDto>> UpdateSelfService(SelfServiceCreateLeaveDto dto)
         {
             var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
-            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
-            if (leave == null || leave.EmployeeID != employeeId) return null;
+            var leave = await _leaveRepository.GetPendingByEmployeeAndDateAsync(employeeId, dto.StartDate);
+            if (leave == null) return null;
 
-            if (leave.Status != Leave.StatusPending)
-                throw new Exception("Only pending leave filings can be edited.");
             if (leave.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be edited.");
 
@@ -258,17 +256,16 @@ namespace AccuPay.Web.Leaves
                 throw new BusinessLogicException("At least one date is required.");
         }
 
-        public async Task<bool> DeleteSelfService(int id)
+        public async Task<bool> DeleteSelfService(string employeeNumber, DateTime date)
         {
-            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
-            if (leave == null || leave.EmployeeID != _currentUser.EmployeeId) return false;
+            var (employeeId, _) = await ResolveEmployeeAsync(employeeNumber);
 
-            if (leave.Status != Leave.StatusPending)
-                throw new Exception("Only pending leave filings can be deleted.");
+            var leave = await _leaveRepository.GetPendingByEmployeeAndDateAsync(employeeId, date);
+            if (leave == null) return false;
+
             if (leave.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be deleted.");
 
-            var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
             var filingGroup = await GetFilingGroupAsync(leave);
             foreach (var groupLeave in filingGroup)
             {

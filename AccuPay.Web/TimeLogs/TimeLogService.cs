@@ -276,9 +276,12 @@ namespace AccuPay.Web.TimeLogs
             };
             return dto;
         }
-        internal async Task<TimeLogDto> Checkout(int Id, SelfServiceCreateTimeLogDto timeLog)
+        internal async Task<TimeLogDto> Checkout(SelfServiceCreateTimeLogDto timeLog)
         {
-            var existingTimeLog = _repository.GetById(Id);
+            var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
+            var date = timeLog.Date.Date;
+
+            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
 
             if (existingTimeLog == null)
                 throw new Exception("Time log not found.");
@@ -303,9 +306,12 @@ namespace AccuPay.Web.TimeLogs
 
             return dto;
         }
-        internal async Task<TimeLogDto> LunchOut(int Id, SelfServiceCreateTimeLogDto timeLog)
+        internal async Task<TimeLogDto> LunchOut(SelfServiceCreateTimeLogDto timeLog)
         {
-            var existingTimeLog = _repository.GetById(Id);
+            var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
+            var date = timeLog.Date.Date;
+
+            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
 
             if (existingTimeLog == null)
                 throw new Exception("Time log not found.");
@@ -330,9 +336,12 @@ namespace AccuPay.Web.TimeLogs
 
             return dto;
         }
-        internal async Task<TimeLogDto> LunchIn(int Id, SelfServiceCreateTimeLogDto timeLog)
+        internal async Task<TimeLogDto> LunchIn(SelfServiceCreateTimeLogDto timeLog)
         {
-            var existingTimeLog = _repository.GetById(Id);
+            var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
+            var date = timeLog.Date.Date;
+
+            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
 
             if (existingTimeLog == null)
                 throw new Exception("Time log not found.");
