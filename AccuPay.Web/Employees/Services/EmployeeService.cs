@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Employees;
@@ -76,7 +77,9 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task<EmployeeDto> Create(CreateEmployeeDto dto)
         {
-            var employee = Employee.NewEmployee(organizationId:1);
+            await EnsureNoDuplicateAsync(dto.EmployeeNo, dto.EmailAddress, organizationId: SelfServiceOrganzationId.Id);
+
+            var employee = Employee.NewEmployee(organizationId: SelfServiceOrganzationId.Id);
 
             Map(dto, employee);
             await _dataService.SaveAsync(employee, currentlyLoggedInUserId: 1);
@@ -85,6 +88,20 @@ namespace AccuPay.Web.Employees.Services
             await _dataService.SaveAsync(employee,currentlyLoggedInUserId: 1);
 
             return EmployeeDto.Convert(employee);
+        }
+
+        private async Task EnsureNoDuplicateAsync(string employeeNo, string emailAddress, int organizationId)
+        {
+            var existingByNumber = await _employeeRepository.GetByEmployeeNumberAsync(employeeNo, organizationId);
+            if (existingByNumber != null)
+                throw new BusinessLogicException($"Employee number '{employeeNo}' is already in use.");
+
+            if (!string.IsNullOrWhiteSpace(emailAddress))
+            {
+                var existingByEmail = await _employeeRepository.GetByEmailAsync(emailAddress, organizationId);
+                if (existingByEmail != null)
+                    throw new BusinessLogicException($"Email address '{emailAddress}' is already in use.");
+            }
         }
 
         public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
