@@ -53,16 +53,6 @@ namespace AccuPay.Infrastructure.Data
 
         #region Single entity
 
-        public async Task<Leave> GetPendingByEmployeeAndDateAsync(int employeeId, DateTime date)
-        {
-            return await _context.Leaves
-                .Include(x => x.Employee)
-                .Where(x => x.EmployeeID == employeeId)
-                .Where(x => x.StartDate == date.Date)
-                .Where(x => x.Status == Leave.StatusPending)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<Leave> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Leaves

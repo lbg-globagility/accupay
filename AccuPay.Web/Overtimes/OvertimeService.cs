@@ -117,13 +117,15 @@ namespace AccuPay.Web.Overtimes
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 
-        public async Task<OvertimeDto> UpdateSelfService(SelfServiceUpdateOvertimeDto dto)
+        public async Task<OvertimeDto> UpdateSelfService(int id, SelfServiceUpdateOvertimeDto dto)
         {
             var (employeeId, _) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
-            var overtime = await _repository.GetPendingByEmployeeAndDateAsync(employeeId, dto.StartDate);
-            if (overtime == null) return null;
+            var overtime = await _repository.GetByIdWithEmployeeAsync(id);
+            if (overtime == null || overtime.EmployeeID != employeeId) return null;
 
+            if (overtime.Status != Overtime.StatusPending)
+                throw new Exception("Only pending overtime filings can be edited.");
             if (overtime.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be edited.");
             overtime.OTStartDate = dto.StartDate;
@@ -136,17 +138,17 @@ namespace AccuPay.Web.Overtimes
             return ConvertToDto(overtime);
         }
 
-        public async Task<bool> DeleteSelfService(string employeeNumber, DateTime date)
+        public async Task<bool> DeleteSelfService(int id)
         {
-            var (employeeId, _) = await ResolveEmployeeAsync(employeeNumber);
+            var overtime = await _repository.GetByIdWithEmployeeAsync(id);
+            if (overtime == null || overtime.EmployeeID != _currentUser.EmployeeId) return false;
 
-            var overtime = await _repository.GetPendingByEmployeeAndDateAsync(employeeId, date);
-            if (overtime == null) return false;
-
+            if (overtime.Status != Overtime.StatusPending)
+                throw new Exception("Only pending overtime filings can be deleted.");
             if (overtime.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be deleted.");
             await _dataService.DeleteAsync(
-                id: overtime.RowID.Value,
+                id: id,
                 currentlyLoggedInUserId: SelfServiceUser.Id);
 
             return true;

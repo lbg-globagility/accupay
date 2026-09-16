@@ -53,16 +53,6 @@ namespace AccuPay.Infrastructure.Data
 
         #region Single entity
 
-        public async Task<Overtime> GetPendingByEmployeeAndDateAsync(int employeeId, DateTime date)
-        {
-            return await _context.Overtimes
-                .Include(x => x.Employee)
-                .Where(x => x.EmployeeID == employeeId)
-                .Where(x => x.OTStartDate == date.Date)
-                .Where(x => x.Status == Overtime.StatusPending)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<Overtime> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Overtimes

@@ -4,7 +4,6 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Leaves.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -55,10 +54,10 @@ namespace AccuPay.Web.Controllers.SelfService
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<ActionResult<List<LeaveDto>>> Update([FromBody] SelfServiceCreateLeaveDto dto)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<LeaveDto>>> Update(int id, [FromBody] SelfServiceCreateLeaveDto dto)
         {
-            var leaves = await _leaveService.UpdateSelfService(dto);
+            var leaves = await _leaveService.UpdateSelfService(id, dto);
 
             if (leaves == null)
                 return NotFound();
@@ -66,10 +65,10 @@ namespace AccuPay.Web.Controllers.SelfService
                 return leaves;
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete([FromQuery] string employeeNumber, [FromQuery] DateTime date)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var deleted = await _leaveService.DeleteSelfService(employeeNumber, date);
+            var deleted = await _leaveService.DeleteSelfService(id);
 
             if (!deleted) return NotFound();
 

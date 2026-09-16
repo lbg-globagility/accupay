@@ -2,7 +2,6 @@ using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers.SelfService
@@ -42,10 +41,10 @@ namespace AccuPay.Web.Controllers.SelfService
             return overtime;
         }
 
-        [HttpPut]
-        public async Task<ActionResult<OvertimeDto>> Update([FromBody] SelfServiceUpdateOvertimeDto dto)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<OvertimeDto>> Update(int id, [FromBody] SelfServiceUpdateOvertimeDto dto)
         {
-            var overtime = await _overtimeService.UpdateSelfService(dto);
+            var overtime = await _overtimeService.UpdateSelfService(id, dto);
 
             if (overtime == null)
                 return NotFound();
@@ -53,10 +52,10 @@ namespace AccuPay.Web.Controllers.SelfService
                 return overtime;
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete([FromQuery] string employeeNumber, [FromQuery] DateTime date)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var deleted = await _overtimeService.DeleteSelfService(employeeNumber, date);
+            var deleted = await _overtimeService.DeleteSelfService(id);
 
             if (!deleted) return NotFound();
 
