@@ -3,6 +3,7 @@ using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.SelfService;
 using AccuPay.Web.Leaves.Models;
 using Microsoft.VisualBasic;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
@@ -127,13 +128,17 @@ namespace AccuPay.Web.Leaves
         {
             ValidateSelfServiceDto(dto);
 
+            // Leaves already approved outside AccuPay (e.g. in Zoho People) can be created as
+            // "Approved"; otherwise the filing is "Pending" and goes through the approval flow.
+            var status = SelfServiceFilingStatus.IsApproved(dto.Status) ? Leave.StatusApproved : Leave.StatusPending;
+
             var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var leaves = new List<Leave>();
             var filingGroupDate = DateTime.Now;
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-              var leave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+              var leave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate, status);
               leaves.Add(leave);
               await _dataService.SaveAsync(leave, SelfServiceUser.Id);
             }
@@ -145,7 +150,7 @@ namespace AccuPay.Web.Leaves
                 foreach (var date in dto.DateTimes)
                 {
 
-                    var leave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate);
+                    var leave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate, status);
 
                     leaves.Add(leave);
                 }
@@ -164,7 +169,7 @@ namespace AccuPay.Web.Leaves
             }).ToList();
         }
 
-        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, int organizationId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate)
+        private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, int organizationId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate, string status)
         {
             return new Leave()
             {
@@ -176,7 +181,7 @@ namespace AccuPay.Web.Leaves
                 StartTime = startTime,
                 EndTime = endTime,
                 Reason = dto.Reason,
-                Status = Leave.StatusPending,
+                Status = status,
                 FilingGroupDate = filingGroupDate
             };
         }
@@ -217,17 +222,19 @@ namespace AccuPay.Web.Leaves
             var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
             var filingGroup = await GetFilingGroupAsync(leave);
 
+            // Only pending filings can be edited, so the replacement rows stay "Pending"
+            // (dto.Status is only used when creating).
             var leaves = new List<Leave>();
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-                var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate);
+                var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate, Leave.StatusPending);
                 leaves.Add(newLeave);
             }
             else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
                 foreach (var date in dto.DateTimes)
                 {
-                    var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate);
+                    var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate, Leave.StatusPending);
                     leaves.Add(newLeave);
                 }
             }

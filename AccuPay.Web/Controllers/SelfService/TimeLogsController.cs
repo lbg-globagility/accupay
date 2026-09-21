@@ -11,6 +11,7 @@ namespace AccuPay.Web.Controllers.SelfService
 {
     [Route("api/self-service/[controller]")]
     [ApiController]
+    [Authorize]
     public class TimeLogsController : ControllerBase
     {
         private readonly TimeLogService _service;

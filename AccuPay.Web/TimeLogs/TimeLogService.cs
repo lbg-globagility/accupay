@@ -5,7 +5,9 @@ using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
+using AccuPay.Utilities.Extensions;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.SelfService;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -18,6 +20,15 @@ namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogService
     {
+        // Entry types that ApplyFilingToTimeLogAsync knows how to apply to a time log.
+        private static readonly string[] ApprovableEntryTypes =
+        {
+            EmployeeTimelogFiling.CheckInType,
+            EmployeeTimelogFiling.CheckOutType,
+            EmployeeTimelogFiling.LunchOutType,
+            EmployeeTimelogFiling.LunchInType
+        };
+
         private readonly ITimeLogDataService _dataService;
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
@@ -371,26 +382,78 @@ namespace AccuPay.Web.TimeLogs
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
 
+            // Filings already approved outside AccuPay (e.g. in Zoho People) can be created as
+            // "Approved", which applies the time to the employee's time log right away; otherwise
+            // the filing is "Pending" and goes through the approval flow.
+            var isApproved = SelfServiceFilingStatus.IsApproved(dto.Status);
+
+            // A pending filing may carry any entry type text, but an approved one is applied now,
+            // so it has to be one that ApplyFilingToTimeLogAsync understands.
+            var entryType = isApproved ? GetApprovableEntryType(dto.EntryType) : dto.EntryType;
+
             var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
 
             var filing = new EmployeeTimelogFiling
             {
                 EmployeeID = employeeId,
                 OrganizationID = organizationId,
-                EntryType = dto.EntryType,
+                EntryType = entryType,
                 LogDate = dto.LogDate,
                 Time = dto.Time.TimeOfDay,
                 Reason = dto.Reason,
-                Status = EmployeeTimelogFiling.StatusPending
+                Status = isApproved ? EmployeeTimelogFiling.StatusApproved : EmployeeTimelogFiling.StatusPending
             };
 
             // Set audit created by
             filing.CreatedBy = SelfServiceUser.Id;
 
+            if (isApproved)
+            {
+                await EnsureNoDuplicateApprovedFilingAsync(filing);
+
+                // Update the time log before saving the filing, so a failed update does not leave
+                // behind an approved filing that would make a retry look like a duplicate.
+                await ApplyFilingToTimeLogAsync(filing, SelfServiceUser.Id);
+            }
+
             await _repository.CreateFilingAsync(filing);
 
             return filing;
         }
+
+        private static string GetApprovableEntryType(string entryType)
+        {
+            var match = ApprovableEntryTypes.FirstOrDefault(x =>
+                string.Equals(x, entryType?.Trim(), StringComparison.OrdinalIgnoreCase));
+
+            if (match == null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException(
+                    $"Entry type '{entryType}' is not valid for an approved filing. Allowed values are {string.Join(", ", ApprovableEntryTypes)}.");
+
+            return match;
+        }
+
+        // The same approved filing synced twice (e.g. an integration retrying a request) should not
+        // be recorded twice. Reject an exact duplicate: same employee, date, entry type and time.
+        private async Task EnsureNoDuplicateApprovedFilingAsync(EmployeeTimelogFiling filing)
+        {
+            var date = filing.LogDate.Date;
+            var time = filing.Time.StripSeconds();
+
+            var filings = await _repository.GetLatestFilingByEmployeeAndDatePeriodAsync(
+                filing.EmployeeID.Value,
+                new TimePeriod(date, date));
+
+            var isDuplicate = filings.Any(x =>
+                x.Status == EmployeeTimelogFiling.StatusApproved &&
+                string.Equals(x.EntryType, filing.EntryType, StringComparison.OrdinalIgnoreCase) &&
+                x.Time.StripSeconds() == time);
+
+            if (isDuplicate)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException(
+                    $"Employee already has an approved {filing.EntryType} filing for {date.ToShortDateString()} at {time.ToString(@"hh\:mm")}.");
+        }
+
         public async Task<TimeLogDto> ApproveFiling(int filingId, string decidedBy = null)
         {
             var filing = await _repository.GetFilingByIdAsync(filingId);
@@ -404,6 +467,23 @@ namespace AccuPay.Web.TimeLogs
             if (filing.Status != EmployeeTimelogFiling.StatusPending)
                 throw new Exception("Only pending filings can be approved.");
 
+            var affectedTimeLog = await ApplyFilingToTimeLogAsync(filing, changedByUserId: null);
+
+            // Mark filing approved and save
+            filing.Status = EmployeeTimelogFiling.StatusApproved;
+            filing.DecidedBy = decidedBy;
+            filing.LastUpdBy = GetCurrentUserIdOrNull();
+            await _repository.UpdateFilingAsync(filing);
+
+            // return DTO of affected TimeLog
+            return ConvertToDto(affectedTimeLog);
+        }
+
+        // Writes the filing's time into the employee's time log for that date, creating the time log
+        // if there is none yet, and returns the affected time log. Entry types other than CheckIn,
+        // CheckOut, LunchOut and LunchIn leave the time log unchanged.
+        private async Task<TimeLog> ApplyFilingToTimeLogAsync(EmployeeTimelogFiling filing, int? changedByUserId)
+        {
             // Normalize date
             var date = filing.LogDate.Date;
 
@@ -432,7 +512,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             TimeInFull = timeFull,
                             TimeStampIn = timeFull,
-                            CreatedBy = null
+                            CreatedBy = changedByUserId
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -441,7 +521,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.TimeInFull = timeFull;
                         existing.TimeStampIn = timeFull;
-                        existing.LastUpdBy = null;
+                        existing.LastUpdBy = changedByUserId;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -457,7 +537,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             TimeOutFull = timeFull,
                             TimeStampOut = timeFull,
-                            CreatedBy = null
+                            CreatedBy = changedByUserId
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -466,7 +546,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.TimeOutFull = timeFull;
                         existing.TimeStampOut = timeFull;
-                        existing.LastUpdBy = null;
+                        existing.LastUpdBy = changedByUserId;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -481,7 +561,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             LunchOutFull = timeFull,
                             TimeStampLunchOut = timeFull,
-                            CreatedBy = null
+                            CreatedBy = changedByUserId
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -490,7 +570,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.LunchOutFull = timeFull;
                         existing.TimeStampLunchOut = timeFull;
-                        existing.LastUpdBy = null;
+                        existing.LastUpdBy = changedByUserId;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -506,7 +586,7 @@ namespace AccuPay.Web.TimeLogs
                             LogDate = date,
                             LunchInFull = timeFull,
                             TimeStampLunchIn = timeFull,
-                            CreatedBy = null
+                            CreatedBy = changedByUserId
                         };
 
                         await _repository.SaveAsync(affectedTimeLog);
@@ -515,7 +595,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existing.LunchInFull = timeFull;
                         existing.TimeStampLunchIn = timeFull;
-                        existing.LastUpdBy = null;
+                        existing.LastUpdBy = changedByUserId;
 
                         await _repository.UpdateAsync(existing);
                     }
@@ -523,14 +603,7 @@ namespace AccuPay.Web.TimeLogs
 
             }
 
-            // Mark filing approved and save
-            filing.Status = EmployeeTimelogFiling.StatusApproved;
-            filing.DecidedBy = decidedBy;
-            filing.LastUpdBy = GetCurrentUserIdOrNull();
-            await _repository.UpdateFilingAsync(filing);
-
-            // return DTO of affected TimeLog
-            return ConvertToDto(affectedTimeLog);
+            return affectedTimeLog;
         }
         public async Task<bool> RejectFiling(int filingId, string decidedBy = null)
         {

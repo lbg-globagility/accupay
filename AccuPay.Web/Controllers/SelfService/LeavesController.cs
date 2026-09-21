@@ -3,6 +3,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Leaves.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace AccuPay.Web.Controllers.SelfService
 {
     [Route("api/self-service/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeavesController : ControllerBase
     {
         private readonly LeaveService _leaveService;

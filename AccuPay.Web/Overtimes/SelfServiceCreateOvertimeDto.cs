@@ -19,6 +19,10 @@ namespace AccuPay.Web.Overtimes
 
         public string Reason { get; set; }
 
+        /// <summary>
+        /// Optional. "Pending" (default) or "Approved". Send "Approved" for an overtime that was
+        /// already approved outside AccuPay (e.g. in Zoho People) to save it as approved.
+        /// </summary>
         public string Status { get; set; }
     }
 }

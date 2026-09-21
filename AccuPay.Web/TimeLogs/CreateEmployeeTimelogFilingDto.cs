@@ -13,5 +13,13 @@ namespace AccuPay.Web.TimeLogs
         public DateTime Time { get; set; }
 
         public string Reason { get; set; }
+
+        /// <summary>
+        /// Optional. "Pending" (default) or "Approved". Send "Approved" for a filing that was
+        /// already approved outside AccuPay (e.g. in Zoho People): the time is applied to the
+        /// employee's time log right away. An approved filing's EntryType must be CheckIn,
+        /// CheckOut, LunchOut or LunchIn.
+        /// </summary>
+        public string Status { get; set; }
     }
 }

@@ -22,6 +22,20 @@ General notes
   related date field.
 - Fields marked (required) are enforced by [Required] model validation
   and will return HTTP 400 if missing.
+- Records already approved in Zoho People: the create (POST) calls for
+  leaves, overtimes and timelog filings accept an optional "status"
+  key:
+    "Pending"  - default when the key is left out; the filing waits
+                 for approval in AccuPay, as before.
+    "Approved" - the record is saved as already approved; no approval
+                 email or approval step is needed.
+  The value is case-insensitive. Any other value (including
+  "Rejected") returns HTTP 400. PUT/DELETE only work on Pending
+  filings, so a record created as Approved cannot be edited or deleted
+  through this API afterwards.
+- Business-rule errors raised by these calls (e.g. an invalid status
+  or a duplicate approved record) return HTTP 400 with a body like
+  {"Error": "<message>"}.
 
 
 ====================================================================
@@ -100,6 +114,10 @@ Request body (SelfServiceCreateLeaveDto) for POST and PUT:
   startTime        datetime        (used when leaveTiming = "Hour")
   endTime          datetime        (used when leaveTiming = "Hour")
   reason           string
+  status           string          (optional) "Pending" (default) or
+                                     "Approved". POST only - ignored on
+                                     PUT (an edited filing stays
+                                     "Pending").
 
 Example - whole day(s), one Leave row is created per date in dateTimes:
 {
@@ -121,6 +139,16 @@ Example - partial day (hourly):
   "reason": "Doctor's appointment"
 }
 
+Example - leave already approved in Zoho People (saved as Approved):
+{
+  "employeeNumber": "EMP-0001",
+  "leaveType": "Vacation Leave",
+  "leaveTiming": "Day",
+  "dateTimes": ["2026-09-10", "2026-09-11"],
+  "reason": "Family trip",
+  "status": "Approved"
+}
+
 Response: list of LeaveDto (one per date created/updated).
 
 Example - Delete:
@@ -130,6 +158,11 @@ Notes:
 - Update/Delete only work while the filing's Status is "Pending" and
   it has not already been emailed; if no matching pending filing is
   found for that employeeNumber + date, the request returns 404.
+- With "status": "Approved", every date in the request is saved as
+  Approved. The usual leave balance and closed pay period checks still
+  apply. A date that already has a leave for the employee (in any
+  status) is rejected with HTTP 400, so re-sending the same approved
+  leave does not create a duplicate.
 
 
 ====================================================================
@@ -151,7 +184,8 @@ Request body for POST (SelfServiceCreateOvertimeDto):
   startTime        datetime  (required)
   endTime          datetime  (required)
   reason           string
-  status           string    (ignored on create; new filings are always "Pending")
+  status           string    (optional) "Pending" (default) or
+                             "Approved"
 
 Request body for PUT (SelfServiceUpdateOvertimeDto) - same as above
 minus "status":
@@ -170,13 +204,32 @@ Example (POST):
   "reason": "Month-end closing"
 }
 
+Example (POST) - overtime already approved in Zoho People (saved as
+Approved):
+{
+  "employeeNumber": "EMP-0001",
+  "startDate": "2026-09-10",
+  "startTime": "2026-09-10T18:00:00",
+  "endTime": "2026-09-10T21:00:00",
+  "reason": "Month-end closing",
+  "status": "Approved"
+}
+
 Response: OvertimeDto.
 
 Example - Delete:
 DELETE /api/self-service/overtimes?employeeNumber=EMP-0001&date=2026-09-10
 
-Note: if no matching pending filing is found for that employeeNumber +
-date, PUT/DELETE return 404.
+Notes:
+- If no matching pending filing is found for that employeeNumber +
+  date, PUT/DELETE return 404.
+- With "status": "Approved", the overtime is saved as Approved. If the
+  employee already has an Approved overtime on the same date with the
+  same start and end time (to the minute), the request is rejected
+  with HTTP 400, so re-sending the same approved overtime is not paid
+  twice. A different time range on the same date is still accepted.
+- A new overtime (Pending or Approved) is rejected with HTTP 400 while
+  the employee has a Pending overtime filing on the same date.
 
 
 ====================================================================
@@ -288,31 +341,47 @@ PUT    /api/self-service/timelogs/filings     (edit a pending filing)
 DELETE /api/self-service/timelogs/filings     (delete a pending filing)
 
 Used to file a manual correction/request (e.g. forgot to time in/out)
-that requires approval, as opposed to a live Check In/Out.
+that requires approval, as opposed to a live Check In/Out. A
+correction that was already approved in Zoho People can be sent with
+"status": "Approved" to update the employee's time log right away.
 
 There is no {id} in the URL for PUT/DELETE. The target filing is
 looked up by employeeNumber + logDate + entryType instead (must match
 a filing that is still Status = "Pending" - only one per employee per
 day per entryType, since an employee could have separate pending
-filings for e.g. "Time In" and "Time Out" on the same date).
+filings for e.g. "CheckIn" and "CheckOut" on the same date).
 
 Request body for POST (CreateEmployeeTimelogFilingDto):
   employeeNumber   string
-  entryType        string    (free text, e.g. "Time In" / "Time Out")
+  entryType        string    "CheckIn" | "CheckOut" | "LunchOut" |
+                             "LunchIn" (see notes below)
   logDate          date
   time             datetime
   reason           string
+  status           string    (optional) "Pending" (default) or
+                             "Approved"
 
 Example:
 {
   "employeeNumber": "EMP-0001",
-  "entryType": "Time In",
+  "entryType": "CheckIn",
   "logDate": "2026-09-04",
   "time": "2026-09-04T08:05:00",
   "reason": "Forgot to time in due to system downtime"
 }
 
-Response: { "id": <filingId>, "status": "Pending" }
+Example - correction already approved in Zoho People (applied to the
+time log right away):
+{
+  "employeeNumber": "EMP-0001",
+  "entryType": "CheckIn",
+  "logDate": "2026-09-04",
+  "time": "2026-09-04T08:05:00",
+  "reason": "Forgot to time in due to system downtime",
+  "status": "Approved"
+}
+
+Response: { "id": <filingId>, "status": "Pending" | "Approved" }
 
 Request body for PUT (UpdateEmployeeTimelogFilingDto) - employeeNumber,
 logDate and entryType together identify which existing filing to
@@ -328,14 +397,14 @@ Example:
 PUT /api/self-service/timelogs/filings
 {
   "employeeNumber": "EMP-0001",
-  "entryType": "Time In",
+  "entryType": "CheckIn",
   "logDate": "2026-09-04",
   "time": "2026-09-04T08:00:00",
   "reason": "Corrected time"
 }
 
 Example - Delete:
-DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04&entryType=Time%20In
+DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04&entryType=CheckIn
 
 Notes:
 - Only filings with Status = "Pending" that have not already been
@@ -343,3 +412,16 @@ Notes:
   an error.
 - If no matching pending filing is found for that employeeNumber +
   logDate + entryType, PUT/DELETE return 404.
+- entryType decides which part of the day's time log the filing
+  updates once approved: CheckIn = time in, CheckOut = time out,
+  LunchOut = lunch out, LunchIn = lunch in. A Pending filing still
+  accepts other text, but approving it later will not change the time
+  log.
+- With "status": "Approved", the time is written to the employee's
+  time log for logDate immediately (the time log is created if the
+  employee has none for that date yet) and the filing is saved as
+  Approved. entryType must then be one of the four values above
+  (case-insensitive), otherwise HTTP 400. If the employee already has
+  an Approved filing with the same logDate, entryType and time (to the
+  minute), the request is rejected with HTTP 400, so re-sending the
+  same approved correction is not recorded twice.

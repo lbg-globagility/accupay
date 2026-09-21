@@ -25,5 +25,12 @@ namespace AccuPay.Web.Leaves
 
         public string LeaveTiming { get; set; }
         public string Reason { get; set; }
+
+        /// <summary>
+        /// Optional. "Pending" (default) or "Approved". Send "Approved" for a leave that was
+        /// already approved outside AccuPay (e.g. in Zoho People) to save it as approved.
+        /// Only used when creating (POST); an edit (PUT) always keeps the filing "Pending".
+        /// </summary>
+        public string Status { get; set; }
     }
 }

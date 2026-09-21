@@ -1,14 +1,20 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Enums;
+using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Overtimes;
+using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
+using AccuPay.Utilities.Extensions;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.SelfService;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Overtimes
@@ -77,7 +83,21 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(SelfServiceCreateOvertimeDto dto)
         {
+            // Overtimes already approved outside AccuPay (e.g. in Zoho People) can be created as
+            // "Approved"; otherwise the filing is "Pending" and goes through the approval flow.
+            var isApproved = SelfServiceFilingStatus.IsApproved(dto.Status);
+
             var (employeeId, organizationId) = await ResolveEmployeeAsync(dto.EmployeeNumber);
+
+            if (isApproved)
+            {
+                await EnsureNoDuplicateApprovedOvertimeAsync(
+                    organizationId,
+                    employeeId,
+                    dto.StartDate.Date,
+                    dto.StartTime.TimeOfDay,
+                    dto.EndTime.TimeOfDay);
+            }
 
             var overtime = Overtime.NewOvertime(
                 organizationId: organizationId,
@@ -86,11 +106,37 @@ namespace AccuPay.Web.Overtimes
                 startTime: dto.StartTime.TimeOfDay,
                 endTime: dto.EndTime.TimeOfDay,
                 reason: dto.Reason,
-                status: Overtime.StatusPending);
+                status: isApproved ? Overtime.StatusApproved : Overtime.StatusPending);
 
             await _dataService.SaveAsync(overtime, SelfServiceUser.Id);
 
             return ConvertToDto(overtime);
+        }
+
+        // Overtime hours are summed per day when time entries are generated, so the same approved
+        // overtime synced twice (e.g. an integration retrying a request) would be paid twice.
+        // Reject an exact duplicate: same employee, date, start time and end time.
+        private async Task EnsureNoDuplicateApprovedOvertimeAsync(
+            int organizationId,
+            int employeeId,
+            DateTime date,
+            TimeSpan startTime,
+            TimeSpan endTime)
+        {
+            // Saved overtimes have their seconds stripped (OvertimeDataService.SanitizeEntity),
+            // so compare at the same precision.
+            var start = startTime.StripSeconds();
+            var end = endTime.StripSeconds();
+
+            var approvedOvertimes = await _repository.GetByEmployeeAndDatePeriod(
+                organizationId,
+                employeeId,
+                new TimePeriod(date, date),
+                OvertimeStatus.Approved);
+
+            if (approvedOvertimes.Any(x => x.OTStartTime == start && x.OTEndTime == end))
+                throw new BusinessLogicException(
+                    $"Employee already has an approved overtime for {date.ToShortDateString()} from {start.ToString(@"hh\:mm")} to {end.ToString(@"hh\:mm")}.");
         }
 
         public async Task<OvertimeDto> Update(int id, UpdateOvertimeDto dto)
