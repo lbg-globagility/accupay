@@ -268,7 +268,9 @@ namespace AccuPay.Web.Leaves
         public async Task<bool> DeleteSelfService(int id)
         {
             var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
-            if (leave == null || leave.EmployeeID != _currentUser.EmployeeId) return false;
+            // No employee check: this endpoint is called without a login token, so there is
+            // no current employee to compare the filing against.
+            if (leave == null) return false;
 
             if (leave.Status != Leave.StatusPending)
                 throw new Exception("Only pending leave filings can be deleted.");

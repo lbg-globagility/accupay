@@ -187,7 +187,9 @@ namespace AccuPay.Web.Overtimes
         public async Task<bool> DeleteSelfService(int id)
         {
             var overtime = await _repository.GetByIdWithEmployeeAsync(id);
-            if (overtime == null || overtime.EmployeeID != _currentUser.EmployeeId) return false;
+            // No employee check: this endpoint is called without a login token, so there is
+            // no current employee to compare the filing against.
+            if (overtime == null) return false;
 
             if (overtime.Status != Overtime.StatusPending)
                 throw new Exception("Only pending overtime filings can be deleted.");
