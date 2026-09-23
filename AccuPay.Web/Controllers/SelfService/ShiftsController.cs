@@ -47,5 +47,11 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             return await _shiftService.CreateRange(dto);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<List<EmployeeDutyScheduleDto>>> Update([FromBody] SelfServiceCreateShiftDto dto)
+        {
+            return await _shiftService.UpdateRange(dto);
+        }
     }
 }

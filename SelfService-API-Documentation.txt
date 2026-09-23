@@ -233,16 +233,22 @@ Notes:
 
 
 ====================================================================
-4. SHIFT - Create a schedule across a date range
+4. SHIFT - Create / Update a schedule across a date range
 ====================================================================
 POST /api/self-service/shifts
+PUT  /api/self-service/shifts     (update the schedule for a date range)
 
-Creates one Shift row per calendar day from dateFrom to dateTo
+POST creates one Shift row per calendar day from dateFrom to dateTo
 (inclusive), all using the same start/end/break settings. Only the
 time-of-day portion of startTime/endTime/breakStartTime is used; the
 actual date comes from each day in the range.
 
-Request body (SelfServiceCreateShiftDto):
+PUT takes the same request body and sets the employee's schedule for
+every day from dateFrom to dateTo: a day that already has a shift is
+updated, and a day without one gets a new shift. There is no {id} in
+the URL; the shifts are found by employeeNumber + date.
+
+Request body (SelfServiceCreateShiftDto), for POST and PUT:
   employeeNumber      string    (required)
   dateFrom            date      (required)
   dateTo              date      (required, must not be before dateFrom)
@@ -266,7 +272,22 @@ Example:
   "requiresLunchInOut": true
 }
 
-Response: list of EmployeeDutyScheduleDto, one per date created.
+Example - PUT (change Sep 10-11 to 10:00-19:00):
+PUT /api/self-service/shifts
+{
+  "employeeNumber": "EMP-0001",
+  "dateFrom": "2026-09-10",
+  "dateTo": "2026-09-11",
+  "startTime": "2026-09-10T10:00:00",
+  "endTime": "2026-09-10T19:00:00",
+  "breakStartTime": "2026-09-10T14:00:00",
+  "breakLength": 1,
+  "isRestDay": false,
+  "requiresLunchInOut": true
+}
+
+Response: list of EmployeeDutyScheduleDto, one per date in the range
+(created by POST; created or updated by PUT).
 
 
 ====================================================================
@@ -292,15 +313,13 @@ Request body (SelfServiceCreateTimeLogDto):
   endTime          datetime  (used by Check Out)
   lunchOut         datetime  (used by Lunch Out)
   lunchIn          datetime  (used by Lunch In)
-  branchId         int       (used by Check In)
 
 Example - Check In:
 POST /api/self-service/timelogs
 {
   "employeeNumber": "EMP-0001",
   "date": "2026-09-04",
-  "startTime": "2026-09-04T08:00:00",
-  "branchId": 1
+  "startTime": "2026-09-04T08:00:00"
 }
 
 Example - Lunch Out:
@@ -334,39 +353,49 @@ date (employee already has a TimeIn recorded for that date).
 
 
 ====================================================================
-6. TIMELOG FILING - Create / Update / Delete
+6. TIMELOG FILING - Create / Update / Delete / Approve
 ====================================================================
 POST   /api/self-service/timelogs/filings
-PUT    /api/self-service/timelogs/filings     (edit a pending filing)
-DELETE /api/self-service/timelogs/filings     (delete a pending filing)
+PUT    /api/self-service/timelogs/filings           (edit a pending filing)
+DELETE /api/self-service/timelogs/filings           (delete a pending filing)
+POST   /api/self-service/timelogs/filings/approve   (approve a pending filing)
 
 Used to file a manual correction/request (e.g. forgot to time in/out)
-that requires approval, as opposed to a live Check In/Out. A
-correction that was already approved in Zoho People can be sent with
-"status": "Approved" to update the employee's time log right away.
+that requires approval, as opposed to a live Check In/Out. There is one
+filing per employee per day, holding any of that day's four times:
+check in, lunch out, lunch in and check out. Approving the filing
+writes its times to the employee's time log for that day (the time log
+is created if the employee has none for that date yet); times the
+filing doesn't have are left as they are.
 
-There is no {id} in the URL for PUT/DELETE. The target filing is
-looked up by employeeNumber + logDate + entryType instead (must match
-a filing that is still Status = "Pending" - only one per employee per
-day per entryType, since an employee could have separate pending
-filings for e.g. "CheckIn" and "CheckOut" on the same date).
+A correction that was already approved in Zoho People can be sent with
+"status": "Approved" to update the time log right away, or created as
+Pending and approved later with the approve call below.
+
+There is no {id} in the URL for PUT/DELETE/approve. The filing is
+looked up by employeeNumber + logDate (it must still be Status =
+"Pending").
 
 Request body for POST (CreateEmployeeTimelogFilingDto):
-  employeeNumber   string
-  entryType        string    "CheckIn" | "CheckOut" | "LunchOut" |
-                             "LunchIn" (see notes below)
+  employeeNumber   string    (required)
   logDate          date
-  time             datetime
+  checkIn          datetime
+  lunchOut         datetime
+  lunchIn          datetime
+  checkOut         datetime
   reason           string
   status           string    (optional) "Pending" (default) or
                              "Approved"
+At least one of checkIn, lunchOut, lunchIn and checkOut is required.
 
 Example:
 {
   "employeeNumber": "EMP-0001",
-  "entryType": "CheckIn",
   "logDate": "2026-09-04",
-  "time": "2026-09-04T08:05:00",
+  "checkIn": "2026-09-04T08:00:00",
+  "lunchOut": "2026-09-04T12:00:00",
+  "lunchIn": "2026-09-04T13:00:00",
+  "checkOut": "2026-09-04T17:00:00",
   "reason": "Forgot to time in due to system downtime"
 }
 
@@ -374,54 +403,64 @@ Example - correction already approved in Zoho People (applied to the
 time log right away):
 {
   "employeeNumber": "EMP-0001",
-  "entryType": "CheckIn",
   "logDate": "2026-09-04",
-  "time": "2026-09-04T08:05:00",
-  "reason": "Forgot to time in due to system downtime",
+  "checkIn": "2026-09-04T08:00:00",
+  "checkOut": "2026-09-04T17:00:00",
+  "reason": "Regularization",
   "status": "Approved"
 }
 
 Response: { "id": <filingId>, "status": "Pending" | "Approved" }
 
-Request body for PUT (UpdateEmployeeTimelogFilingDto) - employeeNumber,
-logDate and entryType together identify which existing filing to
-update, so entryType cannot itself be changed by this call:
-  employeeNumber   string
-  entryType        string    (identifies the filing; not changed)
-  logDate          date      (identifies the filing)
-  time             datetime
+Request body for PUT (UpdateEmployeeTimelogFilingDto) - employeeNumber
+and logDate identify the filing to update. The four times replace the
+filing's current times, so send every time the filing should have:
+  employeeNumber   string    (required, identifies the filing)
+  logDate          date      (identifies the filing; not changed)
+  checkIn          datetime
+  lunchOut         datetime
+  lunchIn          datetime
+  checkOut         datetime
   reason           string
   decidedBy        string
+At least one of checkIn, lunchOut, lunchIn and checkOut is required.
 
 Example:
 PUT /api/self-service/timelogs/filings
 {
   "employeeNumber": "EMP-0001",
-  "entryType": "CheckIn",
   "logDate": "2026-09-04",
-  "time": "2026-09-04T08:00:00",
+  "checkIn": "2026-09-04T08:00:00",
+  "checkOut": "2026-09-04T17:30:00",
   "reason": "Corrected time"
 }
 
 Example - Delete:
-DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04&entryType=CheckIn
+DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04
+
+Request body for approve (ApproveEmployeeTimelogFilingDto):
+  employeeNumber   string    (required)
+  logDate          date
+  decidedBy        string    (optional, who approved it)
+
+Example - Approve:
+POST /api/self-service/timelogs/filings/approve
+{
+  "employeeNumber": "EMP-0001",
+  "logDate": "2026-09-04",
+  "decidedBy": "manager@example.com"
+}
+
+Response: { "id": <filingId>, "status": "Approved" }
 
 Notes:
+- An employee can have only one filing per day. A new filing for a
+  date that already has a Pending or Approved filing is rejected with
+  HTTP 400 (edit the Pending one with PUT instead); a Rejected filing
+  does not count. This also means re-sending the same filing does not
+  record it twice.
 - Only filings with Status = "Pending" that have not already been
   emailed for approval can be edited/deleted; otherwise the API throws
   an error.
-- If no matching pending filing is found for that employeeNumber +
-  logDate + entryType, PUT/DELETE return 404.
-- entryType decides which part of the day's time log the filing
-  updates once approved: CheckIn = time in, CheckOut = time out,
-  LunchOut = lunch out, LunchIn = lunch in. A Pending filing still
-  accepts other text, but approving it later will not change the time
-  log.
-- With "status": "Approved", the time is written to the employee's
-  time log for logDate immediately (the time log is created if the
-  employee has none for that date yet) and the filing is saved as
-  Approved. entryType must then be one of the four values above
-  (case-insensitive), otherwise HTTP 400. If the employee already has
-  an Approved filing with the same logDate, entryType and time (to the
-  minute), the request is rejected with HTTP 400, so re-sending the
-  same approved correction is not recorded twice.
+- If no pending filing is found for that employeeNumber + logDate,
+  PUT/DELETE/approve return 404.

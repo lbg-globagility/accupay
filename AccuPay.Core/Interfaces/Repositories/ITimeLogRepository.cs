@@ -21,7 +21,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<EmployeeTimelogFiling> GetFilingByIdAsync(int filingId);
 
-        Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeDateAndEntryTypeAsync(int employeeId, DateTime date, string entryType);
+        Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeAndDateAsync(int employeeId, DateTime date);
 
         Task UpdateFilingAsync(EmployeeTimelogFiling filing);
 

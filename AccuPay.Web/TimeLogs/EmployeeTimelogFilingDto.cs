@@ -7,9 +7,16 @@ namespace AccuPay.Web.TimeLogs
     public class EmployeeTimelogFilingDto
     {
         public int Id { get; set; }
-        public string EntryType { get; set; }
 
         public DateTime LogDate { get; set; }
+
+        public DateTime? CheckIn { get; set; }
+
+        public DateTime? LunchOut { get; set; }
+
+        public DateTime? LunchIn { get; set; }
+
+        public DateTime? CheckOut { get; set; }
 
         public virtual EmployeeDto Employee { get; set; }
 
@@ -20,8 +27,6 @@ namespace AccuPay.Web.TimeLogs
         public string Status { get; set; }
 
         public string DecidedBy { get; set; }
-
-        public string TimeStamp { get; set; }
 
         public bool IsNotifyEmail { get; set; }
 

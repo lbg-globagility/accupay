@@ -129,13 +129,12 @@ namespace AccuPay.Infrastructure.Data
                 .FirstOrDefaultAsync(f => f.RowID == filingId);
         }
 
-        public async Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeDateAndEntryTypeAsync(int employeeId, DateTime date, string entryType)
+        public async Task<EmployeeTimelogFiling> GetPendingFilingByEmployeeAndDateAsync(int employeeId, DateTime date)
         {
             return await _context.Set<EmployeeTimelogFiling>()
                 .Include(f => f.Employee)
                 .Where(f => f.EmployeeID == employeeId)
                 .Where(f => f.LogDate == date.Date)
-                .Where(f => f.EntryType == entryType)
                 .Where(f => f.Status == EmployeeTimelogFiling.StatusPending)
                 .FirstOrDefaultAsync();
         }
@@ -180,7 +179,6 @@ namespace AccuPay.Infrastructure.Data
                 var searchTerm = $"%{options.SearchTerm}%";
 
                 query = query.Where(x =>
-                    EF.Functions.Like(x.EntryType, searchTerm) ||
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
                     EF.Functions.Like(x.Employee.LastName, searchTerm));

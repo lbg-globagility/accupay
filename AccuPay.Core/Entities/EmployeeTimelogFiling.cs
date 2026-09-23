@@ -12,20 +12,16 @@ namespace AccuPay.Core.Entities
 
         public const string StatusRejected = "Rejected";
 
-        public const string CheckInType = "CheckIn";
-
-        public const string CheckOutType = "CheckOut";
-
-        public const string LunchOutType = "LunchOut";
-
-        public const string LunchInType = "LunchIn";
-        public string EntryType { get; set; }
-
         [Column("LogDate")]
         public DateTime LogDate { get; set; }
 
-        [Column("Time")]
-        public TimeSpan Time { get; set; }
+        public TimeSpan? TimeIn { get; set; }
+
+        public TimeSpan? LunchOut { get; set; }
+
+        public TimeSpan? LunchIn { get; set; }
+
+        public TimeSpan? TimeOut { get; set; }
 
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
@@ -40,7 +36,23 @@ namespace AccuPay.Core.Entities
 
         public bool IsNotifyEmail { get; set; }
         public DateTime? NotifyEmailSentAt { get; set; }
-        public string TimeStamp => Time.ToString(@"hh\:mm");
+
+        [NotMapped]
+        public bool HasAnyTime => TimeIn.HasValue || LunchOut.HasValue || LunchIn.HasValue || TimeOut.HasValue;
+
+        [NotMapped]
+        public DateTime? TimeInFull => ToFullDate(TimeIn);
+
+        [NotMapped]
+        public DateTime? LunchOutFull => ToFullDate(LunchOut);
+
+        [NotMapped]
+        public DateTime? LunchInFull => ToFullDate(LunchIn);
+
+        [NotMapped]
+        public DateTime? TimeOutFull => ToFullDate(TimeOut);
+
+        private DateTime? ToFullDate(TimeSpan? time) => time == null ? (DateTime?)null : LogDate.Date.Add(time.Value);
 
     }
 }

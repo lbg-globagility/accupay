@@ -20,7 +20,12 @@ namespace AccuPay.Web.AutoMapperProfile
             CreateMap<EmployeeApprover, ApproverDto.EmployeeApproversDto>();
             CreateMap<Employee, ApproverDto.EmployeeDto>();
 
-            CreateMap<EmployeeTimelogFiling, EmployeeTimelogFilingDto>().ForMember(d=>d.Id,o=>o.MapFrom(s=>s.RowID));
+            CreateMap<EmployeeTimelogFiling, EmployeeTimelogFilingDto>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.RowID))
+                .ForMember(d => d.CheckIn, o => o.MapFrom(s => s.TimeInFull))
+                .ForMember(d => d.LunchOut, o => o.MapFrom(s => s.LunchOutFull))
+                .ForMember(d => d.LunchIn, o => o.MapFrom(s => s.LunchInFull))
+                .ForMember(d => d.CheckOut, o => o.MapFrom(s => s.TimeOutFull));
             CreateMap<Employee, EmployeeTimelogFilingDto.EmployeeDto>();
 
             CreateMap<EmailTemplate, EmailTemplateDto>();

@@ -59,6 +59,14 @@ namespace AccuPay.Web.Controllers.SelfService
             var filing = await _service.CreateFiling(dto);
             return Ok(new { Id = filing.RowID, Status = filing.Status });
         }
+        [HttpPost("filings/approve")]
+        public async Task<ActionResult> ApproveFiling([FromBody] ApproveEmployeeTimelogFilingDto dto)
+        {
+            var filing = await _service.ApproveFilingSelfService(dto);
+            if (filing == null) return NotFound();
+
+            return Ok(new { Id = filing.RowID, Status = filing.Status });
+        }
         [HttpPost("filings/{id}/send-approval-email")]
         public async Task<ActionResult> SendFilingForApprovalEmail(int id)
         {
@@ -72,13 +80,15 @@ namespace AccuPay.Web.Controllers.SelfService
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(dto.EmployeeNumber);
             if (employee == null) return NotFound();
 
-            var filing = await _timeLogRepository.GetPendingFilingByEmployeeDateAndEntryTypeAsync(employee.RowID.Value, dto.LogDate, dto.EntryType);
+            var filing = await _timeLogRepository.GetPendingFilingByEmployeeAndDateAsync(employee.RowID.Value, dto.LogDate);
             if (filing == null) return NotFound();
             if (filing.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be edited.");
             // Update allowed fields
-            filing.LogDate = dto.LogDate;
-            filing.Time = dto.Time.TimeOfDay;
+            filing.TimeIn = dto.CheckIn?.TimeOfDay;
+            filing.LunchOut = dto.LunchOut?.TimeOfDay;
+            filing.LunchIn = dto.LunchIn?.TimeOfDay;
+            filing.TimeOut = dto.CheckOut?.TimeOfDay;
             filing.Reason = dto.Reason;
             filing.DecidedBy = dto.DecidedBy;
             filing.LastUpdBy = SelfServiceUser.Id;
@@ -88,12 +98,12 @@ namespace AccuPay.Web.Controllers.SelfService
             return Ok();
         }
         [HttpDelete("filings")]
-        public async Task<ActionResult> DeleteFiling([FromQuery] string employeeNumber, [FromQuery] DateTime date, [FromQuery] string entryType)
+        public async Task<ActionResult> DeleteFiling([FromQuery] string employeeNumber, [FromQuery] DateTime date)
         {
             var employee = await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber);
             if (employee == null) return NotFound();
 
-            var filing = await _timeLogRepository.GetPendingFilingByEmployeeDateAndEntryTypeAsync(employee.RowID.Value, date, entryType);
+            var filing = await _timeLogRepository.GetPendingFilingByEmployeeAndDateAsync(employee.RowID.Value, date);
             if (filing == null) return NotFound();
             if (filing.IsNotifyEmail)
                 throw new Exception("Emailed filings can no longer be deleted.");

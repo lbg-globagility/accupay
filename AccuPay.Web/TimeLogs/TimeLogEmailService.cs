@@ -6,6 +6,7 @@ using AccuPay.Web.Core.Emails;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -145,10 +146,22 @@ namespace AccuPay.Web.TimeLogs
                 .Replace("{approver}", approverName)
                 .Replace("{employee}", employeeName)
                 .Replace("{date}", filing.LogDate.ToString("yyyy-MM-dd"))
-                .Replace("{time}", filing.TimeStamp)
+                .Replace("{time}", DescribeTimes(filing))
                 .Replace("{reason}", string.IsNullOrWhiteSpace(filing.Reason) ? "N/A" : filing.Reason)
                 .Replace("{approveButton}", approveButtonOrUrl)
                 .Replace("{rejectButton}", rejectButtonOrUrl);
+        }
+
+        private static string DescribeTimes(EmployeeTimelogFiling filing)
+        {
+            var times = new List<string>();
+
+            if (filing.TimeIn.HasValue) times.Add($"check in {filing.TimeIn.Value.ToString(@"hh\:mm")}");
+            if (filing.LunchOut.HasValue) times.Add($"lunch out {filing.LunchOut.Value.ToString(@"hh\:mm")}");
+            if (filing.LunchIn.HasValue) times.Add($"lunch in {filing.LunchIn.Value.ToString(@"hh\:mm")}");
+            if (filing.TimeOut.HasValue) times.Add($"check out {filing.TimeOut.Value.ToString(@"hh\:mm")}");
+
+            return string.Join(", ", times);
         }
     }
 }
