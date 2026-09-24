@@ -1,11 +1,23 @@
 ====================================================================
 ACCUPAY SELF-SERVICE API DOCUMENTATION
-Create / Filing endpoints
 ====================================================================
 
 Base URL   : /api/self-service
-Auth       : Authorization: Bearer <token>   (all endpoints below require [Authorize])
 Content-Type: application/json
+
+Authentication
+--------------------------------------------------------------------
+- Only the Approvers and Official Businesses controllers carry
+  [Authorize]. Their endpoints need "Authorization: Bearer <token>"
+  and return HTTP 401 without one.
+- The Employees, Leaves, Overtimes, Shifts and TimeLogs controllers
+  have no [Authorize]. Their endpoints can be called without a login
+  token. The create/update/delete calls identify the employee by
+  "employeeNumber" in the request instead of by the login.
+- Some endpoints on those controllers still read the logged-in
+  employee from the token. They are marked "(uses login)" below.
+  Without a token they fail or return no useful data, so send a
+  Bearer token when calling them.
 
 General notes
 --------------------------------------------------------------------
@@ -17,7 +29,7 @@ General notes
 - Date-only fields (Date, StartDate, DateFrom/DateTo, LogDate) accept
   either "yyyy-MM-dd" or a full ISO 8601 datetime; only the date part
   is used.
-- Date+time fields (StartTime, EndTime, Time, etc.) accept full ISO
+- Date+time fields (StartTime, EndTime, CheckIn, etc.) accept full ISO
   8601 datetimes; only the time-of-day part is used together with the
   related date field.
 - Fields marked (required) are enforced by [Required] model validation
@@ -33,9 +45,21 @@ General notes
   "Rejected") returns HTTP 400. PUT/DELETE only work on Pending
   filings, so a record created as Approved cannot be edited or deleted
   through this API afterwards.
-- Business-rule errors raised by these calls (e.g. an invalid status
-  or a duplicate approved record) return HTTP 400 with a body like
+- Business-rule errors (e.g. an invalid status, a duplicate record or
+  an exceeded leave balance) return HTTP 400 with a body like
   {"Error": "<message>"}.
+- Some checks throw a plain error instead and return HTTP 500. These
+  are editing or deleting a filing that is no longer Pending or was
+  already emailed for approval, and the "(uses login)" list endpoints
+  called without a token.
+- Paged GET endpoints accept these query parameters:
+    pageIndex  int     (0-based, default 0)
+    pageSize   int     (default 10)
+    sort       string
+    direction  string  ("asc" / "desc")
+    all        bool    (true returns every row)
+  The response is a PaginatedList: { items, totalCount, pageNumber,
+  totalPages }.
 
 
 ====================================================================
@@ -43,8 +67,7 @@ General notes
 ====================================================================
 POST /api/self-service/employees
 
-No permission check is enforced beyond being authenticated (no
-"EmployeeCreate" permission required).
+No login token or permission is required.
 
 Request body (CreateEmployeeDto):
   employeeNo          string    (required)
@@ -90,29 +113,40 @@ Example:
 
 Response: EmployeeDto of the created employee.
 
+Notes:
+- An employeeNo or emailAddress that another employee already uses
+  is rejected with HTTP 400 ("Employee number '...' is already in
+  use." / "Email address '...' is already in use.").
+
 
 ====================================================================
-2. LEAVE - File a leave
+2. LEAVE
 ====================================================================
-POST   /api/self-service/leaves
-PUT    /api/self-service/leaves     (edit a pending leave filing)
-DELETE /api/self-service/leaves     (delete a pending leave filing)
+GET    /api/self-service/leaves                     (list, uses login)
+GET    /api/self-service/leaves/{id}                (get one filing)
+POST   /api/self-service/leaves                     (file a leave)
+PUT    /api/self-service/leaves/{id}                (edit a pending filing)
+DELETE /api/self-service/leaves/{id}                (delete a pending filing)
+POST   /api/self-service/leaves/filings/{id}/send-approval-email
+GET    /api/self-service/leaves/leave-types         (uses login)
+GET    /api/self-service/leaves/leave-statuses
+GET    /api/self-service/leaves/leave-balance       (uses login)
 
-There is no {id} in the URL for PUT/DELETE. The target Leave filing is
-looked up by employeeNumber + startDate instead (must match a Leave
-row that is still Status = "Pending" - there is only ever one per
-employee per calendar day).
+A leave "filing" is the group of Leave rows created by one POST (one
+row per date). {id} is the id of any Leave row in that filing. GET,
+PUT, DELETE and send-approval-email act on the whole filing.
 
 Request body (SelfServiceCreateLeaveDto) for POST and PUT:
   employeeNumber   string          (required)
   leaveType        string          (required)
-  leaveTiming      "Day" | "Hour"  (required)
-  dateTimes        date[]          (required when leaveTiming = "Day")
-  startDate        date            (used when leaveTiming = "Hour";
-                                     on PUT this also identifies which
-                                     existing filing to edit)
-  startTime        datetime        (used when leaveTiming = "Hour")
-  endTime          datetime        (used when leaveTiming = "Hour")
+  leaveTiming      "Day" | "Hour"  (required by the server; any other
+                                     value returns HTTP 400)
+  dateTimes        date[]          (required - must be present; send
+                                     [] when leaveTiming = "Hour". For
+                                     "Day" it needs at least one date)
+  startDate        date            (used when leaveTiming = "Hour")
+  startTime        datetime        (required when leaveTiming = "Hour")
+  endTime          datetime        (required when leaveTiming = "Hour")
   reason           string
   status           string          (optional) "Pending" (default) or
                                      "Approved". POST only - ignored on
@@ -120,6 +154,7 @@ Request body (SelfServiceCreateLeaveDto) for POST and PUT:
                                      "Pending").
 
 Example - whole day(s), one Leave row is created per date in dateTimes:
+POST /api/self-service/leaves
 {
   "employeeNumber": "EMP-0001",
   "leaveType": "Vacation Leave",
@@ -129,10 +164,12 @@ Example - whole day(s), one Leave row is created per date in dateTimes:
 }
 
 Example - partial day (hourly):
+POST /api/self-service/leaves
 {
   "employeeNumber": "EMP-0001",
   "leaveType": "Sick Leave",
   "leaveTiming": "Hour",
+  "dateTimes": [],
   "startDate": "2026-09-10",
   "startTime": "2026-09-10T13:00:00",
   "endTime": "2026-09-10T17:00:00",
@@ -140,6 +177,7 @@ Example - partial day (hourly):
 }
 
 Example - leave already approved in Zoho People (saved as Approved):
+POST /api/self-service/leaves
 {
   "employeeNumber": "EMP-0001",
   "leaveType": "Vacation Leave",
@@ -149,15 +187,56 @@ Example - leave already approved in Zoho People (saved as Approved):
   "status": "Approved"
 }
 
-Response: list of LeaveDto (one per date created/updated).
+Response (POST/PUT): list of LeaveDto, one per date in the filing.
+Each LeaveDto also carries "dateTimes", the full list of dates in
+the filing.
 
-Example - Delete:
-DELETE /api/self-service/leaves?employeeNumber=EMP-0001&date=2026-09-10
+Example - Edit (replaces the whole filing with the new dates):
+PUT /api/self-service/leaves/123
+{
+  "employeeNumber": "EMP-0001",
+  "leaveType": "Vacation Leave",
+  "leaveTiming": "Day",
+  "dateTimes": ["2026-09-11", "2026-09-12"],
+  "reason": "Family trip (moved)"
+}
+
+Example - Delete (deletes every date in the filing):
+DELETE /api/self-service/leaves/123
+
+GET /api/self-service/leaves/{id}
+  Response: LeaveDto, with "dateTimes" listing every date in the
+  filing. 404 if the id does not exist.
+
+GET /api/self-service/leaves (uses login)
+  Lists the logged-in employee's leaves. Query parameters: the paged
+  parameters above, plus searchTerm, dateFrom, dateTo.
+  Response: PaginatedList of LeaveDto.
+
+POST /api/self-service/leaves/filings/{id}/send-approval-email
+  Emails the employee's approvers an approve/reject link for the
+  filing and marks the filing as emailed. Only Pending filings can be
+  emailed. The employee must have at least one approver with an email
+  address. A resend is only allowed after the previous link has
+  expired. Otherwise HTTP 400. No request body; response is 200 OK.
+
+GET /api/self-service/leaves/leave-types (uses login)
+  Response: string[] of the organization's leave type names.
+
+GET /api/self-service/leaves/leave-statuses
+  Response: string[] of leave statuses (e.g. "Pending", "Approved",
+  "Rejected").
+
+GET /api/self-service/leaves/leave-balance (uses login)
+  Response: [{ "leaveType": "...", "balance": <hours> }, ...] for the
+  logged-in employee.
 
 Notes:
-- Update/Delete only work while the filing's Status is "Pending" and
-  it has not already been emailed; if no matching pending filing is
-  found for that employeeNumber + date, the request returns 404.
+- PUT/DELETE only work while the filing's Status is "Pending" and it
+  has not been emailed for approval yet (HTTP 500 otherwise).
+- PUT returns 404 if the id does not exist or the filing does not
+  belong to the employee in employeeNumber. DELETE returns 404 if the
+  id does not exist.
 - With "status": "Approved", every date in the request is saved as
   Approved. The usual leave balance and closed pay period checks still
   apply. A date that already has a leave for the employee (in any
@@ -166,17 +245,14 @@ Notes:
 
 
 ====================================================================
-3. OVERTIME - File an overtime
+3. OVERTIME
 ====================================================================
-POST   /api/self-service/overtimes
-PUT    /api/self-service/overtimes     (edit a pending overtime filing)
-DELETE /api/self-service/overtimes     (delete a pending overtime filing)
-
-There is no {id} in the URL for PUT/DELETE. The target Overtime filing
-is looked up by employeeNumber + startDate instead (must match an
-Overtime row that is still Status = "Pending" - only one per employee
-per calendar day). On PUT, startDate identifies the existing filing
-to edit; it cannot be used to move the filing to a different date.
+GET    /api/self-service/overtimes                  (list, uses login)
+GET    /api/self-service/overtimes/{id}             (get one filing)
+POST   /api/self-service/overtimes                  (file an overtime)
+PUT    /api/self-service/overtimes/{id}             (edit a pending filing)
+DELETE /api/self-service/overtimes/{id}             (delete a pending filing)
+POST   /api/self-service/overtimes/filings/{id}/send-approval-email
 
 Request body for POST (SelfServiceCreateOvertimeDto):
   employeeNumber   string    (required)
@@ -188,7 +264,8 @@ Request body for POST (SelfServiceCreateOvertimeDto):
                              "Approved"
 
 Request body for PUT (SelfServiceUpdateOvertimeDto) - same as above
-minus "status":
+minus "status". startDate, startTime, endTime and reason replace the
+filing's current values, so PUT can move the filing to another date:
   employeeNumber   string    (required)
   startDate        date      (required)
   startTime        datetime  (required)
@@ -196,6 +273,7 @@ minus "status":
   reason           string
 
 Example (POST):
+POST /api/self-service/overtimes
 {
   "employeeNumber": "EMP-0001",
   "startDate": "2026-09-10",
@@ -215,28 +293,54 @@ Approved):
   "status": "Approved"
 }
 
-Response: OvertimeDto.
+Example (PUT):
+PUT /api/self-service/overtimes/456
+{
+  "employeeNumber": "EMP-0001",
+  "startDate": "2026-09-10",
+  "startTime": "2026-09-10T18:00:00",
+  "endTime": "2026-09-10T22:00:00",
+  "reason": "Month-end closing (extended)"
+}
 
 Example - Delete:
-DELETE /api/self-service/overtimes?employeeNumber=EMP-0001&date=2026-09-10
+DELETE /api/self-service/overtimes/456
+
+Response (POST/PUT/GET by id): OvertimeDto.
+
+GET /api/self-service/overtimes (uses login)
+  Lists the logged-in employee's overtimes. Query parameters: the
+  paged parameters above, plus searchTerm, dateFrom, dateTo.
+  Response: PaginatedList of OvertimeDto.
+
+POST /api/self-service/overtimes/filings/{id}/send-approval-email
+  Same behavior as the leave version: emails the employee's approvers
+  an approve/reject link. Pending filings only. Response is 200 OK.
 
 Notes:
-- If no matching pending filing is found for that employeeNumber +
-  date, PUT/DELETE return 404.
+- PUT/DELETE only work while the filing's Status is "Pending" and it
+  has not been emailed for approval yet (HTTP 500 otherwise).
+- PUT returns 404 if the id does not exist or the filing does not
+  belong to the employee in employeeNumber. DELETE returns 404 if the
+  id does not exist.
 - With "status": "Approved", the overtime is saved as Approved. If the
   employee already has an Approved overtime on the same date with the
   same start and end time (to the minute), the request is rejected
   with HTTP 400, so re-sending the same approved overtime is not paid
   twice. A different time range on the same date is still accepted.
-- A new overtime (Pending or Approved) is rejected with HTTP 400 while
-  the employee has a Pending overtime filing on the same date.
+- An overtime (new or edited) is rejected with HTTP 400 while the
+  employee has another Pending overtime filing on the same date.
+- startTime and endTime cannot be equal (HTTP 400).
+
 
 
 ====================================================================
-4. SHIFT - Create / Update a schedule across a date range
+4. SHIFT
 ====================================================================
-POST /api/self-service/shifts
-PUT  /api/self-service/shifts     (update the schedule for a date range)
+GET  /api/self-service/shifts          (list, uses login)
+GET  /api/self-service/shifts/today    (today's shift, uses login)
+POST /api/self-service/shifts          (create a schedule for a date range)
+PUT  /api/self-service/shifts          (update the schedule for a date range)
 
 POST creates one Shift row per calendar day from dateFrom to dateTo
 (inclusive), all using the same start/end/break settings. Only the
@@ -254,12 +358,13 @@ Request body (SelfServiceCreateShiftDto), for POST and PUT:
   dateTo              date      (required, must not be before dateFrom)
   startTime           datetime  (required)
   endTime             datetime  (required)
-  breakStartTime       datetime
-  breakLength          decimal   (hours)
-  isRestDay            bool
-  requiresLunchInOut   bool
+  breakStartTime      datetime
+  breakLength         decimal   (hours)
+  isRestDay           bool
+  requiresLunchInOut  bool
 
-Example:
+Example - POST:
+POST /api/self-service/shifts
 {
   "employeeNumber": "EMP-0001",
   "dateFrom": "2026-09-08",
@@ -286,14 +391,23 @@ PUT /api/self-service/shifts
   "requiresLunchInOut": true
 }
 
-Response: list of EmployeeDutyScheduleDto, one per date in the range
-(created by POST; created or updated by PUT).
+Response (POST/PUT): list of EmployeeDutyScheduleDto, one per date in
+the range (created by POST; created or updated by PUT).
+
+GET /api/self-service/shifts (uses login)
+  Lists the logged-in employee's shifts. Query parameters: the paged
+  parameters above, plus dateFrom, dateTo, searchTerm, status.
+  Response: PaginatedList of EmployeeShiftsDto.
+
+GET /api/self-service/shifts/today (uses login)
+  Response: EmployeeDutyScheduleDto for today's shift of the logged-in
+  employee, or 404 if there is none.
 
 
 ====================================================================
 5. TIMELOG - Check In / Lunch Out / Lunch In / Check Out
 ====================================================================
-POST /api/self-service/timelogs                  (Check In)
+POST /api/self-service/timelogs                   (Check In)
 PUT  /api/self-service/timelogs                   (Check Out)
 PUT  /api/self-service/timelogs/lunch-out         (Lunch Out)
 PUT  /api/self-service/timelogs/lunch-in          (Lunch In)
@@ -353,12 +467,18 @@ date (employee already has a TimeIn recorded for that date).
 
 
 ====================================================================
-6. TIMELOG FILING - Create / Update / Delete / Approve
+6. TIMELOG FILING
 ====================================================================
-POST   /api/self-service/timelogs/filings
+GET    /api/self-service/timelogs                   (list filings, uses login)
+GET    /api/self-service/timelogs/{id}              (get one filing)
+POST   /api/self-service/timelogs/filings           (create a filing)
 PUT    /api/self-service/timelogs/filings           (edit a pending filing)
 DELETE /api/self-service/timelogs/filings           (delete a pending filing)
 POST   /api/self-service/timelogs/filings/approve   (approve a pending filing)
+POST   /api/self-service/timelogs/filings/{id}/send-approval-email
+
+Note: GET /api/self-service/timelogs and GET /timelogs/{id} return
+timelog FILINGS, not time logs.
 
 Used to file a manual correction/request (e.g. forgot to time in/out)
 that requires approval, as opposed to a live Check In/Out. There is one
@@ -386,9 +506,11 @@ Request body for POST (CreateEmployeeTimelogFilingDto):
   reason           string
   status           string    (optional) "Pending" (default) or
                              "Approved"
-At least one of checkIn, lunchOut, lunchIn and checkOut is required.
+At least one of checkIn, lunchOut, lunchIn and checkOut is required
+(HTTP 400 otherwise).
 
 Example:
+POST /api/self-service/timelogs/filings
 {
   "employeeNumber": "EMP-0001",
   "logDate": "2026-09-04",
@@ -413,8 +535,9 @@ time log right away):
 Response: { "id": <filingId>, "status": "Pending" | "Approved" }
 
 Request body for PUT (UpdateEmployeeTimelogFilingDto) - employeeNumber
-and logDate identify the filing to update. The four times replace the
-filing's current times, so send every time the filing should have:
+and logDate identify the filing to update. The four times, reason and
+decidedBy replace the filing's current values, so send every time the
+filing should have:
   employeeNumber   string    (required, identifies the filing)
   logDate          date      (identifies the filing; not changed)
   checkIn          datetime
@@ -435,8 +558,12 @@ PUT /api/self-service/timelogs/filings
   "reason": "Corrected time"
 }
 
+Response: 200 OK (no body).
+
 Example - Delete:
 DELETE /api/self-service/timelogs/filings?employeeNumber=EMP-0001&date=2026-09-04
+
+Response: 200 OK (no body).
 
 Request body for approve (ApproveEmployeeTimelogFilingDto):
   employeeNumber   string    (required)
@@ -453,6 +580,23 @@ POST /api/self-service/timelogs/filings/approve
 
 Response: { "id": <filingId>, "status": "Approved" }
 
+GET /api/self-service/timelogs (uses login)
+  Lists the logged-in employee's timelog filings from dateFrom to
+  dateTo, ordered by logDate. Query parameters: dateFrom, dateTo,
+  pageIndex, pageSize.
+  Response: PaginatedList of EmployeeTimelogFilingDto:
+    id, logDate, checkIn, lunchOut, lunchIn, checkOut,
+    employeeID, employee { firstName, middleName, lastName },
+    reason, status, decidedBy, isNotifyEmail, notifyEmailSentAt,
+    created, lastUpd, createdBy, lastUpdBy
+
+GET /api/self-service/timelogs/{id}
+  Response: EmployeeTimelogFilingDto of that filing.
+
+POST /api/self-service/timelogs/filings/{id}/send-approval-email
+  Same behavior as the leave version: emails the employee's approvers
+  an approve/reject link. Pending filings only. Response is 200 OK.
+
 Notes:
 - An employee can have only one filing per day. A new filing for a
   date that already has a Pending or Approved filing is rejected with
@@ -460,7 +604,8 @@ Notes:
   does not count. This also means re-sending the same filing does not
   record it twice.
 - Only filings with Status = "Pending" that have not already been
-  emailed for approval can be edited/deleted; otherwise the API throws
-  an error.
-- If no pending filing is found for that employeeNumber + logDate,
-  PUT/DELETE/approve return 404.
+  emailed for approval can be edited/deleted (HTTP 500 otherwise).
+- If the employeeNumber is unknown or no pending filing is found for
+  that employeeNumber + logDate, PUT/DELETE/approve return 404.
+
+
