@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,7 +15,11 @@ namespace AccuPay.Web.Files.Services
 {
     public class GenerateDefaultImageService
     {
-        private const string FontLocation = "./Fonts/Roboto-Bold.ttf";
+        private const string FontFileName = "Roboto-Bold.ttf";
+
+        private static readonly PrivateFontCollection PrivateFonts = new PrivateFontCollection();
+
+        private static readonly FontFamily TextFontFamily = LoadFontFamily();
 
         private const int FontSize = 128;
 
@@ -64,13 +69,8 @@ namespace AccuPay.Web.Files.Services
             var backgroundColor = ColorTranslator.FromHtml(colorCombination.Background);
             var foregroundColor = ColorTranslator.FromHtml(colorCombination.Foreground);
 
-            var fontCollection = new PrivateFontCollection();
-            fontCollection.AddFontFile(FontLocation);
-
-            var fontFamily = fontCollection.Families[0];
-
             // Create the Font object for the image text drawing.
-            using var font = new Font(fontFamily, FontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            using var font = new Font(TextFontFamily, FontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             using var brush = new SolidBrush(foregroundColor);
 
             // Create a graphics object to measure the text's width and height.
@@ -103,6 +103,28 @@ namespace AccuPay.Web.Files.Services
             graphics.Flush();
 
             return bitmap;
+        }
+
+        private static FontFamily LoadFontFamily()
+        {
+            var fontFile = new[]
+            {
+                Path.Combine(AppContext.BaseDirectory, "Fonts", FontFileName),
+                Path.Combine(Directory.GetCurrentDirectory(), "Fonts", FontFileName)
+            }.FirstOrDefault(System.IO.File.Exists);
+
+            if (fontFile == null) return FontFamily.GenericSansSerif;
+
+            try
+            {
+                PrivateFonts.AddFontFile(fontFile);
+
+                return PrivateFonts.Families[0];
+            }
+            catch (Exception)
+            {
+                return FontFamily.GenericSansSerif;
+            }
         }
 
         private ColorCombination PickColorCombination(Employee employee)

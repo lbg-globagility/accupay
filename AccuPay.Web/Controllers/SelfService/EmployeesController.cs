@@ -22,5 +22,14 @@ namespace AccuPay.Web.Controllers.SelfService
         {
             return await _employeeService.Create(dto);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<EmployeeDto>> Update([FromBody] SelfServiceUpdateEmployeeDto dto)
+        {
+            var employee = await _employeeService.UpdateSelfService(dto);
+            if (employee == null) return NotFound();
+
+            return employee;
+        }
     }
 }

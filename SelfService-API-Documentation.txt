@@ -63,12 +63,15 @@ General notes
 
 
 ====================================================================
-1. EMPLOYEE - Create
+1. EMPLOYEE - Create / Update
 ====================================================================
 POST /api/self-service/employees
+PUT  /api/self-service/employees     (update an existing employee)
 
 No login token or permission is required.
 
+Create
+--------------------------------------------------------------------
 Request body (CreateEmployeeDto):
   employeeNo          string    (required)
   firstName           string    (required)
@@ -117,6 +120,71 @@ Notes:
 - An employeeNo or emailAddress that another employee already uses
   is rejected with HTTP 400 ("Employee number '...' is already in
   use." / "Email address '...' is already in use.").
+- If the default profile image cannot be generated, the employee is
+  still created and returned; it is simply left without an image.
+
+Update
+--------------------------------------------------------------------
+PUT /api/self-service/employees
+
+There is no {id} in the URL. The employee is found by "employeeNo" in
+the body, and an unknown number returns HTTP 404. Only the fields
+that are present in the request are changed; anything left out keeps
+its current value, so a status change can be sent on its own.
+
+Request body (SelfServiceUpdateEmployeeDto):
+  employeeNo          string    (required, identifies the employee;
+                                 this call does not change it)
+  firstName           string
+  lastName            string
+  middleName          string
+  birthdate           date
+  address             string
+  landlineNo          string
+  mobileNo            string
+  emailAddress        string
+  tin                 string
+  sssNo               string
+  philHealthNo        string
+  pagIbigNo           string
+  employmentStatus    string
+  startDate           date
+  regularizationDate  date
+  terminationDate     date
+
+Example - a team member who resigned:
+PUT /api/self-service/employees
+{
+  "employeeNo": "EMP-0001",
+  "employmentStatus": "Resigned",
+  "terminationDate": "2026-09-30"
+}
+
+Example - a correction:
+PUT /api/self-service/employees
+{
+  "employeeNo": "EMP-0001",
+  "mobileNo": "09171234567"
+}
+
+Response: EmployeeDto of the updated employee.
+
+Notes:
+- Resigned or terminated team members: send "employmentStatus" as
+  "Resigned", "Terminated" or "Retired" (matched without case or
+  spaces) together with "terminationDate". AccuPay counts an employee
+  with one of those three statuses as inactive and uses
+  terminationDate as the cut-off that keeps them out of later pay
+  periods. Any other value (e.g. "Regular", "Probationary") leaves
+  the employee active.
+- terminationDate is required when employmentStatus is one of those
+  three values; without it the request is rejected with HTTP 400.
+- Once an employee is inactive, the other self-service endpoints
+  (leaves, overtimes, timelogs, filings, shifts) no longer find them
+  by employeeNumber. This update call still does, so a status that
+  was set by mistake can be changed back.
+- An emailAddress that another employee already uses is rejected with
+  HTTP 400. Re-sending the employee's own address is fine.
 
 
 ====================================================================

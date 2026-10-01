@@ -11,6 +11,7 @@ using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Files.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,7 @@ namespace AccuPay.Web.Employees.Services
         private readonly IEmployeeDataService _dataService;
         private readonly IEmployeeImportParser _importParser;
         private readonly IEmployeeApproverRepository _employeeApproverRepository;
+        private readonly ILogger<EmployeeService> _logger;
 
         public EmployeeService(
             IEmployeeRepository employeeRepository,
@@ -38,7 +40,8 @@ namespace AccuPay.Web.Employees.Services
             IFileRepository fileRepository,
             IEmployeeDataService dataService,
             IEmployeeImportParser importParser,
-            IEmployeeApproverRepository employeeApproverRepository)
+            IEmployeeApproverRepository employeeApproverRepository,
+            ILogger<EmployeeService> logger)
         {
             _employeeRepository = employeeRepository;
             _currentUser = currentUser;
@@ -48,6 +51,7 @@ namespace AccuPay.Web.Employees.Services
             _dataService = dataService;
             _importParser = importParser;
             _employeeApproverRepository = employeeApproverRepository;
+            _logger = logger;
         }
 
         public async Task<PaginatedList<EmployeeDto>> List(EmployeePageOptions options)
@@ -84,8 +88,12 @@ namespace AccuPay.Web.Employees.Services
             Map(dto, employee);
             await _dataService.SaveAsync(employee, currentlyLoggedInUserId: 1);
 
-            employee.OriginalImageId = (await CreateOriginalImage(employee)).Id;
-            await _dataService.SaveAsync(employee,currentlyLoggedInUserId: 1);
+            var originalImage = await TryCreateOriginalImage(employee);
+            if (originalImage != null)
+            {
+                employee.OriginalImageId = originalImage.Id;
+                await _dataService.SaveAsync(employee, currentlyLoggedInUserId: 1);
+            }
 
             return EmployeeDto.Convert(employee);
         }
@@ -102,6 +110,54 @@ namespace AccuPay.Web.Employees.Services
                 if (existingByEmail != null)
                     throw new BusinessLogicException($"Email address '{emailAddress}' is already in use.");
             }
+        }
+
+        public async Task<EmployeeDto> UpdateSelfService(SelfServiceUpdateEmployeeDto dto)
+        {
+            var employee = await _employeeRepository.GetByEmployeeNumberAsync(
+                dto.EmployeeNo,
+                organizationId: SelfServiceOrganzationId.Id);
+
+            if (employee == null) return null;
+
+            await EnsureEmailNotUsedByOtherEmployeeAsync(dto.EmailAddress, employee);
+
+            ApplyChanges(dto, employee);
+
+            await _dataService.SaveAsync(employee, currentlyLoggedInUserId: SelfServiceUser.Id);
+
+            return EmployeeDto.Convert(employee);
+        }
+
+        private async Task EnsureEmailNotUsedByOtherEmployeeAsync(string emailAddress, Employee employee)
+        {
+            if (string.IsNullOrWhiteSpace(emailAddress)) return;
+            if (string.Equals(emailAddress.Trim(), employee.EmailAddress?.Trim(), StringComparison.OrdinalIgnoreCase)) return;
+
+            var existing = await _employeeRepository.GetByEmailAsync(emailAddress, SelfServiceOrganzationId.Id);
+
+            if (existing != null && existing.RowID != employee.RowID)
+                throw new BusinessLogicException($"Email address '{emailAddress}' is already in use.");
+        }
+
+        private static void ApplyChanges(SelfServiceUpdateEmployeeDto dto, Employee employee)
+        {
+            if (dto.FirstName != null) employee.FirstName = dto.FirstName;
+            if (dto.LastName != null) employee.LastName = dto.LastName;
+            if (dto.MiddleName != null) employee.MiddleName = dto.MiddleName;
+            if (dto.Birthdate != null) employee.BirthDate = dto.Birthdate.Value;
+            if (dto.Address != null) employee.HomeAddress = dto.Address;
+            if (dto.LandlineNo != null) employee.HomePhone = dto.LandlineNo;
+            if (dto.MobileNo != null) employee.MobilePhone = dto.MobileNo;
+            if (dto.EmailAddress != null) employee.EmailAddress = dto.EmailAddress;
+            if (dto.Tin != null) employee.TinNo = dto.Tin;
+            if (dto.SssNo != null) employee.SssNo = dto.SssNo;
+            if (dto.PhilHealthNo != null) employee.PhilHealthNo = dto.PhilHealthNo;
+            if (dto.PagIbigNo != null) employee.HdmfNo = dto.PagIbigNo;
+            if (dto.EmploymentStatus != null) employee.EmploymentStatus = dto.EmploymentStatus;
+            if (dto.StartDate != null) employee.StartDate = dto.StartDate.Value;
+            if (dto.RegularizationDate != null) employee.DateRegularized = dto.RegularizationDate;
+            if (dto.TerminationDate != null) employee.TerminationDate = dto.TerminationDate;
         }
 
         public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
@@ -156,6 +212,22 @@ namespace AccuPay.Web.Employees.Services
             employee.EmploymentStatus = dto.EmploymentStatus;
             employee.StartDate = dto.StartDate;
             employee.DateRegularized = dto.RegularizationDate;
+        }
+
+        // A missing or unusable font file must not stop an employee from being created,
+        // so the employee is saved without a default image and the error is logged.
+        private async Task<AccuPay.Core.Entities.File> TryCreateOriginalImage(Employee employee)
+        {
+            try
+            {
+                return await CreateOriginalImage(employee);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to create the default image of employee {EmployeeNo}.", employee.EmployeeNo);
+
+                return null;
+            }
         }
 
         private async Task<AccuPay.Core.Entities.File> CreateOriginalImage(Employee employee)
