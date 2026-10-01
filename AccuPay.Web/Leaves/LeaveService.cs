@@ -171,19 +171,27 @@ namespace AccuPay.Web.Leaves
 
         private Leave NewSelfServiceLeave(SelfServiceCreateLeaveDto dto, int employeeId, int organizationId, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate, string status)
         {
-            return new Leave()
+            var leave = new Leave()
             {
                 EmployeeID = employeeId,
-                OrganizationID = organizationId,
-                LeaveType = dto.LeaveType,
-                StartDate = date,
-                EndDate = date,
-                StartTime = startTime,
-                EndTime = endTime,
-                Reason = dto.Reason,
-                Status = status,
-                FilingGroupDate = filingGroupDate
+                OrganizationID = organizationId
             };
+
+            ApplySelfServiceChanges(leave, dto, date, startTime, endTime, filingGroupDate, status);
+
+            return leave;
+        }
+
+        private static void ApplySelfServiceChanges(Leave leave, SelfServiceCreateLeaveDto dto, DateTime date, TimeSpan? startTime, TimeSpan? endTime, DateTime filingGroupDate, string status)
+        {
+            leave.LeaveType = dto.LeaveType;
+            leave.StartDate = date;
+            leave.EndDate = date;
+            leave.StartTime = startTime;
+            leave.EndTime = endTime;
+            leave.Reason = dto.Reason;
+            leave.Status = status;
+            leave.FilingGroupDate = filingGroupDate;
         }
 
         public async Task<LeaveDto> Update(int id, UpdateLeaveDto dto)
@@ -222,28 +230,53 @@ namespace AccuPay.Web.Leaves
             var filingGroupDate = leave.FilingGroupDate ?? DateTime.Now;
             var filingGroup = await GetFilingGroupAsync(leave);
 
-            // Only pending filings can be edited, so the replacement rows stay "Pending"
-            // (dto.Status is only used when creating).
-            var leaves = new List<Leave>();
+            var requests = new List<(DateTime Date, TimeSpan? StartTime, TimeSpan? EndTime)>();
             if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingHour)
             {
-                var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay, filingGroupDate, Leave.StatusPending);
-                leaves.Add(newLeave);
+                requests.Add((dto.StartDate, dto.StartTime.Value.TimeOfDay, dto.EndTime.Value.TimeOfDay));
             }
             else if (dto.LeaveTiming == SelfServiceCreateLeaveDto.TimingDay)
             {
-                foreach (var date in dto.DateTimes)
-                {
-                    var newLeave = NewSelfServiceLeave(dto, employeeId, organizationId, date, null, null, filingGroupDate, Leave.StatusPending);
-                    leaves.Add(newLeave);
-                }
+                requests.AddRange(dto.DateTimes.Select(date => (date, (TimeSpan?)null, (TimeSpan?)null)));
             }
 
-            // The old filing group is deleted and the replacement is created in a single
-            // transaction: the old rows still hold these dates, so create-then-delete would
-            // trip SanitizeEntity's duplicate-date check, and delete-then-create without a
-            // transaction risks losing the request entirely if the create half fails.
-            await _dataService.ReplaceSelfServiceFilingGroupAsync(filingGroup, leaves, SelfServiceUser.Id);
+            var unused = filingGroup.OrderBy(x => x.StartDate).ToList();
+            var existingLeaves = new Leave[requests.Count];
+
+            for (var index = 0; index < requests.Count; index++)
+            {
+                var sameDate = unused.FirstOrDefault(x => x.StartDate.Date == requests[index].Date.Date);
+                if (sameDate == null) continue;
+
+                unused.Remove(sameDate);
+                existingLeaves[index] = sameDate;
+            }
+
+            for (var index = 0; index < requests.Count; index++)
+            {
+                if (existingLeaves[index] != null || !unused.Any()) continue;
+
+                existingLeaves[index] = unused[0];
+                unused.RemoveAt(0);
+            }
+
+            var leaves = new List<Leave>();
+            for (var index = 0; index < requests.Count; index++)
+            {
+                var (date, startTime, endTime) = requests[index];
+                var existingLeave = existingLeaves[index];
+
+                if (existingLeave == null)
+                {
+                    leaves.Add(NewSelfServiceLeave(dto, employeeId, organizationId, date, startTime, endTime, filingGroupDate, Leave.StatusPending));
+                    continue;
+                }
+
+                ApplySelfServiceChanges(existingLeave, dto, date, startTime, endTime, filingGroupDate, Leave.StatusPending);
+                leaves.Add(existingLeave);
+            }
+
+            await _dataService.ReplaceSelfServiceFilingGroupAsync(unused, leaves, SelfServiceUser.Id);
 
             var dateTimes = leaves.Select(x => x.StartDate).ToList();
             return leaves.Select(x =>

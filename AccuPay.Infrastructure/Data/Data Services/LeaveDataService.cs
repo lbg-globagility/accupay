@@ -143,7 +143,7 @@ namespace AccuPay.Infrastructure.Data
             await PostSaveManyAction(updatedLeaves, oldLeaves.ToList(), SaveType.Update, changedByUserId);
         }
 
-        public async Task ReplaceSelfServiceFilingGroupAsync(List<Leave> toDelete, List<Leave> toCreate, int changedByUserId)
+        public async Task ReplaceSelfServiceFilingGroupAsync(List<Leave> toDelete, List<Leave> toSave, int changedByUserId)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -154,9 +154,9 @@ namespace AccuPay.Infrastructure.Data
                         await DeleteAsync(leave.RowID.Value, changedByUserId);
                     }
 
-                    if (toCreate.Any())
+                    if (toSave.Any())
                     {
-                        await SaveManyAsync(toCreate, changedByUserId);
+                        await SaveManyAsync(toSave, changedByUserId);
                     }
 
                     transaction.Commit();

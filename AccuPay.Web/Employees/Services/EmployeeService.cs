@@ -214,8 +214,6 @@ namespace AccuPay.Web.Employees.Services
             employee.DateRegularized = dto.RegularizationDate;
         }
 
-        // A missing or unusable font file must not stop an employee from being created,
-        // so the employee is saved without a default image and the error is logged.
         private async Task<AccuPay.Core.Entities.File> TryCreateOriginalImage(Employee employee)
         {
             try

@@ -259,7 +259,7 @@ Response (POST/PUT): list of LeaveDto, one per date in the filing.
 Each LeaveDto also carries "dateTimes", the full list of dates in
 the filing.
 
-Example - Edit (replaces the whole filing with the new dates):
+Example - Edit (sets the filing to the new dates):
 PUT /api/self-service/leaves/123
 {
   "employeeNumber": "EMP-0001",
@@ -268,6 +268,14 @@ PUT /api/self-service/leaves/123
   "dateTimes": ["2026-09-11", "2026-09-12"],
   "reason": "Family trip (moved)"
 }
+
+PUT edits the filing's existing rows, so their ids do not change: a
+row whose date is still in dateTimes keeps that date, and any other
+row is reused for one of the remaining dates. Only dates dropped from
+the filing have their rows deleted (removed from the database, not
+kept under another status), and dates added to the filing get new rows
+with new ids. Editing a filing without changing the number of dates
+therefore leaves every id as it was.
 
 Example - Delete (deletes every date in the filing):
 DELETE /api/self-service/leaves/123
