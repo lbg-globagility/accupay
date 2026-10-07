@@ -87,20 +87,32 @@ namespace AccuPay.Core.Services
                         hoursWorked = paystub.RegularHoursAndTotalRestDay;
                     }
 
-                    return ComputeByDailyRate(employee, salary, hoursWorked);
+                    return ComputeByDailyRate(timeEntries, hoursWorked,employee, salary,  currentSystemOwner);
 
                 default:
                     return 0;
             }
         }
 
-        private static decimal ComputeByDailyRate(Employee employee, Salary salary, decimal hoursWorked)
+        private static decimal ComputeByDailyRate(IReadOnlyCollection<TimeEntry> timeEntries, decimal hoursWorked,Employee employee,Salary salary, string currentSystemOwner)
         {
-            var daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay;
-
             var dailyRate = PayrollTools.GetDailyRate(salary, employee);
-
-            return AccuMath.CommercialRound(daysWorked * dailyRate);
+            var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
+            decimal thirteenMonthPay = 0;
+            foreach (var timeEntry in timeEntries)
+            {
+                var rate = timeEntry.BasicHours * hourlyRate;
+                //absent or not during legal holiday will allow to compute 13thmonthpay
+                if (currentSystemOwner == SystemOwner.AsiaCargo)
+                {
+                    if (timeEntry.RegularHolidayPay > 0)
+                    {
+                        rate = dailyRate;
+                    }
+                }
+                thirteenMonthPay += rate;
+            }
+            return thirteenMonthPay;
         }
 
         private static decimal ComputeByRegularPayAndAllowance(
