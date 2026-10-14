@@ -117,7 +117,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
             var totalDeductionRow = RenderDeductionBlock(worksheet, deductionStartRow, paystub);
 
             var totalPayableRow = totalDeductionRow + 2;
-            RenderTotalPayable(worksheet, totalPayableRow, payrollRows, totalDeductionRow);
+            RenderTotalPayable(worksheet, totalPayableRow, payrollRows, totalDeductionRow, paystub);
 
             var remitToStartRow = totalPayableRow + 3;
             RenderRemitToBlock(worksheet, remitToStartRow, employee);
@@ -245,14 +245,11 @@ namespace AccuPay.Infrastructure.Reports.Customize
                 rowIndex++;
             }
 
-            var wfhAllowanceAmount = allowanceItems?
-                .Where(a => a.Allowance?.Product?.Name != null &&
-                    a.Allowance.Product.Name.IndexOf("WFH", StringComparison.OrdinalIgnoreCase) >= 0)
-                .Sum(a => a.Amount) ?? 0M;
+            var wfhAllowanceAmount = paystub.TotalNonTaxableAllowance;
 
-            var sssTotal = paystub.SssEmployeeShare + paystub.SssEmployerShare;
-            var philHealthTotal = paystub.PhilHealthEmployeeShare + paystub.PhilHealthEmployerShare;
-            var hdmfTotal = paystub.HdmfEmployeeShare + paystub.HdmfEmployerShare;
+            var sssTotal = paystub.SssEmployeeShare;
+            var philHealthTotal = paystub.PhilHealthEmployeeShare;
+            var hdmfTotal = paystub.HdmfEmployeeShare;
 
             RenderLineItem($"{payPeriod.PayFromDate:MMM d} - {payPeriod.PayToDate:MMM d, yyyy}", paystub.TotalEarnings, highlight: true);
             RenderLineItem("WFH ALLOWANCE", wfhAllowanceAmount);
@@ -315,7 +312,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             ExcelWorksheet worksheet,
             int rowIndex,
             List<int> payrollRows,
-            int totalDeductionRow)
+            int totalDeductionRow,Paystub paystub)
+            
         {
             worksheet.Cells[$"B{rowIndex}:C{rowIndex}"].Merge = true;
             var labelCell = worksheet.Cells[$"B{rowIndex}"];
@@ -325,7 +323,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
             labelCell.Style.Font.Color.SetColor(Color.Red);
 
             var totalCell = worksheet.Cells[$"D{rowIndex}"];
-            totalCell.Formula = string.Join("+", payrollRows.Select(r => $"D{r}")) + $"-D{totalDeductionRow}";
+            totalCell.Value = paystub.NetPay;
             totalCell.Style.Numberformat.Format = MoneyFormat;
             totalCell.Style.Font.Bold = true;
             totalCell.Style.Font.Size = FontSize + 2;
