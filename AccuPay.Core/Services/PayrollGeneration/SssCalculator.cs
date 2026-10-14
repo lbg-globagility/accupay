@@ -84,6 +84,11 @@ namespace AccuPay.Core.Services
                         employeeShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.SssEmployerShare =
                         employerShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                    if (currentSystemOwner == SystemOwner.AccessOffshoring)
+                    {
+                        paystub.SssEmployeeShare = employeeShare;
+                        paystub.SssEmployerShare =employerShare;
+                    }
                 }
             }
         }
