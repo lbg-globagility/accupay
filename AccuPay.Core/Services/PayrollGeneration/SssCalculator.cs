@@ -173,6 +173,9 @@ namespace AccuPay.Core.Services
                 case SssCalculationBasis.GrossPay:
                     return (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
 
+                case SssCalculationBasis.TotalEarningsPerCutOff:
+                    return paystub.TotalEarnings;
+
                 default:
                     return 0;
             }

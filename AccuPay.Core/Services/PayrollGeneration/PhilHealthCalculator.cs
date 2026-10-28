@@ -96,6 +96,12 @@ namespace AccuPay.Core.Services
                         employeeShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.PhilHealthEmployerShare =
                         employerShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+
+                    if (currentSystemOwner == SystemOwner.AccessOffshoring)
+                    {
+                        paystub.PhilHealthEmployeeShare = employeeShare;
+                        paystub.PhilHealthEmployerShare = employerShare;
+                    }
                     
                 }
             }
@@ -142,7 +148,7 @@ namespace AccuPay.Core.Services
                         var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
                             paystub.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly);
 
-                        if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
+                        if (currentSystemOwner == SystemOwner.AccessOffshoring && employee.IsPremiumInclusive)
                         {
                             totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                 paystub.RegularHoursAndTotalRestDay;
@@ -163,7 +169,9 @@ namespace AccuPay.Core.Services
                 case PhilHealthCalculationBasis.GrossPay:
                     basisPay = (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
                     break;
-
+                case PhilHealthCalculationBasis.BasicPerCutOff:
+                    basisPay = paystub.BasicPay;
+                    break;
                 default:
                     break;
             }

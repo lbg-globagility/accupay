@@ -11,7 +11,7 @@ namespace AccuPay.Core.Services
 
         private const decimal StandardEmployerContribution = 100;
 
-        public void Calculate(Salary salary, Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payperiod)
+        public void Calculate(Salary salary, Paystub paystub, Paystub previousPaystub, Employee employee, ListOfValueCollection settings, PayPeriod payperiod)
         {
             // Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0;
@@ -54,6 +54,17 @@ namespace AccuPay.Core.Services
                                                 CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.HdmfEmployerShare = employerShare /
                                                 CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+
+                    if (payperiod.IsFirstHalf && payperiod.IsBetween(employee.TerminationDate.Value))
+                    {
+                        paystub.HdmfEmployeeShare = employeeShare;
+                        paystub.HdmfEmployerShare = employerShare;
+                    }
+                    if (!payperiod.IsFirstHalf && previousPaystub == null)
+                    {
+                        paystub.HdmfEmployeeShare = employeeShare;
+                        paystub.HdmfEmployerShare = employerShare;
+                    }
                 }
             }
 

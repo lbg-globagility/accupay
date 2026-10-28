@@ -471,7 +471,7 @@ namespace AccuPay.Core.Entities
             philHealthCalculator.Calculate(salary, this, previousPaystub, employee, payPeriod, currentSystemOwner);
 
             var hdmfCalculator = new HdmfCalculator();
-            hdmfCalculator.Calculate(salary, this, employee, settings, payPeriod);
+            hdmfCalculator.Calculate(salary, this, previousPaystub, employee, settings, payPeriod);
 
             var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.WithholdingTaxBrackets);
             withholdingTaxCalculator.Calculate(this, previousPaystub, employee, payPeriod, salary);
