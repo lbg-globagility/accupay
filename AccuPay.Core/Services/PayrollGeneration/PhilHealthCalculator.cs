@@ -96,11 +96,7 @@ namespace AccuPay.Core.Services
                         employeeShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.PhilHealthEmployerShare =
                         employerShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
-                    if (currentSystemOwner == SystemOwner.AccessOffshoring)
-                    {
-                        paystub.PhilHealthEmployeeShare = employeeShare;
-                        paystub.PhilHealthEmployerShare = employerShare;
-                    }
+                    
                 }
             }
         }

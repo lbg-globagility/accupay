@@ -124,7 +124,7 @@ Public Class ReportsList
     End Function
 
     Private Async Function GoldwingsBankFileReportProvidersAsync(providers As Collection(Of IReportProvider)) As Task
-        If Not curr_sys_owner_name = SystemOwner.Goldwings Then Return
+        If Not curr_sys_owner_name = SystemOwner.AccessOffshoring Then Return
 
         Dim bankFileSecurityBankPolicyText = BankFileTextFormatBDOForm.POLICY_TYPE_NAME
         Dim types = {bankFileSecurityBankPolicyText}
