@@ -39,6 +39,7 @@ namespace AccuPay.Core.Services
                     paystub,
                     previousPaystub,
                     employee,
+                    payperiod,
                     currentSystemOwner);
             }
             else
@@ -54,6 +55,11 @@ namespace AccuPay.Core.Services
 
             var employeeShare = halfContribution;
             var employerShare = halfContribution;
+            if (!payperiod.IsFirstHalf && previousPaystub != null)
+            {
+                employeeShare = employeeShare - previousPaystub.PhilHealthEmployeeShare;
+                employerShare = employerShare - previousPaystub.PhilHealthEmployerShare;
+            }
 
             // Account for any division loss by putting the missing value to the employer's share
             if (_policy.OddCentDifference)
@@ -112,6 +118,7 @@ namespace AccuPay.Core.Services
             Paystub paystub,
             Paystub previousPaystub,
             Employee employee,
+            PayPeriod payperiod,
             string currentSystemOwner)
         {
             var calculationBasis = _policy.CalculationBasis(employee.OrganizationID.Value);
@@ -171,6 +178,10 @@ namespace AccuPay.Core.Services
                     break;
                 case PhilHealthCalculationBasis.BasicPerCutOff:
                     basisPay = paystub.BasicPay;
+                    if (!payperiod.IsFirstHalf)
+                    {
+                        basisPay += (previousPaystub?.BasicPay ?? 0);
+                    }
                     break;
                 default:
                     break;

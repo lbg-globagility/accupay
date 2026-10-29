@@ -32,6 +32,7 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Salary salary,
             Employee employee,
+            PayPeriod payPeriod,
             string currentSystemOwner)
         {
             // Reset SSS values to zero
@@ -48,16 +49,22 @@ namespace AccuPay.Core.Services
                 previousPaystub,
                 salary,
                 employee,
+                payPeriod,
                 currentSystemOwner);
+            
             var socialSecurityBracket = FindMatchingBracket(amount);
-
+            
             // If no bracket was matched/found, then there's nothing to compute.
             if (socialSecurityBracket == null)
                 return;
 
             var employeeShare = socialSecurityBracket.EmployeeContributionAmount + socialSecurityBracket.EmployeeMPFAmount;
             var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
-
+            if (!payPeriod.IsFirstHalf && previousPaystub != null)
+            {
+                employeeShare = employeeShare - previousPaystub.SssEmployeeShare;
+                employerShare = employerShare - previousPaystub.SssEmployerShare;
+            }
             if (employee.IsWeeklyPaid)
             {
                 var shouldDeduct = employee.IsUnderAgency ? _payPeriod.SSSWeeklyAgentContribSched : _payPeriod.SSSWeeklyContribSched;
@@ -104,6 +111,7 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Salary salary,
             Employee employee,
+            PayPeriod payPeriod,
             string currentSystemOwner)
         {
             switch (_policy.SssCalculationBasis(employee.OrganizationID.Value))
@@ -174,9 +182,17 @@ namespace AccuPay.Core.Services
                     return (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
 
                 case SssCalculationBasis.TotalEarningsPerCutOff:
-                    return paystub.TotalEarnings;
+                    if (payPeriod.IsFirstHalf)
+                    {
+                        return paystub.TotalEarnings;
+                    }
+                    else
+                    {
+                        return (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
+                    }
 
-                default:
+
+                        default:
                     return 0;
             }
         }

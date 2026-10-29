@@ -147,7 +147,7 @@ namespace AccuPay.Core.Entities
         public decimal NetDeductions => GovernmentDeductions + TotalLoans + WithholdingTax;
 
         public decimal GovernmentDeductions => SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare;
-
+        public decimal GovernmentIncrease => SssEmployerShare + PhilHealthEmployerShare + HdmfEmployerShare;
         public decimal TotalRestDayHours => RestDayHours + SpecialHolidayRestDayHours + RegularHolidayRestDayHours;
 
         public decimal TotalRestDayPay => RestDayPay + SpecialHolidayRestDayPay + RegularHolidayRestDayPay;
@@ -465,7 +465,7 @@ namespace AccuPay.Core.Entities
             }
 
             var socialSecurityCalculator = new SssCalculator(resources.Policy, resources.SocialSecurityBrackets, payPeriod);
-            socialSecurityCalculator.Calculate(this, previousPaystub, salary, employee, currentSystemOwner);
+            socialSecurityCalculator.Calculate(this, previousPaystub, salary, employee, payPeriod, currentSystemOwner);
 
             var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings));
             philHealthCalculator.Calculate(salary, this, previousPaystub, employee, payPeriod, currentSystemOwner);
@@ -476,8 +476,19 @@ namespace AccuPay.Core.Entities
             var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.WithholdingTaxBrackets);
             withholdingTaxCalculator.Calculate(this, previousPaystub, employee, payPeriod, salary);
 
+            if (resources.Organization?.IsContractor == true)
+            {
+                SssEmployeeShare = 0;
+                PhilHealthEmployeeShare = 0;
+                HdmfEmployeeShare = 0;
+                WithholdingTax = 0;
+                TaxableIncome = 0;
+            }
             NetPay = AccuMath.CommercialRound(GrossPay - NetDeductions + TotalAdjustments);
-
+            if (resources.Organization?.IsContractor == true)
+            {
+                NetPay += AccuMath.CommercialRound(GovernmentIncrease);
+            }
             var actualCalculator = new PaystubActualCalculator();
             actualCalculator.Compute(employee, salary, settings, payPeriod, this, currentSystemOwner);
 
@@ -488,6 +499,7 @@ namespace AccuPay.Core.Entities
             thirteenthMonthPayCalculator.Calculate(employee, this, timeEntries, actualTimeEntries, salary, settings, allowanceItems.ToList(), currentSystemOwner);
         }
 
+      
         public void ComputeTotalEarnings(Employee employee, bool isFirstPayAsDailyRule, PayPeriod payPeriod, string currentSystemOwner)
         {
             if (employee.IsFixed)

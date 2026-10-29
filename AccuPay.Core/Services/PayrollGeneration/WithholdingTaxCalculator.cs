@@ -27,7 +27,7 @@ namespace AccuPay.Core.Services
             paystub.WithholdingTax = 0;
 
             var currentTaxableIncome = 0M;
-
+            
             var taxablePolicy = _settings.GetString("Payroll Policy.paystub.taxableincome") ?? "Basic Pay";
 
             if (employee.EmployeeType == SalaryType.Fixed)
@@ -41,6 +41,7 @@ namespace AccuPay.Core.Services
                 if (taxablePolicy == "Gross Income")
                     // Adds those taxable allowances to the taxable income
                     currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
+                    
                 else
                     currentTaxableIncome = paystub.BasicPay;
             }
@@ -50,9 +51,14 @@ namespace AccuPay.Core.Services
                     // Adds those taxable allowances to the taxable income
                     currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
             }
-
+           
             // Government contributions are tax deductible
             currentTaxableIncome -= paystub.GovernmentDeductions;
+            if (!payperiod.IsFirstHalf && previousPaystub != null)
+            {
+                currentTaxableIncome += (previousPaystub?.TotalEarnings ?? 0);
+                currentTaxableIncome -= (previousPaystub?.GovernmentDeductions ?? 0);
+            }
             // Taxable income should not be less than zero
             paystub.TaxableIncome = new decimal[] { currentTaxableIncome, 0 }.Max();
 
@@ -93,12 +99,22 @@ namespace AccuPay.Core.Services
             }
             else if (IsWithholdingTaxPaidPerPayPeriod(deductionSchedule))
             {
-                payFrequencyId = PayFrequency.SemiMonthly;
+                if(payperiod.IsFirstHalf)
+                    payFrequencyId = PayFrequency.SemiMonthly;
+                else
+                    payFrequencyId = PayFrequency.Monthly;
+
             }
 
             var taxBracket = GetTaxBracket(payFrequencyId, paystub, payperiod);
+            
 
             paystub.WithholdingTax = GetTaxWithheld(taxBracket, paystub.TaxableIncome);
+            if (!payperiod.IsFirstHalf && previousPaystub != null)
+            {
+                paystub.TaxableIncome -= (previousPaystub?.TaxableIncome ?? 0);
+                paystub.WithholdingTax -= (previousPaystub?.WithholdingTax ?? 0);
+            }
         }
 
         private decimal GetTaxWithheld(WithholdingTaxBracket bracket, decimal taxableIncome)

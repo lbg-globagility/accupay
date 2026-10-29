@@ -55,10 +55,12 @@ namespace AccuPay.Core.Services
                     paystub.HdmfEmployerShare = employerShare /
                                                 CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
 
-                    if (payperiod.IsFirstHalf && payperiod.IsBetween(employee.TerminationDate.Value))
+                    if (payperiod.IsFirstHalf && employee.IsResigned)
                     {
-                        paystub.HdmfEmployeeShare = employeeShare;
-                        paystub.HdmfEmployerShare = employerShare;
+                        if (payperiod.IsBetween(employee.TerminationDate.Value)) {
+                            paystub.HdmfEmployeeShare = employeeShare;
+                            paystub.HdmfEmployerShare = employerShare;
+                        }
                     }
                     if (!payperiod.IsFirstHalf && previousPaystub == null)
                     {
