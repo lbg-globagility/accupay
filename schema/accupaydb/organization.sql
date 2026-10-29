@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `organization` (
   `NoPurpose` char(1) DEFAULT '0' COMMENT 'This serves as a flag as dummy data, for developers purpose only',
   `LeaveBalanceAcquisition` char(1) DEFAULT '0' COMMENT 'Resets Annually,Accrual',
   `IsAgency` tinyint(4) NOT NULL DEFAULT 0,
+  `IsContractor` tinyint(4) NOT NULL DEFAULT 0,
   `ClientId` int(11) NOT NULL,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `Index 4` (`Name`),

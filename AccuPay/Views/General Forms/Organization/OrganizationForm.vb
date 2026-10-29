@@ -92,6 +92,7 @@ Public Class OrganizationForm
         txtcompFaxNumTxt.Clear()
         txtcompEmailTxt.Clear()
         IsAgencyCheckBox.Checked = False
+        IsContractorCheckBox.Checked = False
         txtRDO.Clear()
         txtZIP.Clear()
         txtcompUrl.Clear()
@@ -180,6 +181,7 @@ Public Class OrganizationForm
             txtcompFaxNumTxt.Text = _currentOrganization.FaxNumber
             txtcompEmailTxt.Text = _currentOrganization.EmailAddress
             IsAgencyCheckBox.Checked = _currentOrganization.IsAgency
+            IsContractorCheckBox.Checked = _currentOrganization.IsContractor
             txtRDO.Text = _currentOrganization.RDOCode
             txtZIP.Text = _currentOrganization.ZIPCode
             txtcompUrl.Text = _currentOrganization.URL
@@ -277,6 +279,7 @@ Public Class OrganizationForm
         _currentOrganization.FaxNumber = txtcompFaxNumTxt.Text
         _currentOrganization.EmailAddress = txtcompEmailTxt.Text
         _currentOrganization.IsAgency = IsAgencyCheckBox.Checked
+        _currentOrganization.IsContractor = IsContractorCheckBox.Checked
         _currentOrganization.RDOCode = txtRDO.Text
         _currentOrganization.ZIPCode = txtZIP.Text
         _currentOrganization.URL = txtcompUrl.Text

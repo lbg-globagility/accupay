@@ -19,6 +19,7 @@ namespace AccuPay.Core.Interfaces
         IReadOnlyCollection<Leave> Leaves { get; }
         ListOfValueCollection ListOfValueCollection { get; }
         IReadOnlyCollection<Loan> Loans { get; }
+        Organization Organization { get; }
         PayPeriod PayPeriod { get; }
         IReadOnlyCollection<Paystub> Paystubs { get; }
         IPolicyHelper Policy { get; }

@@ -68,6 +68,11 @@ Public Class PayStubForm
 
     Private ReadOnly _productRepository As IProductRepository
 
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+
+    ' Contractor employees are self-employed, so the government contributions shown are the employer share.
+    Private _isContractor As Boolean
+
     Sub New()
 
         InitializeComponent()
@@ -85,6 +90,8 @@ Public Class PayStubForm
         _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -131,6 +138,9 @@ Public Class PayStubForm
         cboProducts.DisplayMember = "DisplayName"
 
         Await PopulateAdjustmentTypeComboBox()
+
+        Dim organization = Await _organizationRepository.GetByIdAsync(z_OrganizationID)
+        _isContractor = If(organization?.IsContractor, False)
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
@@ -1213,9 +1223,9 @@ Public Class PayStubForm
         txtGrossPay.Text = FormatNumber(paystub.GrossPay, 2)
 
         'Government Deductions
-        txtSssEmployeeShare.Text = FormatNumber(paystub.SssEmployeeShare, 2)
-        txtPhilHealthEmployeeShare.Text = FormatNumber(paystub.PhilHealthEmployeeShare, 2)
-        txtHdmfEmployeeShare.Text = FormatNumber(paystub.HdmfEmployeeShare, 2)
+        txtSssEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
 
         'Other Deductions
         txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)
@@ -1322,9 +1332,9 @@ Public Class PayStubForm
         txtGrossPay.Text = FormatNumber(paystub.Actual?.GrossPay, 2)
 
         'Government Deductions
-        txtSssEmployeeShare.Text = FormatNumber(paystub.SssEmployeeShare, 2)
-        txtPhilHealthEmployeeShare.Text = FormatNumber(paystub.PhilHealthEmployeeShare, 2)
-        txtHdmfEmployeeShare.Text = FormatNumber(paystub.HdmfEmployeeShare, 2)
+        txtSssEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
 
         'Other Deductions
         txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)
@@ -1812,11 +1822,11 @@ Public Class PayStubForm
         ExportNetPayAllToolStripMenuItem.Click,
         ExportNetPayCashToolStripMenuItem.Click,
         ExportNetPayDirectDepositToolStripMenuItem.Click,
- _
+                                                         _
         ExportNetPayDeclaredAllToolStripMenuItem.Click,
         ExportNetPayDeclaredCashToolStripMenuItem.Click,
         ExportNetPayDeclaredDirectDepositToolStripMenuItem.Click,
- _
+                                                                 _
         ExportNetPayActualAllToolStripMenuItem.Click,
         ExportNetPayActualCashToolStripMenuItem.Click,
         ExportNetPayActualDirectDepositToolStripMenuItem.Click

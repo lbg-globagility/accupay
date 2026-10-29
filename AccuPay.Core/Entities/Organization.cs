@@ -20,6 +20,12 @@ namespace AccuPay.Core.Entities
 
         public bool IsAgency { get; set; }
 
+        /// <summary>
+        /// Employees of a contractor organization are self-employed, so the employer shoulders
+        /// the whole government contribution and the employee share is zero.
+        /// </summary>
+        public bool IsContractor { get; set; }
+
         public int? PrimaryAddressId { get; set; }
 
         public int ClientId { get; set; }
@@ -53,6 +59,7 @@ namespace AccuPay.Core.Entities
             {
                 ClientId = clientId,
                 IsAgency = false,
+                IsContractor = false,
                 IsInActive = false,
                 NightDifferentialTimeFrom = DefaultNightDifferentialTimeFrom,
                 NightDifferentialTimeTo = DefaultNightDifferentialTimeTo,

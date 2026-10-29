@@ -43,6 +43,7 @@ Partial Class OrganizationForm
         Me.Label14 = New System.Windows.Forms.Label()
         Me.txtcompanyName = New System.Windows.Forms.TextBox()
         Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
+        Me.IsContractorCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtZIP = New System.Windows.Forms.TextBox()
         Me.AddressComboBox = New System.Windows.Forms.ComboBox()
@@ -165,6 +166,7 @@ Partial Class OrganizationForm
         Me.GroupBox1.Controls.Add(Me.FirstPayPeriodGroupBox)
         Me.GroupBox1.Controls.Add(Me.txtcompanyName)
         Me.GroupBox1.Controls.Add(Me.IsAgencyCheckBox)
+        Me.GroupBox1.Controls.Add(Me.IsContractorCheckBox)
         Me.GroupBox1.Controls.Add(Me.Label1)
         Me.GroupBox1.Controls.Add(Me.txtZIP)
         Me.GroupBox1.Controls.Add(Me.AddressComboBox)
@@ -363,6 +365,16 @@ Partial Class OrganizationForm
         Me.IsAgencyCheckBox.TabIndex = 377
         Me.IsAgencyCheckBox.Text = "Is Agency"
         Me.IsAgencyCheckBox.UseVisualStyleBackColor = True
+        '
+        'IsContractorCheckBox
+        '
+        Me.IsContractorCheckBox.AutoSize = True
+        Me.IsContractorCheckBox.Location = New System.Drawing.Point(140, 354)
+        Me.IsContractorCheckBox.Name = "IsContractorCheckBox"
+        Me.IsContractorCheckBox.Size = New System.Drawing.Size(89, 17)
+        Me.IsContractorCheckBox.TabIndex = 378
+        Me.IsContractorCheckBox.Text = "Is Contractor"
+        Me.IsContractorCheckBox.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -855,6 +867,7 @@ Partial Class OrganizationForm
     Friend WithEvents Label68 As System.Windows.Forms.Label
     Friend WithEvents Label70 As System.Windows.Forms.Label
     Friend WithEvents IsAgencyCheckBox As CheckBox
+    Friend WithEvents IsContractorCheckBox As CheckBox
     Friend WithEvents c_companyname As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents FirstPayPeriodGroupBox As GroupBox

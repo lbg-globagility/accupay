@@ -48,6 +48,8 @@ namespace AccuPay.Core.Services
 
         public IReadOnlyCollection<Loan> Loans { get; private set; }
 
+        public Organization Organization { get; private set; }
+
         public IReadOnlyCollection<Paystub> Paystubs { get; private set; }
 
         public IReadOnlyCollection<Paystub> PreviousPaystubs { get; private set; }
@@ -80,6 +82,8 @@ namespace AccuPay.Core.Services
 
         private readonly ILoanRepository _loanRepository;
 
+        private readonly IOrganizationRepository _organizationRepository;
+
         private readonly IPayPeriodRepository _payPeriodRepository;
 
         private readonly IPaystubRepository _paystubRepository;
@@ -111,6 +115,7 @@ namespace AccuPay.Core.Services
             IEmployeeRepository employeeRepository,
             ILeaveRepository leaveRepository,
             ILoanRepository loanRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IPaystubRepository paystubRepository,
             IPhilHealthBracketRepository philHealthBracketRepository,
@@ -131,6 +136,7 @@ namespace AccuPay.Core.Services
             _employeeRepository = employeeRepository;
             _leaveRepository = leaveRepository;
             _loanRepository = loanRepository;
+            _organizationRepository = organizationRepository;
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _philHealthBracketRepository = philHealthBracketRepository;
@@ -164,6 +170,7 @@ namespace AccuPay.Core.Services
             await LoadEmployees();
             await LoadLeaves();
             await LoadListOfValueCollection();
+            await LoadOrganization();
             await LoadPaystubs();
             // LoadSchedules() should be executed following paystubs
             await LoadLoans();
@@ -295,6 +302,18 @@ namespace AccuPay.Core.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("Loans", ex);
+            }
+        }
+
+        private async Task LoadOrganization()
+        {
+            try
+            {
+                Organization = await _organizationRepository.GetByIdAsync(_organizationId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Organization", ex);
             }
         }
 
