@@ -4,6 +4,7 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
 {
@@ -12,12 +13,12 @@ namespace AccuPay.Core.Services
         private readonly IPolicyHelper _policy;
         private readonly PayPeriod _payPeriod;
         private readonly IReadOnlyCollection<SocialSecurityBracket> _socialSecurityBrackets;
+        private readonly Organization _organization;
 
         public SssCalculator(IPolicyHelper policy, IReadOnlyCollection<SocialSecurityBracket> socialSecurityBrackets, PayPeriod payPeriod)
         {
             _policy = policy;
             _payPeriod = payPeriod;
-
             // brackets are already filtered in PayrollResources
             // but still better to filter here so SSSCalculator
             // can be sure that it has the right data
@@ -27,7 +28,7 @@ namespace AccuPay.Core.Services
                 .ToList();
         }
 
-        public void Calculate(
+        public async Task Calculate(
             Paystub paystub,
             Paystub previousPaystub,
             Salary salary,
@@ -57,9 +58,29 @@ namespace AccuPay.Core.Services
             // If no bracket was matched/found, then there's nothing to compute.
             if (socialSecurityBracket == null)
                 return;
-
+            
             var employeeShare = socialSecurityBracket.EmployeeContributionAmount + socialSecurityBracket.EmployeeMPFAmount;
             var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
+            //check the total contribtion per basic pay
+            var deductionSchedule = employee.SssSchedule;
+            bool isContractor = _organization.IsContractor;
+
+            if (payPeriod.IsFirstHalf)
+            {
+                var basic = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                var basicBracket = FindMatchingBracket(basic);
+                if (basicBracket == null)
+                    return;
+                var basicEmployeeShare = basicBracket.EmployeeContributionAmount + basicBracket.EmployeeMPFAmount;
+                var basicEmployerShare = basicBracket.EmployerContributionAmount + basicBracket.EmployerECAmount + basicBracket.EmployerMPFAmount;
+                var perPeriodShare = basicEmployerShare / 2;
+                if (employerShare >= perPeriodShare)
+                {
+                    employeeShare = basicEmployeeShare/2;
+                    employerShare = perPeriodShare;
+
+                }
+            }
             if (!payPeriod.IsFirstHalf && previousPaystub != null)
             {
                 employeeShare = employeeShare - previousPaystub.SssEmployeeShare;
@@ -77,7 +98,7 @@ namespace AccuPay.Core.Services
             }
             else
             {
-                var deductionSchedule = employee.SssSchedule;
+                
 
                 if (IsSssPaidOnFirstHalf(_payPeriod, deductionSchedule) ||
                     IsSssPaidOnEndOfTheMonth(_payPeriod, deductionSchedule))

@@ -393,7 +393,6 @@ namespace AccuPay.Infrastructure.Reports
                 var adjustment = _adjustments
                     .Where(a => a.Product.PartNo == productName)
                     .Where(a => a.Paystub.EmployeeID.Value == employeeId.Value)
-                    .Where(a => a.Paystub.RowID.Value == ObjectUtils.ToInteger(employee["PaystubId"]))
                     .Sum(a => a.Amount);
 
                 return adjustment;

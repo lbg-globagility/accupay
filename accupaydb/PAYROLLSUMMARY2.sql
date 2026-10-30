@@ -1,13 +1,18 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.28-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP PROCEDURE IF EXISTS `PAYROLLSUMMARY2`;
+-- Dumping structure for procedure accupaydb_ao.PAYROLLSUMMARY2
 DELIMITER //
 CREATE PROCEDURE `PAYROLLSUMMARY2`(
 	IN `ps_OrganizationID` INT,
@@ -37,7 +42,15 @@ DECLARE customDateFormat VARCHAR(50) DEFAULT '%m/%d/%Y';
 
 DECLARE isNullSalaryDistribType BOOL DEFAULT FALSE;
 
+-- Contractor employees are self-employed, so the government contributions shown are the employer share.
+DECLARE isContractor INT(1) DEFAULT 0;
+
 SET isNullSalaryDistribType = strSalaryDistrib IS NULL;
+
+SELECT IsContractor
+FROM organization
+WHERE RowID = ps_OrganizationID
+INTO isContractor;
 
 SELECT
     PayFromDate,
@@ -68,6 +81,109 @@ SET @_dateto=CURDATE();
 SET @_eId=0;
 SET @_isDaily=FALSE;
 
+SELECT
+	ps.EmployeeRowID,
+	MAX(ps.DatCol2) `DatCol2`,
+	MAX(ps.DivisionID) `DivisionID`,
+	-- rate of the latest paystub within the selected pay periods
+	CAST(SUBSTRING_INDEX(GROUP_CONCAT(ps.Rate ORDER BY ps.DateFrom DESC), ',', 1) AS DECIMAL(15, 2)) `Rate`,
+	MIN(ps.DateFrom) `DateFrom`,
+	MAX(ps.DateTo) `DateTo`,
+	ps.EmployeeRowID `AssignEmployeeID`,
+	MAX(ps.IsDaily) `IsDaily`,
+	MAX(ps.HasMultiRateSalary) `HasMultiRateSalary`,
+	ROUND(SUM(ps.BasicHours), decimal_size) `BasicHours`,
+	ROUND(SUM(ps.BasicPay), decimal_size) `BasicPay`,
+	ROUND(SUM(ps.RegularHours), decimal_size) `RegularHours`,
+	ROUND(SUM(ps.RegularPay), decimal_size) `RegularPay`,
+	ROUND(SUM(ps.OvertimeHours), decimal_size) `OvertimeHours`,
+	ROUND(SUM(ps.OvertimePay), decimal_size) `OvertimePay`,
+	ROUND(SUM(ps.NightDiffHours), decimal_size) `NightDiffHours`,
+	ROUND(SUM(ps.NightDiffPay), decimal_size) `NightDiffPay`,
+	ROUND(SUM(ps.NightDiffOvertimeHours), decimal_size) `NightDiffOvertimeHours`,
+	ROUND(SUM(ps.NightDiffOvertimePay), decimal_size) `NightDiffOvertimePay`,
+	ROUND(SUM(ps.RestDayHours), decimal_size) `RestDayHours`,
+	ROUND(SUM(ps.RestDayPay), decimal_size) `RestDayPay`,
+	ROUND(SUM(ps.RestDayOTHours), decimal_size) `RestDayOTHours`,
+	ROUND(SUM(ps.RestDayOTPay), decimal_size) `RestDayOTPay`,
+	ROUND(SUM(ps.RestDayNightDiffHours), decimal_size) `RestDayNightDiffHours`,
+	ROUND(SUM(ps.RestDayNightDiffPay), decimal_size) `RestDayNightDiffPay`,
+	ROUND(SUM(ps.RestDayNightDiffOTHours), decimal_size) `RestDayNightDiffOTHours`,
+	ROUND(SUM(ps.RestDayNightDiffOTPay), decimal_size) `RestDayNightDiffOTPay`,
+
+	ROUND(SUM(ps.SpecialHolidayHours), decimal_size) `SpecialHolidayHours`,
+	ROUND(SUM(ps.SpecialHolidayPay), decimal_size) `SpecialHolidayPay`,
+	ROUND(SUM(ps.SpecialHolidayOTHours), decimal_size) `SpecialHolidayOTHours`,
+	ROUND(SUM(ps.SpecialHolidayOTPay), decimal_size) `SpecialHolidayOTPay`,
+	ROUND(SUM(ps.SpecialHolidayNightDiffHours), decimal_size) `SpecialHolidayNightDiffHours`,
+	ROUND(SUM(ps.SpecialHolidayNightDiffPay), decimal_size) `SpecialHolidayNightDiffPay`,
+	ROUND(SUM(ps.SpecialHolidayNightDiffOTHours), decimal_size) `SpecialHolidayNightDiffOTHours`,
+	ROUND(SUM(ps.SpecialHolidayNightDiffOTPay), decimal_size) `SpecialHolidayNightDiffOTPay`,
+	ROUND(SUM(ps.SpecialHolidayRestDayHours), decimal_size) `SpecialHolidayRestDayHours`,
+	ROUND(SUM(ps.SpecialHolidayRestDayPay), decimal_size) `SpecialHolidayRestDayPay`,
+	ROUND(SUM(ps.SpecialHolidayRestDayOTHours), decimal_size) `SpecialHolidayRestDayOTHours`,
+	ROUND(SUM(ps.SpecialHolidayRestDayOTPay), decimal_size) `SpecialHolidayRestDayOTPay`,
+	ROUND(SUM(ps.SpecialHolidayRestDayNightDiffHours), decimal_size) `SpecialHolidayRestDayNightDiffHours`,
+	ROUND(SUM(ps.SpecialHolidayRestDayNightDiffPay), decimal_size) `SpecialHolidayRestDayNightDiffPay`,
+	ROUND(SUM(ps.SpecialHolidayRestDayNightDiffOTHours), decimal_size) `SpecialHolidayRestDayNightDiffOTHours`,
+	ROUND(SUM(ps.SpecialHolidayRestDayNightDiffOTPay), decimal_size) `SpecialHolidayRestDayNightDiffOTPay`,
+
+	ROUND(SUM(ps.RegularHolidayHours), decimal_size) `RegularHolidayHours`,
+	ROUND(SUM(ps.RegularHolidayPay), decimal_size) `RegularHolidayPay`,
+	ROUND(SUM(ps.RegularHolidayOTHours), decimal_size) `RegularHolidayOTHours`,
+	ROUND(SUM(ps.RegularHolidayOTPay), decimal_size) `RegularHolidayOTPay`,
+	ROUND(SUM(ps.RegularHolidayNightDiffHours), decimal_size) `RegularHolidayNightDiffHours`,
+	ROUND(SUM(ps.RegularHolidayNightDiffPay), decimal_size) `RegularHolidayNightDiffPay`,
+	ROUND(SUM(ps.RegularHolidayNightDiffOTHours), decimal_size) `RegularHolidayNightDiffOTHours`,
+	ROUND(SUM(ps.RegularHolidayNightDiffOTPay), decimal_size) `RegularHolidayNightDiffOTPay`,
+	ROUND(SUM(ps.RegularHolidayRestDayHours), decimal_size) `RegularHolidayRestDayHours`,
+	ROUND(SUM(ps.RegularHolidayRestDayPay), decimal_size) `RegularHolidayRestDayPay`,
+	ROUND(SUM(ps.RegularHolidayRestDayOTHours), decimal_size) `RegularHolidayRestDayOTHours`,
+	ROUND(SUM(ps.RegularHolidayRestDayOTPay), decimal_size) `RegularHolidayRestDayOTPay`,
+	ROUND(SUM(ps.RegularHolidayRestDayNightDiffHours), decimal_size) `RegularHolidayRestDayNightDiffHours`,
+	ROUND(SUM(ps.RegularHolidayRestDayNightDiffPay), decimal_size) `RegularHolidayRestDayNightDiffPay`,
+	ROUND(SUM(ps.RegularHolidayRestDayNightDiffOTHours), decimal_size) `RegularHolidayRestDayNightDiffOTHours`,
+	ROUND(SUM(ps.RegularHolidayRestDayNightDiffOTPay), decimal_size) `RegularHolidayRestDayNightDiffOTPay`,
+
+	ROUND(SUM(ps.HolidayPay), decimal_size) `HolidayPay`,
+	ROUND(SUM(ps.LeaveHours), decimal_size) `LeaveHours`,
+	ROUND(SUM(ps.LeavePay), decimal_size) `LeavePay`,
+	ROUND(SUM(ps.LateHours), decimal_size) `LateHours`,
+	ROUND(SUM(ps.LateDeduction), decimal_size) `LateDeduction`,
+	ROUND(SUM(ps.UndertimeHours), decimal_size) `UndertimeHours`,
+	ROUND(SUM(ps.UndertimeDeduction), decimal_size) `UndertimeDeduction`,
+	ROUND(SUM(ps.AbsentHours), decimal_size) `AbsentHours`,
+	ROUND(SUM(ps.AbsentDeduction), decimal_size) `AbsentDeduction`,
+	ROUND(SUM(ps.TotalAllowance), decimal_size) `TotalAllowance`,
+	ROUND(SUM(ps.TotalBonus), decimal_size) `TotalBonus`,
+	ROUND(SUM(ps.GrossIncome), decimal_size) `GrossIncome`,
+	ROUND(SUM(ps.SSS), decimal_size) `SSS`,
+	ROUND(SUM(ps.PhilHealth), decimal_size) `PhilHealth`,
+	ROUND(SUM(ps.HDMF), decimal_size) `HDMF`,
+	ROUND(SUM(ps.TaxableIncome), decimal_size) `TaxableIncome`,
+	ROUND(SUM(ps.WithholdingTax), decimal_size) `WithholdingTax`,
+	ROUND(SUM(ps.TotalLoans), decimal_size) `TotalLoans`,
+	ROUND(SUM(ps.AgencyFee), decimal_size) `AgencyFee`,
+	ROUND(SUM(ps.TotalAdjustments), decimal_size) `TotalAdjustments`,
+	ROUND(SUM(ps.NetPay), decimal_size) `NetPay`,
+	ROUND(SUM(ps.`13thMonthPay`), decimal_size) `13thMonthPay`,
+	ROUND(SUM(ps.Total), decimal_size) `Total`,
+	MAX(ps.DatCol3) `DatCol3`,
+	MAX(ps.FirstName) `FirstName`,
+	MAX(ps.MiddleName) `MiddleName`,
+	MAX(ps.LastName) `LastName`,
+	MAX(ps.Surname) `Surname`,
+	MAX(ps.PositionName) `PositionName`,
+	MAX(ps.DatCol1) `DatCol1`,
+	CONCAT_WS(
+		' to ',
+		DATE_FORMAT(MIN(ps.DateFrom), IF(YEAR(MIN(ps.DateFrom)) = YEAR(MAX(ps.DateTo)), '%c/%e', '%c/%e/%Y')),
+		DATE_FORMAT(MAX(ps.DateTo), '%c/%e/%Y')
+	) `DatCol20`,
+	DATE_FORMAT(MIN(ps.DateFrom), customDateFormat) `From`,
+	DATE_FORMAT(MAX(ps.DateTo), customDateFormat) `To`,
+	GROUP_CONCAT(ps.PaystubId ORDER BY ps.DateFrom) `PaystubId`
+FROM (
 SELECT
 	e.RowID 'EmployeeRowID',
 	e.EmployeeID `DatCol2`,
@@ -187,9 +303,9 @@ SELECT
 	paystub.TotalAllowance + paystub.TotalTaxableAllowance `TotalAllowance`,
 	ROUND(paystub.TotalBonus, decimal_size) `TotalBonus`,
 	ROUND(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `GrossIncome`,
-	ROUND(-paystub.TotalEmpSSS, decimal_size) `SSS`,
-	ROUND(-paystub.TotalEmpPhilhealth, decimal_size) `PhilHealth`,
-	ROUND(-paystub.TotalEmpHDMF, decimal_size) `HDMF`,
+	ROUND(IF(isContractor=1, paystub.TotalCompSSS, -paystub.TotalEmpSSS), decimal_size) `SSS`,
+	ROUND(IF(isContractor=1, paystub.TotalCompPhilhealth, -paystub.TotalEmpPhilhealth), decimal_size) `PhilHealth`,
+	ROUND(IF(isContractor=1, paystub.TotalCompHDMF, -paystub.TotalEmpHDMF), decimal_size) `HDMF`,
 	ROUND(paystub.TotalTaxableSalary, decimal_size) `TaxableIncome`,
 	ROUND(-paystub.TotalEmpWithholdingTax, decimal_size) `WithholdingTax`,
 	ROUND(-paystub.TotalLoans, decimal_size) `TotalLoans`,
@@ -256,12 +372,13 @@ WHERE paystub.OrganizationID = ps_OrganizationID AND
 				, (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0))) = TRUE AND
 		-- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 	IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.WorkPay > 0, TRUE) # RegularHours
-ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate;
+) ps
+GROUP BY ps.EmployeeRowID
+ORDER BY CONCAT(MAX(ps.LastName), MAX(ps.FirstName));
 
 END//
 DELIMITER ;
 
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
