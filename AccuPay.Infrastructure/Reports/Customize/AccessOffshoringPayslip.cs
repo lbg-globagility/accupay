@@ -29,15 +29,18 @@ namespace AccuPay.Infrastructure.Reports.Customize
         private readonly IPayPeriodRepository _payPeriodRepository;
         private readonly IPaystubRepository _paystubRepository;
         private readonly ISalaryRepository _salaryRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public AccessOffshoringPayslip(
             IPayPeriodRepository payPeriodRepository,
             IPaystubRepository paystubRepository,
-            ISalaryRepository salaryRepository)
+            ISalaryRepository salaryRepository,
+            IOrganizationRepository organizationRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task CreateReport(
@@ -50,6 +53,9 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
             if (payPeriod == null)
                 throw new Exception("Pay period not found.");
+
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+            var isContractor = organization?.IsContractor ?? false;
 
             var paystubs = (await _paystubRepository.GetByPayPeriodFullPaystubAsync(payPeriodId))
                 .Where(p => p.EmployeeID.HasValue && employeeIds.Contains(p.EmployeeID.Value))
@@ -79,7 +85,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
                     var worksheet = excel.Workbook.Worksheets.Add(sheetName);
 
-                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, allowanceItems);
+                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, allowanceItems, isContractor);
                 }
 
                 excel.Save();
@@ -92,7 +98,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             PayPeriod payPeriod,
             Paystub paystub,
             Salary salary,
-            ICollection<AllowanceItem> allowanceItems)
+            ICollection<AllowanceItem> allowanceItems,
+            bool isContractor)
         {
             worksheet.Cells.Style.Font.Size = FontSize;
 
@@ -111,7 +118,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
             RenderInvoiceHeader(worksheet, rowIndex: 13, employee, payPeriod);
 
             var payrollStartRow = 15;
-            var (lastPayrollRow, payrollRows) = RenderPayrollTable(worksheet, payrollStartRow, payPeriod, paystub, allowanceItems);
+            var (lastPayrollRow, payrollRows) = RenderPayrollTable(worksheet, payrollStartRow, payPeriod, paystub, allowanceItems, isContractor);
 
             var deductionStartRow = lastPayrollRow + 2;
             var totalDeductionRow = RenderDeductionBlock(worksheet, deductionStartRow, paystub);
@@ -209,7 +216,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             int startRow,
             PayPeriod payPeriod,
             Paystub paystub,
-            ICollection<AllowanceItem> allowanceItems)
+            ICollection<AllowanceItem> allowanceItems,
+            bool isContractor)
         {
             var rowIndex = startRow;
 
@@ -247,9 +255,10 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
             var wfhAllowanceAmount = paystub.TotalNonTaxableAllowance;
 
-            var sssTotal = paystub.SssEmployeeShare;
-            var philHealthTotal = paystub.PhilHealthEmployeeShare;
-            var hdmfTotal = paystub.HdmfEmployeeShare;
+            // Contractor employees are self-employed, so the contributions shown are the employer share.
+            var sssTotal = isContractor ? paystub.SssEmployerShare : paystub.SssEmployeeShare;
+            var philHealthTotal = isContractor ? paystub.PhilHealthEmployerShare : paystub.PhilHealthEmployeeShare;
+            var hdmfTotal = isContractor ? paystub.HdmfEmployerShare : paystub.HdmfEmployeeShare;
 
             RenderLineItem($"{payPeriod.PayFromDate:MMM d} - {payPeriod.PayToDate:MMM d, yyyy}", paystub.TotalEarnings, highlight: true);
             RenderLineItem("WFH ALLOWANCE", wfhAllowanceAmount);

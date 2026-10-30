@@ -38,19 +38,22 @@ namespace AccuPay.Infrastructure.Reports.Customize
         private readonly ISalaryRepository _salaryRepository;
         private readonly ITimeLogRepository _timeLogRepository;
         private readonly IShiftRepository _shiftRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public DailyAttendanceReport(
             IPayPeriodRepository payPeriodRepository,
             IPaystubRepository paystubRepository,
             ISalaryRepository salaryRepository,
             ITimeLogRepository timeLogRepository,
-            IShiftRepository shiftRepository)
+            IShiftRepository shiftRepository,
+            IOrganizationRepository organizationRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
             _timeLogRepository = timeLogRepository;
             _shiftRepository = shiftRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task CreateReport(
@@ -63,6 +66,9 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
             if (payPeriod == null)
                 throw new Exception("Pay period not found.");
+
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+            var isContractor = organization?.IsContractor ?? false;
 
             var datePeriod = new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate);
 
@@ -112,7 +118,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
                     var worksheet = excel.Workbook.Worksheets.Add(sheetName);
 
-                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, employeeTimeLogs, employeeShiftsByDate, allowanceItems);
+                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, employeeTimeLogs, employeeShiftsByDate, allowanceItems, isContractor);
                 }
 
                 excel.Save();
@@ -127,7 +133,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             Salary salary,
             IList<TimeLog> timeLogs,
             IDictionary<DateTime, Shift> shiftsByDate,
-            ICollection<AllowanceItem> allowanceItems)
+            ICollection<AllowanceItem> allowanceItems,
+            bool isContractor)
         {
             worksheet.Cells.Style.Font.Size = FontSize;
 
@@ -151,7 +158,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
             RenderRatesBlock(worksheet, ratesStartRow, monthlyRate, dailyRate, hourlyRate);
 
             var payablesStartRow = ratesStartRow + 4;
-            RenderPayablesBlock(worksheet, payablesStartRow, paystub, timeLogs, allowanceItems);
+            RenderPayablesBlock(worksheet, payablesStartRow, paystub, timeLogs, allowanceItems, isContractor);
 
             SetDefaultPrinterSettings(worksheet.PrinterSettings);
             worksheet.PrinterSettings.Orientation = eOrientation.Portrait;
@@ -433,7 +440,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             int startRow,
             Paystub paystub,
             IList<TimeLog> timeLogs,
-            ICollection<AllowanceItem> allowanceItems)
+            ICollection<AllowanceItem> allowanceItems,
+            bool isContractor)
         {
             var daysWorked = timeLogs.Count(t => t.TimeIn.HasValue);
 
@@ -500,9 +508,10 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
             var deductionsStartRow = rowIndex;
 
-            RenderAmountItem("SSS", paystub.SssEmployeeShare, deductionCells);
-            RenderAmountItem("PHIC", paystub.PhilHealthEmployeeShare, deductionCells);
-            RenderAmountItem("PAGIBIG", paystub.HdmfEmployeeShare, deductionCells);
+            // Contractor employees are self-employed, so the contributions shown are the employer share.
+            RenderAmountItem("SSS", isContractor ? paystub.SssEmployerShare : paystub.SssEmployeeShare, deductionCells);
+            RenderAmountItem("PHIC", isContractor ? paystub.PhilHealthEmployerShare : paystub.PhilHealthEmployeeShare, deductionCells);
+            RenderAmountItem("PAGIBIG", isContractor ? paystub.HdmfEmployerShare : paystub.HdmfEmployeeShare, deductionCells);
             RenderAmountItem("W/TAX", paystub.WithholdingTax, deductionCells);
 
             RenderSectionHeader(worksheet, rowIndex, "DEDUCTIONS");
