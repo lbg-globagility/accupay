@@ -43,6 +43,7 @@ Public Class ReportsList
             New PhilHealthReportProvider(),
             New PagIBIGMonthlyReportProvider(),
             New TaxReportProvider(),
+            New RemittanceReportProvider(),
             New ThirteenthMonthDetailedReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
             New AttendanceSheetReportProvider(),
