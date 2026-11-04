@@ -102,7 +102,7 @@ Public Class ImportSalaryForm
                 .BasicSalary = record.BasicSalary.Value,
                 .AllowanceSalary = record.AllowanceSalary,
                 .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
+                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, False),
                 .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
                 .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
                 .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)

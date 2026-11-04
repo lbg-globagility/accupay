@@ -7,9 +7,9 @@ namespace AccuPay.Core.Services
 {
     public class HdmfCalculator
     {
-        public const decimal StandardEmployeeContribution = 100;
+        public const decimal StandardEmployeeContribution = 200;
 
-        private const decimal StandardEmployerContribution = 100;
+        private const decimal StandardEmployerContribution = 200;
 
         public void Calculate(Salary salary, Paystub paystub, Paystub previousPaystub, Employee employee, ListOfValueCollection settings, PayPeriod payperiod)
         {
