@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Reports;
+using AccuPay.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,21 +13,32 @@ namespace AccuPay.Infrastructure.Data
     public class RemittanceReportDataService : IRemittanceReportDataService
     {
         private readonly PayrollContext _context;
+        private readonly IProjectEmployeeRepository _projectEmployeeRepository;
 
-        public RemittanceReportDataService(PayrollContext context)
+        public RemittanceReportDataService(
+            PayrollContext context,
+            IProjectEmployeeRepository projectEmployeeRepository)
         {
             _context = context;
+            _projectEmployeeRepository = projectEmployeeRepository;
         }
 
         public async Task<ICollection<RemittanceReportRow>> GetData(int organizationId, DateTime dateMonth)
         {
-            var paystubs = await _context.Paystubs
+            var allPaystubs = await _context.Paystubs
                 .AsNoTracking()
                 .Include(p => p.Employee)
+                .Include(p => p.PayPeriod)
                 .Where(p => p.OrganizationID == organizationId)
                 .Where(p => p.PayPeriod.Month == dateMonth.Month)
                 .Where(p => p.PayPeriod.Year == dateMonth.Year)
                 .ToListAsync();
+
+            var paystubs = await ExcludeContractors(
+                organizationId,
+                allPaystubs,
+                p => p.PayPeriod,
+                p => p.EmployeeID);
 
             if (!paystubs.Any())
                 return new List<RemittanceReportRow>();
@@ -76,11 +88,14 @@ namespace AccuPay.Infrastructure.Data
                 .Where(t => GetLoanCategory(t.Loan?.LoanType) == LoanCategory.SssSalaryLoan)
                 .ToList();
 
-            var currentMonthTransactions = loanTransactions
-                .Where(t => t.PayPeriod.Month == dateMonth.Month)
-                .ToList();
+            var employeeTransactions = await ExcludeContractors(
+                organizationId,
+                loanTransactions,
+                t => t.PayPeriod,
+                t => t.EmployeeID);
 
-            var paid = currentMonthTransactions
+            var paid = employeeTransactions
+                .Where(t => t.PayPeriod.Month == dateMonth.Month)
                 .GroupBy(t => t.LoanID)
                 .Select(g => CreateLoanRow(
                     g.First().Loan,
@@ -89,9 +104,14 @@ namespace AccuPay.Infrastructure.Data
                 .OrderBy(r => r.EmployeeName)
                 .ToList();
 
-            var paidLoanIds = currentMonthTransactions.Select(t => t.LoanID).ToList();
+            // Includes contractors so a loan that is still being paid is not reported as stopped
+            // when its employee became a contractor this month.
+            var paidLoanIds = loanTransactions
+                .Where(t => t.PayPeriod.Month == dateMonth.Month)
+                .Select(t => t.LoanID)
+                .ToList();
 
-            var stoppedPayment = loanTransactions
+            var stoppedPayment = employeeTransactions
                 .Where(t => t.PayPeriod.Month == previousMonth.Month)
                 .Where(t => !paidLoanIds.Contains(t.LoanID))
                 .GroupBy(t => t.LoanID)
@@ -105,6 +125,34 @@ namespace AccuPay.Infrastructure.Data
                 Paid = paid,
                 StoppedPayment = stoppedPayment
             };
+        }
+
+        /// <summary>
+        /// The remittance report is for regular employees only. Contractor status is checked per
+        /// cutoff, the same way the payroll computes it, so a mid-month change keeps the cutoffs
+        /// the person was a regular employee.
+        /// </summary>
+        private async Task<List<T>> ExcludeContractors<T>(
+            int organizationId,
+            ICollection<T> items,
+            Func<T, PayPeriod> getPayPeriod,
+            Func<T, int?> getEmployeeId)
+        {
+            var employeeItems = new List<T>();
+
+            foreach (var cutoff in items.GroupBy(i => getPayPeriod(i).RowID))
+            {
+                var payPeriod = getPayPeriod(cutoff.First());
+
+                var contractorEmployeeIds = await _projectEmployeeRepository.GetContractorEmployeeIdsAsync(
+                    organizationId,
+                    new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate));
+
+                employeeItems.AddRange(cutoff
+                    .Where(i => !contractorEmployeeIds.Contains(getEmployeeId(i).GetValueOrDefault())));
+            }
+
+            return employeeItems;
         }
 
         private RemittanceLoanRow CreateLoanRow(Loan loan, decimal? totalDeduction, string remarks)

@@ -9,6 +9,7 @@ Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Core.Interfaces.Reports.Customize
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -35,6 +36,8 @@ Public Class SelectPayslipEmployeesForm
     Private ReadOnly _paystubEmailRepository As IPaystubEmailRepository
 
     Private ReadOnly _paystubEmailHistoryRepository As IPaystubEmailHistoryRepository
+
+    Private ReadOnly _projectEmployeeRepository As IProjectEmployeeRepository
 
     Private ReadOnly _reportType As String
 
@@ -69,6 +72,8 @@ Public Class SelectPayslipEmployeesForm
         _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailRepository)
 
         _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailHistoryRepository)
+
+        _projectEmployeeRepository = MainServiceProvider.GetRequiredService(Of IProjectEmployeeRepository)
 
         _reportDailyAttendaceRecordBuilder = MainServiceProvider.GetRequiredService(Of IDailyAttendanceReport)
 
@@ -106,8 +111,21 @@ Public Class SelectPayslipEmployeesForm
         ShowEmployees(_paystubs)
     End Function
     Private Async Function LoadPaystubs() As Task(Of List(Of Paystub))
-        Return (Await _paystubRepository.
+        Dim paystubs = (Await _paystubRepository.
             GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)).ToList()
+
+        If _reportType = PaystubEmail.TypePayslip Then Return paystubs
+
+        Dim contractorEmployeeIds = Await _projectEmployeeRepository.GetContractorEmployeeIdsAsync(
+            z_OrganizationID,
+            New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate))
+
+        ' The Access Offshoring payslip is for contractors only, the Daily Attendance Report is for regular employees only.
+        Dim forContractors = _reportType = PaystubEmail.TypeAccessOffshoringPayslip
+
+        Return paystubs.
+            Where(Function(p) contractorEmployeeIds.Contains(p.EmployeeID.Value) = forContractors).
+            ToList()
     End Function
     Private Sub ShowOrHideToolStripButtonsBasedOnFormAction()
         PreviewToolStripDropDownButton.Visible = True
