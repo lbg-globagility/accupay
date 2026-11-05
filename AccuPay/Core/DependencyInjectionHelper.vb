@@ -208,6 +208,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ICostCenterReportBuilder, CostCenterReportBuilder)
         services.AddTransient(Of IRemittanceReportDataService, RemittanceReportDataService)
         services.AddTransient(Of IRemittanceReportBuilder, RemittanceReportBuilder)
+        services.AddTransient(Of INonBdoBankReportBuilder, NonBdoBankReportBuilder)
 
         services.AddTransient(Of IAttachmentDataService, AttachmentDataService)
         services.AddTransient(Of IAwardDataService, AwardDataService)

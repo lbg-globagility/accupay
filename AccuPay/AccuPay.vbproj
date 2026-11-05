@@ -1203,6 +1203,7 @@
     <Compile Include="Reports\Reports\Providers\PayrollLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PhilHealthReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\NonBdoBankReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\RemittanceReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\IReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />

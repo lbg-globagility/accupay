@@ -140,6 +140,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsUnderAgency => AgencyID.HasValue;
 
+        public bool HasBdoBank => string.Equals(BankName?.Trim(), "BDO", StringComparison.OrdinalIgnoreCase);
+
         public string FullName => $"{FirstName} {LastName}".Trim();
 
         public string FullNameLastNameFirst => $"{LastName}, {FirstName}".Trim();

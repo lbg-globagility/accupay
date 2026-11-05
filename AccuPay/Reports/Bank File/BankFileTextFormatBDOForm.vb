@@ -12,7 +12,6 @@ Imports OfficeOpenXml.Style
 
 Public Class BankFileTextFormatBDOForm
     Public Const POLICY_TYPE_NAME As String = "BankFileBDOPolicy"
-    Private Const BDO_BANK_NAME As String = "BDO"
     Private ReadOnly DATETIME_PICKER_MINDATE As Date = New Date(1753, 1, 1)
     Private ReadOnly DATETIME_PICKER_MAXDATE As Date = New Date(9998, 12, 31)
     Private ReadOnly _paystubRepository As IPaystubRepository
@@ -102,7 +101,7 @@ Public Class BankFileTextFormatBDOForm
             Dim showContractors = ContractorRadioButton.Checked
 
             paystubs = paystubs.
-                Where(Function(p) String.Equals(p.Employee.BankName?.Trim(), BDO_BANK_NAME, StringComparison.OrdinalIgnoreCase)).
+                Where(Function(p) p.Employee.HasBdoBank).
                 Where(Function(p) contractorEmployeeIds.Contains(p.EmployeeID.Value) = showContractors).
                 ToList()
         End If

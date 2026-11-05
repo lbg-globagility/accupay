@@ -63,6 +63,8 @@ Public Class ReportsList
 
         If curr_sys_owner_name = SystemOwner.LAGlobal Then providers.Add(New LaGlobalAlphaListReportProvider())
 
+        If curr_sys_owner_name = SystemOwner.AccessOffshoring Then providers.Add(New NonBdoBankReportProvider())
+
         Await Cinema2000BankFileReportProvidersAsync(providers)
 
         Await GoldwingsBankFileReportProvidersAsync(providers)
