@@ -91,16 +91,13 @@ namespace AccuPay.Web
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository>();
             services.AddScoped<IResetLeaveCreditRepository, ResetLeaveCreditRepository>();
-<<<<<<< HEAD
             services.AddScoped<IEmployeeApproverRepository, EmployeeApproverRepository>();
             services.AddScoped<IApproverRepository, ApproverRepository>();
             services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
-=======
             services.AddScoped<ITimeAttendanceLogRepository, TimeAttendanceLogRepository>();
             services.AddScoped<IContractorRepository, ContractorRepository>();
             services.AddScoped<IContractorProjectRepository, ContractorProjectRepository>();
             services.AddScoped<IProjectEmployeeRepository, ProjectEmployeeRepository>();
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
 
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IListOfValueService, ListOfValueService>();
@@ -199,15 +196,13 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IListOfValueCollection, ListOfValueCollection>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
-<<<<<<< HEAD
             services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
             services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
             services.AddTransient<ListOfValueCollection>();
-=======
             services.AddScoped<ListOfValueCollection>();
             services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
             services.AddScoped<IPayrollInvoiceExcelFormatReportBuilder, PayrollInvoiceExcelFormatReportBuilder>();
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
+
 
             return services;
         }

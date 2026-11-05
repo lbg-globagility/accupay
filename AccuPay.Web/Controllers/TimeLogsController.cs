@@ -62,7 +62,6 @@ namespace AccuPay.Web.Controllers
                 return result;
         }
 
-<<<<<<< HEAD
         [HttpPost("filings/{id}/approve")]
         [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult<TimeLogDto>> ApproveFiling(int id, [FromBody] ApproveFilingDto dto)
@@ -134,7 +133,7 @@ namespace AccuPay.Web.Controllers
             var result = await _service.ListForCurrentEmployee(options);
             return result;
         }
-=======
+
         [HttpPost("clock-stamp")]
         [Permission(PermissionTypes.TimeLogCreate)]
         public async Task<ActionResult> ClockStamp([FromBody] TimeLogClockStamp clockStamp)
@@ -143,6 +142,5 @@ namespace AccuPay.Web.Controllers
 
             return Ok();
         }
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
     }
 }

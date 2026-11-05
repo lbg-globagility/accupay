@@ -24,32 +24,26 @@ namespace AccuPay.Web.TimeLogs
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
         private readonly ITimeLogRepository _repository;
-<<<<<<< HEAD
         private readonly IMapper _mapper;
         private readonly IEmployeeRepository _employeeRepository;
-=======
         private readonly ITimeAttendanceLogDataService _timeAttendanceLogDataService;
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
 
         public TimeLogService(
             ITimeLogDataService service,
             ITimeLogImportParser importParser,
             ICurrentUser currentUser,
             ITimeLogRepository repository,
-<<<<<<< HEAD
             IMapper mapper,
-            IEmployeeRepository employeeRepository)
-=======
+            IEmployeeRepository employeeRepository,
             ITimeAttendanceLogDataService timeAttendanceLogDataService)
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
         {
             _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
-<<<<<<< HEAD
             _mapper = mapper;
             _employeeRepository = employeeRepository;
+            _timeAttendanceLogDataService = timeAttendanceLogDataService;
         }
 
         private async Task<(int EmployeeId, int OrganizationId)> ResolveEmployeeAsync(string employeeNumber)
@@ -59,9 +53,6 @@ namespace AccuPay.Web.TimeLogs
                 throw new Exception($"Employee number '{employeeNumber}' was not found.");
 
             return (employee.RowID.Value, employee.OrganizationID.Value);
-=======
-            _timeAttendanceLogDataService = timeAttendanceLogDataService;
->>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
