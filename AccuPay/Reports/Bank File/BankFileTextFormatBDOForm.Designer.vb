@@ -59,6 +59,9 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.EmployeeTypePanel = New System.Windows.Forms.Panel()
+        Me.ContractorRadioButton = New System.Windows.Forms.RadioButton()
+        Me.EmployeeRadioButton = New System.Windows.Forms.RadioButton()
         Me.txtCompanyCode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.numBatchNo = New System.Windows.Forms.NumericUpDown()
@@ -69,6 +72,7 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel3.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
+        Me.EmployeeTypePanel.SuspendLayout()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -339,6 +343,7 @@ Partial Class BankFileTextFormatBDOForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.EmployeeTypePanel)
         Me.Panel1.Controls.Add(Me.Panel5)
         Me.Panel1.Controls.Add(Me.txtCompanyCode)
         Me.Panel1.Controls.Add(Me.Label1)
@@ -384,6 +389,37 @@ Partial Class BankFileTextFormatBDOForm
         Me.RadioButton1.TabStop = True
         Me.RadioButton1.Text = "Declared"
         Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'EmployeeTypePanel
+        '
+        Me.EmployeeTypePanel.Controls.Add(Me.ContractorRadioButton)
+        Me.EmployeeTypePanel.Controls.Add(Me.EmployeeRadioButton)
+        Me.EmployeeTypePanel.Location = New System.Drawing.Point(147, 74)
+        Me.EmployeeTypePanel.Name = "EmployeeTypePanel"
+        Me.EmployeeTypePanel.Size = New System.Drawing.Size(166, 40)
+        Me.EmployeeTypePanel.TabIndex = 283
+        '
+        'ContractorRadioButton
+        '
+        Me.ContractorRadioButton.AutoSize = True
+        Me.ContractorRadioButton.Location = New System.Drawing.Point(0, 23)
+        Me.ContractorRadioButton.Name = "ContractorRadioButton"
+        Me.ContractorRadioButton.Size = New System.Drawing.Size(36, 17)
+        Me.ContractorRadioButton.TabIndex = 1
+        Me.ContractorRadioButton.Text = "IC"
+        Me.ContractorRadioButton.UseVisualStyleBackColor = True
+        '
+        'EmployeeRadioButton
+        '
+        Me.EmployeeRadioButton.AutoSize = True
+        Me.EmployeeRadioButton.Checked = True
+        Me.EmployeeRadioButton.Location = New System.Drawing.Point(0, 0)
+        Me.EmployeeRadioButton.Name = "EmployeeRadioButton"
+        Me.EmployeeRadioButton.Size = New System.Drawing.Size(71, 17)
+        Me.EmployeeRadioButton.TabIndex = 0
+        Me.EmployeeRadioButton.TabStop = True
+        Me.EmployeeRadioButton.Text = "Employee"
+        Me.EmployeeRadioButton.UseVisualStyleBackColor = True
         '
         'txtCompanyCode
         '
@@ -441,6 +477,8 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel1.PerformLayout()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
+        Me.EmployeeTypePanel.ResumeLayout(False)
+        Me.EmployeeTypePanel.PerformLayout()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -483,4 +521,7 @@ Partial Class BankFileTextFormatBDOForm
     Friend WithEvents Panel5 As Panel
     Friend WithEvents RadioButton2 As RadioButton
     Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents EmployeeTypePanel As Panel
+    Friend WithEvents ContractorRadioButton As RadioButton
+    Friend WithEvents EmployeeRadioButton As RadioButton
 End Class

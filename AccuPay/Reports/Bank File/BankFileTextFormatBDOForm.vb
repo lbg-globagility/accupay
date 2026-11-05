@@ -4,6 +4,7 @@ Imports System.Text
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -11,12 +12,14 @@ Imports OfficeOpenXml.Style
 
 Public Class BankFileTextFormatBDOForm
     Public Const POLICY_TYPE_NAME As String = "BankFileBDOPolicy"
+    Private Const BDO_BANK_NAME As String = "BDO"
     Private ReadOnly DATETIME_PICKER_MINDATE As Date = New Date(1753, 1, 1)
     Private ReadOnly DATETIME_PICKER_MAXDATE As Date = New Date(9998, 12, 31)
     Private ReadOnly _paystubRepository As IPaystubRepository
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
     Private ReadOnly _listOfValueRepository As IListOfValueRepository
+    Private ReadOnly _projectEmployeeRepository As IProjectEmployeeRepository
     Private ReadOnly _organizationId As Integer
     Private ReadOnly _userId As Integer
     Private _organization As Organization
@@ -39,6 +42,8 @@ Public Class BankFileTextFormatBDOForm
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
 
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+
+        _projectEmployeeRepository = MainServiceProvider.GetRequiredService(Of IProjectEmployeeRepository)
 
     End Sub
 
@@ -81,6 +86,7 @@ Public Class BankFileTextFormatBDOForm
 
         AddHandler RadioButton1.CheckedChanged, AddressOf RadioButton1_CheckedChanged
         AddHandler RadioButton2.CheckedChanged, AddressOf RadioButton2_CheckedChanged
+        AddHandler ContractorRadioButton.CheckedChanged, AddressOf ContractorRadioButton_CheckedChanged
     End Sub
 
     Private Async Function LoadPaystubs(payPeriod As PayPeriod) As Task
@@ -88,6 +94,17 @@ Public Class BankFileTextFormatBDOForm
         If payPeriod.RowID IsNot Nothing Then
             Dim payPeriodId = If(payPeriod.RowID, 0)
             paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeAsync(payPeriodId)
+
+            Dim contractorEmployeeIds = Await _projectEmployeeRepository.GetContractorEmployeeIdsAsync(
+                _organizationId,
+                New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
+
+            Dim showContractors = ContractorRadioButton.Checked
+
+            paystubs = paystubs.
+                Where(Function(p) String.Equals(p.Employee.BankName?.Trim(), BDO_BANK_NAME, StringComparison.OrdinalIgnoreCase)).
+                Where(Function(p) contractorEmployeeIds.Contains(p.EmployeeID.Value) = showContractors).
+                ToList()
         End If
 
         Dim models = paystubs.Select(Function(p) New BankFileModel(p) With {.IsSelected = True}).
@@ -349,5 +366,13 @@ Public Class BankFileTextFormatBDOForm
 
     Private Async Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs)
         If RadioButton2.Checked Then Await LoadPaystubs(_selectedPayPeriod)
+    End Sub
+
+    Private Async Sub ContractorRadioButton_CheckedChanged(sender As Object, e As EventArgs)
+        chkSelectAll.Checked = False
+
+        Await LoadPaystubs(_selectedPayPeriod)
+
+        chkSelectAll.Checked = True
     End Sub
 End Class
