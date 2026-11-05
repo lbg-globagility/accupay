@@ -63,8 +63,7 @@ namespace AccuPay.Core.Services
             var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
             //check the total contribtion per basic pay
             var deductionSchedule = employee.SssSchedule;
-            bool isContractor = _organization.IsContractor;
-
+            
             if (payPeriod.IsFirstHalf)
             {
                 var basic = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
