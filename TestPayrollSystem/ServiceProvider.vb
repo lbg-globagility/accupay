@@ -79,6 +79,7 @@ Public Class ServiceProvider
         services.AddTransient(Of ILoanRepository, LoanRepository)
         services.AddTransient(Of IOfficialBusinessRepository, OfficialBusinessRepository)
         services.AddTransient(Of IOrganizationRepository, OrganizationRepository)
+        services.AddTransient(Of IProjectEmployeeRepository, ProjectEmployeeRepository)
         services.AddTransient(Of IOvertimeRepository, OvertimeRepository)
         services.AddTransient(Of IPayFrequencyRepository, PayFrequencyRepository)
         services.AddTransient(Of IPayPeriodRepository, PayPeriodRepository)

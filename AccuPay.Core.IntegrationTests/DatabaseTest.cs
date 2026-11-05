@@ -71,6 +71,7 @@ namespace AccuPay.Core.IntegrationTests
             services.AddScoped<ILoanRepository, LoanRepository>();
             services.AddScoped<IOfficialBusinessRepository, OfficialBusinessRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IProjectEmployeeRepository, ProjectEmployeeRepository>();
             services.AddScoped<IOvertimeRepository, OvertimeRepository>();
             services.AddScoped<IPayFrequencyRepository, PayFrequencyRepository>();
             services.AddScoped<IPayPeriodRepository, PayPeriodRepository>();

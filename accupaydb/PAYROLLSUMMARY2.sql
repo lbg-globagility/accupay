@@ -42,15 +42,7 @@ DECLARE customDateFormat VARCHAR(50) DEFAULT '%m/%d/%Y';
 
 DECLARE isNullSalaryDistribType BOOL DEFAULT FALSE;
 
--- Contractor employees are self-employed, so the government contributions shown are the employer share.
-DECLARE isContractor INT(1) DEFAULT 0;
-
 SET isNullSalaryDistribType = strSalaryDistrib IS NULL;
-
-SELECT IsContractor
-FROM organization
-WHERE RowID = ps_OrganizationID
-INTO isContractor;
 
 SELECT
     PayFromDate,
@@ -303,9 +295,9 @@ SELECT
 	paystub.TotalAllowance + paystub.TotalTaxableAllowance `TotalAllowance`,
 	ROUND(paystub.TotalBonus, decimal_size) `TotalBonus`,
 	ROUND(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `GrossIncome`,
-	ROUND(IF(isContractor=1, paystub.TotalCompSSS, -paystub.TotalEmpSSS), decimal_size) `SSS`,
-	ROUND(IF(isContractor=1, paystub.TotalCompPhilhealth, -paystub.TotalEmpPhilhealth), decimal_size) `PhilHealth`,
-	ROUND(IF(isContractor=1, paystub.TotalCompHDMF, -paystub.TotalEmpHDMF), decimal_size) `HDMF`,
+	ROUND(IF(contractorPaystub.PaystubId IS NOT NULL, paystub.TotalCompSSS, -paystub.TotalEmpSSS), decimal_size) `SSS`,
+	ROUND(IF(contractorPaystub.PaystubId IS NOT NULL, paystub.TotalCompPhilhealth, -paystub.TotalEmpPhilhealth), decimal_size) `PhilHealth`,
+	ROUND(IF(contractorPaystub.PaystubId IS NOT NULL, paystub.TotalCompHDMF, -paystub.TotalEmpHDMF), decimal_size) `HDMF`,
 	ROUND(paystub.TotalTaxableSalary, decimal_size) `TaxableIncome`,
 	ROUND(-paystub.TotalEmpWithholdingTax, decimal_size) `WithholdingTax`,
 	ROUND(-paystub.TotalLoans, decimal_size) `TotalLoans`,
@@ -360,6 +352,23 @@ ON IFNULL(agf.RowID, 1) > 0 AND
 LEFT JOIN thirteenthmonthpay
 ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
 	thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
+-- Employees assigned to a contractor's project during the cutoff are self-employed,
+-- so the government contributions shown are the employer share.
+LEFT JOIN (
+	SELECT DISTINCT ps.RowID AS PaystubId
+	FROM paystub ps
+	INNER JOIN project_employees pe
+		ON pe.EmployeeId = ps.EmployeeID
+	INNER JOIN contractor_project cp
+		ON cp.RowID = pe.ProjectId
+	WHERE ps.OrganizationID = ps_OrganizationID AND
+		cp.ContractorId IS NOT NULL AND
+		(pe.BeginDate IS NULL OR pe.BeginDate <= ps.PayToDate) AND
+		(pe.EndDate IS NULL OR pe.EndDate >= ps.PayFromDate) AND
+		(cp.BeginDate IS NULL OR cp.BeginDate <= ps.PayToDate) AND
+		(cp.EndDate IS NULL OR cp.EndDate >= ps.PayFromDate)
+) contractorPaystub
+ON contractorPaystub.PaystubId = paystub.RowID
 
 WHERE paystub.OrganizationID = ps_OrganizationID AND
 	(paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND

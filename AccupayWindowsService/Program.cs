@@ -43,6 +43,7 @@ namespace AccupayWindowsService
             services.AddScoped<IListOfValueService, ListOfValueService>();
 
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IProjectEmployeeRepository, ProjectEmployeeRepository>();
             services.AddScoped<IPaystubEmailRepository, PaystubEmailRepository>();
             services.AddScoped<IPayPeriodRepository, PayPeriodRepository>();
             services.AddScoped<IPaystubEmailRepository, PaystubEmailRepository>();

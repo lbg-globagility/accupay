@@ -68,10 +68,7 @@ Public Class PayStubForm
 
     Private ReadOnly _productRepository As IProductRepository
 
-    Private ReadOnly _organizationRepository As IOrganizationRepository
-
-    ' Contractor employees are self-employed, so the government contributions shown are the employer share.
-    Private _isContractor As Boolean
+    Private ReadOnly _projectEmployeeRepository As IProjectEmployeeRepository
 
     Sub New()
 
@@ -91,7 +88,7 @@ Public Class PayStubForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+        _projectEmployeeRepository = MainServiceProvider.GetRequiredService(Of IProjectEmployeeRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -139,8 +136,6 @@ Public Class PayStubForm
 
         Await PopulateAdjustmentTypeComboBox()
 
-        Dim organization = Await _organizationRepository.GetByIdAsync(z_OrganizationID)
-        _isContractor = If(organization?.IsContractor, False)
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
@@ -1223,9 +1218,10 @@ Public Class PayStubForm
         txtGrossPay.Text = FormatNumber(paystub.GrossPay, 2)
 
         'Government Deductions
-        txtSssEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
-        txtPhilHealthEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
-        txtHdmfEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
+        Dim isContractor = Await IsContractorAsync(employee, datePeriod)
+        txtSssEmployeeShare.Text = FormatNumber(If(isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(If(isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(If(isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
 
         'Other Deductions
         txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)
@@ -1250,6 +1246,13 @@ Public Class PayStubForm
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
         Await LoadAdjustmentsAsync()
+    End Function
+
+    ' Contractor employees are self-employed, so the government contributions shown are the employer share.
+    Private Async Function IsContractorAsync(employee As Employee, datePeriod As TimePeriod) As Task(Of Boolean)
+        Dim contractorEmployeeIds = Await _projectEmployeeRepository.GetContractorEmployeeIdsAsync(z_OrganizationID, datePeriod)
+
+        Return contractorEmployeeIds.Contains(employee.RowID.Value)
     End Function
 
     Private Async Sub ActualTabPage_Enter(sender As Object, e As EventArgs)
@@ -1332,9 +1335,10 @@ Public Class PayStubForm
         txtGrossPay.Text = FormatNumber(paystub.Actual?.GrossPay, 2)
 
         'Government Deductions
-        txtSssEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
-        txtPhilHealthEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
-        txtHdmfEmployeeShare.Text = FormatNumber(If(_isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
+        Dim isContractor = Await IsContractorAsync(employee, datePeriod)
+        txtSssEmployeeShare.Text = FormatNumber(If(isContractor, paystub.SssEmployerShare, paystub.SssEmployeeShare), 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(If(isContractor, paystub.PhilHealthEmployerShare, paystub.PhilHealthEmployeeShare), 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(If(isContractor, paystub.HdmfEmployerShare, paystub.HdmfEmployeeShare), 2)
 
         'Other Deductions
         txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)

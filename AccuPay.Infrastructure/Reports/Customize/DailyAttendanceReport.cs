@@ -38,7 +38,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
         private readonly ISalaryRepository _salaryRepository;
         private readonly ITimeLogRepository _timeLogRepository;
         private readonly IShiftRepository _shiftRepository;
-        private readonly IOrganizationRepository _organizationRepository;
+        private readonly IProjectEmployeeRepository _projectEmployeeRepository;
 
         public DailyAttendanceReport(
             IPayPeriodRepository payPeriodRepository,
@@ -46,14 +46,14 @@ namespace AccuPay.Infrastructure.Reports.Customize
             ISalaryRepository salaryRepository,
             ITimeLogRepository timeLogRepository,
             IShiftRepository shiftRepository,
-            IOrganizationRepository organizationRepository)
+            IProjectEmployeeRepository projectEmployeeRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
             _timeLogRepository = timeLogRepository;
             _shiftRepository = shiftRepository;
-            _organizationRepository = organizationRepository;
+            _projectEmployeeRepository = projectEmployeeRepository;
         }
 
         public async Task CreateReport(
@@ -67,10 +67,9 @@ namespace AccuPay.Infrastructure.Reports.Customize
             if (payPeriod == null)
                 throw new Exception("Pay period not found.");
 
-            var organization = await _organizationRepository.GetByIdAsync(organizationId);
-            var isContractor = organization?.IsContractor ?? false;
-
             var datePeriod = new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate);
+
+            var contractorEmployeeIds = await _projectEmployeeRepository.GetContractorEmployeeIdsAsync(organizationId, datePeriod);
 
             var paystubs = (await _paystubRepository.GetByPayPeriodFullPaystubAsync(payPeriodId))
                 .Where(p => p.EmployeeID.HasValue && employeeIds.Contains(p.EmployeeID.Value))
@@ -118,7 +117,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
                     var worksheet = excel.Workbook.Worksheets.Add(sheetName);
 
-                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, employeeTimeLogs, employeeShiftsByDate, allowanceItems, isContractor);
+                    RenderEmployeeSheet(worksheet, employee, payPeriod, paystub, salary, employeeTimeLogs, employeeShiftsByDate, allowanceItems, contractorEmployeeIds.Contains(employee.RowID.Value));
                 }
 
                 excel.Save();

@@ -476,7 +476,11 @@ namespace AccuPay.Core.Entities
             var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.WithholdingTaxBrackets);
             withholdingTaxCalculator.Calculate(this, previousPaystub, employee, payPeriod, salary);
 
-            if (resources.Organization?.IsContractor == true)
+            // Employees assigned to a contractor's project are self-employed, so the employer
+            // shoulders the whole government contribution and the employee share is zero.
+            var isContractor = resources.ContractorEmployeeIds.Contains(employee.RowID.Value);
+
+            if (isContractor)
             {
                 SssEmployeeShare = 0;
                 PhilHealthEmployeeShare = 0;
@@ -485,7 +489,7 @@ namespace AccuPay.Core.Entities
                 TaxableIncome = 0;
             }
             NetPay = AccuMath.CommercialRound(GrossPay - NetDeductions + TotalAdjustments);
-            if (resources.Organization?.IsContractor == true)
+            if (isContractor)
             {
                 NetPay += AccuMath.CommercialRound(GovernmentIncrease);
             }

@@ -26,6 +26,11 @@ namespace AccuPay.Core.Services
 
         public CalendarCollection CalendarCollection { get; private set; }
 
+        /// <summary>
+        /// The employees assigned to a contractor's project during the pay period.
+        /// </summary>
+        public IReadOnlyCollection<int> ContractorEmployeeIds { get; private set; }
+
         public string CurrentSystemOwner { get; private set; }
 
         public ListOfValueCollection ListOfValueCollection { get; private set; }
@@ -95,6 +100,8 @@ namespace AccuPay.Core.Services
 
         private readonly IProductRepository _productRepository;
 
+        private readonly IProjectEmployeeRepository _projectEmployeeRepository;
+
         private readonly ISalaryRepository _salaryRepository;
 
         private readonly ISocialSecurityBracketRepository _socialSecurityBracketRepository;
@@ -123,6 +130,7 @@ namespace AccuPay.Core.Services
             IPaystubRepository paystubRepository,
             IPhilHealthBracketRepository philHealthBracketRepository,
             IProductRepository productRepository,
+            IProjectEmployeeRepository projectEmployeeRepository,
             ISalaryRepository salaryRepository,
             ISocialSecurityBracketRepository socialSecurityBracketRepository,
             ITimeEntryRepository timeEntryRepository,
@@ -144,6 +152,7 @@ namespace AccuPay.Core.Services
             _paystubRepository = paystubRepository;
             _philHealthBracketRepository = philHealthBracketRepository;
             _productRepository = productRepository;
+            _projectEmployeeRepository = projectEmployeeRepository;
             _salaryRepository = salaryRepository;
             _socialSecurityBracketRepository = socialSecurityBracketRepository;
             _timeEntryRepository = timeEntryRepository;
@@ -170,6 +179,7 @@ namespace AccuPay.Core.Services
             await LoadBonuses();
             await LoadBpiInsuranceProduct();
             await LoadCalendarCollection();
+            await LoadContractorEmployeeIds();
             await LoadEmployees();
             await LoadLeaves();
             await LoadListOfValueCollection();
@@ -249,6 +259,19 @@ namespace AccuPay.Core.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("CalendarCollection", ex);
+            }
+        }
+
+        private async Task LoadContractorEmployeeIds()
+        {
+            try
+            {
+                ContractorEmployeeIds = new HashSet<int>(await _projectEmployeeRepository
+                    .GetContractorEmployeeIdsAsync(_organizationId, _payPeriodSpan));
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("ContractorEmployeeIds", ex);
             }
         }
 

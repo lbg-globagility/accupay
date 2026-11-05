@@ -14,6 +14,7 @@ namespace AccuPay.Core.Interfaces
         IReadOnlyCollection<Bonus> Bonuses { get; }
         Product BpiInsuranceProduct { get; }
         CalendarCollection CalendarCollection { get; }
+        IReadOnlyCollection<int> ContractorEmployeeIds { get; }
         string CurrentSystemOwner { get; }
         IReadOnlyCollection<Employee> Employees { get; }
         IReadOnlyCollection<Leave> Leaves { get; }
