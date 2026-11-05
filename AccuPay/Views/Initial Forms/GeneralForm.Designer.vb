@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class GeneralForm
     Inherits System.Windows.Forms.Form
 
@@ -32,13 +32,14 @@ Partial Class GeneralForm
         Me.AgencyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CalendarsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelGeneral = New System.Windows.Forms.Panel()
+        Me.ContractorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem, Me.ContractorToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -103,6 +104,12 @@ Partial Class GeneralForm
         Me.PanelGeneral.Size = New System.Drawing.Size(1006, 446)
         Me.PanelGeneral.TabIndex = 2
         '
+        'ContractorToolStripMenuItem
+        '
+        Me.ContractorToolStripMenuItem.Name = "ContractorToolStripMenuItem"
+        Me.ContractorToolStripMenuItem.Size = New System.Drawing.Size(76, 20)
+        Me.ContractorToolStripMenuItem.Text = "Contractor"
+        '
         'GeneralForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -130,4 +137,5 @@ Partial Class GeneralForm
     Friend WithEvents AgencyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BranchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CalendarsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ContractorToolStripMenuItem As ToolStripMenuItem
 End Class

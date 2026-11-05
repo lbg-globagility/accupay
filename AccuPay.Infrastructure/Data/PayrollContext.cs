@@ -79,6 +79,7 @@ namespace AccuPay.Infrastructure.Data
         public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
+        internal virtual DbSet<SoloParentBeneficiary> SoloParentBeneficiaries { get; set; }
         internal virtual DbSet<SystemInfo> SystemInfo { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
@@ -102,6 +103,9 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<Approver> Approvers { get; set; }
         internal virtual DbSet<EmployeeApprover> EmployeeApprovers { get; set; }
         internal virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
+        internal virtual DbSet<Contractor> Contractors { get; set; }
+        internal virtual DbSet<ContractorProject> ContractorProjects { get; set; }
+        internal virtual DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
         public PayrollContext(DbContextOptions options)
             : base(options)

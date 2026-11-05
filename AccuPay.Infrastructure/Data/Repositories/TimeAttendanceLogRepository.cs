@@ -9,13 +9,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Infrastructure.Data
 {
-    public class TimeAttendanceLogRepository : ITimeAttendanceLogRepository
+    public class TimeAttendanceLogRepository : SavableRepository<TimeAttendanceLog>, ITimeAttendanceLogRepository
     {
-        private readonly PayrollContext _context;
-
-        public TimeAttendanceLogRepository(PayrollContext context)
+        public TimeAttendanceLogRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<ICollection<TimeAttendanceLog>> GetByTimePeriodAsync(int organizationId, TimePeriod timePeriod)

@@ -1,3 +1,4 @@
+using AccuPay.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,6 +14,8 @@ namespace AccuPay.Web.Core.Auth
         public int ClientId { get; private set; }
 
         public int? EmployeeId { get; private set; }
+
+        public bool HasEmployeeId => (EmployeeId ?? 0) > 0;
 
         public CurrentUser(IHttpContextAccessor accessor)
         {

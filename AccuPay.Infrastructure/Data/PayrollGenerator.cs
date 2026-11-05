@@ -49,6 +49,8 @@ namespace AccuPay.Infrastructure.Data
 
             var vacationLeaveProduct = resources.VacationLeaveProduct;
 
+            var soloParentLeaveProduct = resources.SoloParentLeaveProduct;
+
             var calendarCollection = resources.CalendarCollection;
 
             var salary = resources.Salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
@@ -109,6 +111,7 @@ namespace AccuPay.Infrastructure.Data
                     bpiInsuranceProduct: bpiInsuranceProduct,
                     sickLeaveProduct: sickLeaveProduct,
                     vacationLeaveProduct: vacationLeaveProduct,
+                    soloParentLeaveProduct: soloParentLeaveProduct,
                     loans: loans,
                     previousTimeEntries: previousTimeEntries,
                     timeEntries: timeEntries,
@@ -147,6 +150,7 @@ namespace AccuPay.Infrastructure.Data
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
+            Product soloParentLeaveProduct,
             IReadOnlyCollection<Loan> loans,
             IReadOnlyCollection<TimeEntry> previousTimeEntries,
             IReadOnlyCollection<TimeEntry> timeEntries,
@@ -239,6 +243,7 @@ namespace AccuPay.Infrastructure.Data
                 bpiInsuranceProduct: bpiInsuranceProduct,
                 sickLeaveProduct: sickLeaveProduct,
                 vacationLeaveProduct: vacationLeaveProduct,
+                soloParentLeaveProduct: soloParentLeaveProduct,
                 loans: loans,
                 allowanceItems: allowanceItems,
                 loanTransactions: loanTransactions,

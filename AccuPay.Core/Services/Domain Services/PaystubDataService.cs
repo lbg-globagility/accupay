@@ -84,6 +84,7 @@ namespace AccuPay.Infrastructure.Data
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
+            Product soloParentLeaveProduct,
             IReadOnlyCollection<Loan> loans,
             ICollection<AllowanceItem> allowanceItems,
             ICollection<LoanTransaction> loanTransactions,

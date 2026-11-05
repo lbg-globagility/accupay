@@ -58,5 +58,8 @@ namespace AccuPay.Core.Interfaces
         Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date);
 
         Task<PayPeriod> GetCurrentOpenAsync(Organization organization);
+
+        Task<PayPeriod> GetMostRecentAsync(int organizationId);
+        Task<PayPeriod> GetMostRecentAsync(Organization organization);
     }
 }

@@ -1,8 +1,14 @@
-﻿Option Strict On
+Option Strict On
 
 Public Class NullableDatePicker
 
     Private _lastCheckValue As Boolean
+
+    Public Event CheckedChanged As EventHandler
+
+    Protected Sub OnCheckedChanged()
+        RaiseEvent CheckedChanged(Me, EventArgs.Empty)
+    End Sub
 
     Private Sub NullableDatePicker_Load(sender As Object, e As EventArgs) Handles Me.Load
         DateTimePicker1.MinDate = Date.MinValue
@@ -50,6 +56,23 @@ Public Class NullableDatePicker
 
         _lastCheckValue = DateTimePicker1.Checked
 
+        OnCheckedChanged()
+
     End Sub
+
+    Public Property Checked() As Boolean
+        Get
+            Return DateTimePicker1.Checked
+
+        End Get
+
+        Set(ByVal value As Boolean)
+            DateTimePicker1.Checked = value
+
+            'If Not _lastCheckValue = value Then OnCheckedChanged()
+
+        End Set
+
+    End Property
 
 End Class

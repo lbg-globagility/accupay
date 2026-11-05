@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports;
+using AccuPay.Core.Services.Reports.Employees_Personal_Information;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
@@ -238,15 +239,14 @@ namespace AccuPay.Core.Services
                 if (employeeId == null)
                     continue;
 
-                timeAttendanceLogs.Add(new TimeAttendanceLog()
-                {
-                    CreatedBy = _userId,
-                    OrganizationID = _organizationId,
-                    TimeStamp = log.DateTime,
-                    IsTimeIn = log.IsTimeIn,
-                    WorkDay = Convert.ToDateTime(log.LogDate),
-                    EmployeeID = Convert.ToInt32(employeeId)
-                });
+                var timeAttendanceLog = TimeAttendanceLog.NewTimeAttendanceLog(userId: _userId,
+                    organizationId: _organizationId,
+                    timeStamp: log.DateTime,
+                    isTimeIn: log.IsTimeIn,
+                    workDay: Convert.ToDateTime(log.LogDate),
+                    employeeID: Convert.ToInt32(employeeId));
+
+                timeAttendanceLogs.Add(timeAttendanceLog);
             }
 
             return timeAttendanceLogs;

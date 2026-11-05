@@ -43,6 +43,7 @@ namespace AccuPay.Infrastructure.Data
             return await _context.LeaveTransactions
                 .Where(t => t.LeaveLedgerID == leaveLedgerId)
                 .OrderByDescending(t => t.TransactionDate)
+                    .ThenByDescending(t => t.Created)
                 .ToListAsync();
         }
 
@@ -104,7 +105,18 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.ProductID == leaveTypeId)
                 .FirstOrDefaultAsync();
 
-            if (ledger == null) return;
+            if (ledger == null)
+            {
+                ledger = new LeaveLedger
+                {
+                    EmployeeID = employeeId,
+                    ProductID = leaveTypeId,
+                    OrganizationID = organizationId,
+                    CreatedBy = userId,
+                };
+
+                await CreateAsync(ledger);
+            }
 
             var newTransaction = LeaveTransaction.NewLeaveTransaction(userId: userId,
                 organizationId: organizationId,
@@ -158,7 +170,7 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<ICollection<LeaveLedger>> GetAllByEmployeeAndLeaveType(int? employeeId)
         {
-            var ledger =await _context.LeaveLedgers
+            var ledger = await _context.LeaveLedgers
                 .Include(t => t.Product)
                 .Include(t => t.LastTransaction)
                 .Include(t => t.LeaveTransactions)
@@ -166,6 +178,15 @@ namespace AccuPay.Infrastructure.Data
                 .Where(t => t.EmployeeID == employeeId)
                 .Where(x => x.Product.PartNo == ProductConstant.SICK_LEAVE || x.Product.PartNo == ProductConstant.VACATION_LEAVE).ToListAsync();
             return ledger;
+        }
+
+        public async Task CreateAsync(LeaveLedger leaveLedger)
+        {
+            if (leaveLedger == null) return;
+
+            await _context.LeaveLedgers.AddAsync(leaveLedger);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -76,6 +76,7 @@ namespace AccuPay.CrystalReportsAPI
             services.AddScoped<IAlphalistReportBuilder, AlphalistReportBuilder>();
             services.AddScoped<IPaystubRepository, PaystubRepository>();
             services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
+            services.AddScoped<IPayrollInvoiceExcelFormatReportBuilder, PayrollInvoiceExcelFormatReportBuilder>();
 
             var serviceProvider = services.BuildServiceProvider();
 

@@ -215,4 +215,10 @@ Public Class GeneralForm
         Next
     End Sub
 
+    Private Sub ContractorToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ContractorToolStripMenuItem.Click
+        Dim form = New ProjectAssignmentForm(z_User)
+        form.ShowDialog()
+
+    End Sub
+
 End Class

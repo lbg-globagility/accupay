@@ -4,6 +4,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.SelfService;
@@ -23,21 +24,30 @@ namespace AccuPay.Web.TimeLogs
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
         private readonly ITimeLogRepository _repository;
+<<<<<<< HEAD
         private readonly IMapper _mapper;
         private readonly IEmployeeRepository _employeeRepository;
+=======
+        private readonly ITimeAttendanceLogDataService _timeAttendanceLogDataService;
+>>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
 
         public TimeLogService(
             ITimeLogDataService service,
             ITimeLogImportParser importParser,
             ICurrentUser currentUser,
             ITimeLogRepository repository,
+<<<<<<< HEAD
             IMapper mapper,
             IEmployeeRepository employeeRepository)
+=======
+            ITimeAttendanceLogDataService timeAttendanceLogDataService)
+>>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
         {
             _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
+<<<<<<< HEAD
             _mapper = mapper;
             _employeeRepository = employeeRepository;
         }
@@ -49,6 +59,9 @@ namespace AccuPay.Web.TimeLogs
                 throw new Exception($"Employee number '{employeeNumber}' was not found.");
 
             return (employee.RowID.Value, employee.OrganizationID.Value);
+=======
+            _timeAttendanceLogDataService = timeAttendanceLogDataService;
+>>>>>>> c792b4de0dcc268ae9af168cb6076853fec11b39
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
@@ -169,6 +182,16 @@ namespace AccuPay.Web.TimeLogs
                 InvalidRecords = invalidDtos,
                 GeneratedTimeLogs = timeLogs
             };
+        }
+
+        internal async Task ClockStampAsync(TimeLogClockStamp clockStamp)
+        {
+            var timeAttendanceLog = clockStamp.ToTimeAttendanceLog(userId: _currentUser.UserId,
+                organizationId: _currentUser.OrganizationId,
+                employeeId: _currentUser.HasEmployeeId ? _currentUser.EmployeeId.Value : clockStamp.EmployeeId);
+
+            await _timeAttendanceLogDataService.SaveAsync(entity: timeAttendanceLog,
+                _currentUser.UserId);
         }
 
         private static TimeLogImportDetailsDto ConvertToImportDetailsDto(TimeLogImportModel parsedResult)

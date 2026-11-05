@@ -294,6 +294,14 @@ namespace AccuPay.Infrastructure.Data
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<PayPeriod> GetMostRecentAsync(int organizationId)
+            => await CreateBaseQuery(organizationId)
+                .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
+
+        public async Task<PayPeriod> GetMostRecentAsync(Organization organization)
+            => await GetMostRecentAsync(organization.RowID.Value);
+
         #endregion Single entity
 
         #region List of entities

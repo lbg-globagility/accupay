@@ -13,7 +13,7 @@ namespace AccuPay.Infrastructure.Data
     public class EmployeeDataService : BaseOrganizationDataService<Employee>, IEmployeeDataService
     {
         private const string UserActivityName = "Employee";
-
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IPositionRepository _positionRepository;
@@ -35,6 +35,7 @@ namespace AccuPay.Infrastructure.Data
                 policy,
                 entityName: "Employee")
         {
+            _employeeRepository = employeeRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _productRepository = productRepository;
             _positionRepository = positionRepository;
@@ -156,6 +157,9 @@ namespace AccuPay.Infrastructure.Data
                 organizationId: entity.OrganizationID.Value,
                 changedEmployeeId: entity.RowID.Value);
         }
+
+        public async Task<ICollection<Employee>> GetAllActiveEmployeesWithOrganizationAsync()
+            => await _employeeRepository.GetAllActiveEmployeesWithOrganizationAsync();
 
         #endregion Overrides
     }

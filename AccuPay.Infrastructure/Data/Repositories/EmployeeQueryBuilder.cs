@@ -110,6 +110,12 @@ namespace AccuPay.Infrastructure.Data
             return this;
         }
 
+        public IEmployeeQueryBuilder IncludeOrganization()
+        {
+            _query = _query.Include(x => x.Organization);
+            return this;
+        }
+
         #endregion Builder Methods
 
         public List<Employee> ToList(int organizationId)

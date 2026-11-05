@@ -279,6 +279,23 @@ namespace AccuPay.Infrastructure.Data
                     }
                     break;
 
+                case ProductConstant.SOLO_PARENT_LEAVE:
+                    filedLeaveHours = timeEntries.Sum(t => t.SoloParentLeaveHours);
+                    foreach (var timeEntry in timeEntries)
+                    {
+                        var leaveHours = timeEntry.SoloParentLeaveHours;
+                        decrementTenureLeaveHours -= leaveHours;
+
+                        leaveTransactions.Add(CreateLeaveTransaction(leaveLedger,
+                            userId,
+                            employeeId,
+                            organizationId,
+                            decrementTenureLeaveHours,
+                            timeEntry,
+                            leaveHours));
+                    }
+                    break;
+
                 default:
                     filedLeaveHours = 0;
                     break;

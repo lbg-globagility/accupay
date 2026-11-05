@@ -16,8 +16,7 @@ namespace AccuPay.Infrastructure.Data
                 payPeriodRepository,
                 context,
                 policy,
-                entityName: ENTITY_NAME,
-                entityNamePlural: $"{ENTITY_NAME}s")
+                entityName: ENTITY_NAME)
         {
             _bankFileHeaderRepository = bankFileHeaderRepository;
         }

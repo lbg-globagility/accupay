@@ -467,6 +467,12 @@
     <Compile Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\Providers\AccessOffshoring\AccessOffshoringPayrollInvoiceForm.Designer.vb">
+      <DependentUpon>AccessOffshoringPayrollInvoiceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Reports\Providers\AccessOffshoring\AccessOffshoringPayrollInvoiceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileBDOReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileEasyExcelReportProvider.vb" />
@@ -474,7 +480,47 @@
     <Compile Include="Reports\Reports\Providers\BankFileSecurityBankReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileSimpleExcelReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PayrollInvoiceExcelFormatReportProvider.vb" />
+    <Compile Include="Views\Contractor\ContractorProject\ContractorProjectSaveChangesForm.Designer.vb">
+      <DependentUpon>ContractorProjectSaveChangesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Contractor\ContractorProject\ContractorProjectSaveChangesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Contractor\ContractorSaveChangesForm.Designer.vb">
+      <DependentUpon>ContractorSaveChangesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Contractor\ContractorSaveChangesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Contractor\ControlExtensions.vb" />
+    <Compile Include="Views\Contractor\ProjectAssignmentForm.Designer.vb">
+      <DependentUpon>ProjectAssignmentForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Contractor\ProjectAssignmentForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Contractor\ProjectEmployee\ProjectEmployeeModel.vb" />
+    <Compile Include="Views\Contractor\ProjectEmployee\ProjectEmployeeSaveChangesForm.Designer.vb">
+      <DependentUpon>ProjectEmployeeSaveChangesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Contractor\ProjectEmployee\ProjectEmployeeSaveChangesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Contractor\WinFormUtils.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
+    <Compile Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.Designer.vb">
+      <DependentUpon>ApplySoloParentBenefitForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.Designer.vb">
+      <DependentUpon>EditSoloParentBenefitForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </Compile>
@@ -1734,6 +1780,27 @@
     <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.resx">
       <DependentUpon>BankFileTextFormatSecurityBankForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\Providers\AccessOffshoring\AccessOffshoringPayrollInvoiceForm.resx">
+      <DependentUpon>AccessOffshoringPayrollInvoiceForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Contractor\ContractorProject\ContractorProjectSaveChangesForm.resx">
+      <DependentUpon>ContractorProjectSaveChangesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\ApplySoloParentBenefitForm.resx">
+      <DependentUpon>ApplySoloParentBenefitForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\EditSoloParentBenefitForm.resx">
+      <DependentUpon>EditSoloParentBenefitForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Contractor\ContractorSaveChangesForm.resx">
+      <DependentUpon>ContractorSaveChangesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Contractor\ProjectAssignmentForm.resx">
+      <DependentUpon>ProjectAssignmentForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Contractor\ProjectEmployee\ProjectEmployeeSaveChangesForm.resx">
+      <DependentUpon>ProjectEmployeeSaveChangesForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2423,6 +2490,10 @@
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
       <Name>AccuPay.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.EasyCompletionComboBox\SergeUtils.csproj">
+      <Project>{25438301-ddf3-4efd-8c17-4aa3249cc9e0}</Project>
+      <Name>SergeUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
