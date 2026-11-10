@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CcEmailSender.cs" />
     <Compile Include="EmailConfig.cs" />
     <Compile Include="EmailService.cs">
       <SubType>Component</SubType>

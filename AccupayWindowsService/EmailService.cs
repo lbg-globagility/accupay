@@ -4,6 +4,7 @@ using AccuPay.CrystalReports;
 using GlobagilityShared.EmailSender;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.ServiceProcess;
@@ -35,6 +36,8 @@ namespace AccupayWindowsService
     {
         private Timer _emailTimer;
         private EmailSender _emailSender;
+        private CcEmailSender _ccEmailSender;
+        private EmailConfig _emailConfig;
 
         private const string PayslipsFolderName = "Payslips";
         private const string DailyAttendanceReportsFolderName = "DailyAttendanceReports";
@@ -48,7 +51,9 @@ namespace AccupayWindowsService
             InitializeComponent();
 
             _emailTimer = new Timer();
-            _emailSender = new EmailSender(new EmailConfig());
+            _emailConfig = new EmailConfig();
+            _emailSender = new EmailSender(_emailConfig);
+            _ccEmailSender = new CcEmailSender(_emailConfig);
             _serviceScopeFactory = serviceScopeFactory;
         }
 
@@ -244,9 +249,7 @@ namespace AccupayWindowsService
 
             WriteToFile($"{paystubEmailLog} Sending...");
 
-            _emailSender.SendEmail(employee.EmailAddress, subject, body, attachments);
-
-            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
+            SendWithCc(employee.EmailAddress, _emailConfig.DailyAttendanceReportCcEmails, subject, body, attachments, paystubEmailLog);
 
             await dataService.Finish(paystubEmail.RowID, fileName, employee.EmailAddress);
         }
@@ -287,11 +290,30 @@ namespace AccupayWindowsService
 
             WriteToFile($"{paystubEmailLog} Sending...");
 
-            _emailSender.SendEmail(employee.EmailAddress, subject, body, attachments);
-
-            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
+            SendWithCc(employee.EmailAddress, _emailConfig.PayslipCcEmails, subject, body, attachments, paystubEmailLog);
 
             await dataService.Finish(paystubEmail.RowID, fileName, employee.EmailAddress);
+        }
+
+        private void SendWithCc(
+            string emailAddress,
+            IReadOnlyList<string> ccAddresses,
+            string subject,
+            string body,
+            string[] attachments,
+            string paystubEmailLog)
+        {
+            if (ccAddresses == null || ccAddresses.Count == 0)
+            {
+                _emailSender.SendEmail(emailAddress, subject, body, attachments);
+
+                WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {emailAddress}]");
+                return;
+            }
+
+            _ccEmailSender.SendEmail(emailAddress, ccAddresses, subject, body, attachments);
+
+            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {emailAddress}] [CC: {string.Join(", ", ccAddresses)}]");
         }
 
         private async Task<bool> Validate(
@@ -390,9 +412,7 @@ namespace AccupayWindowsService
 
             WriteToFile($"{paystubEmailLog} Sending...");
 
-            _emailSender.SendEmail(emailAddress, subject, body, attachments);
-
-            WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {emailAddress}]");
+            SendWithCc(emailAddress, _emailConfig.PayslipCcEmails, subject, body, attachments, paystubEmailLog);
 
             await dataService.Finish(paystubEmail.RowID, fileName, emailAddress);
         }
