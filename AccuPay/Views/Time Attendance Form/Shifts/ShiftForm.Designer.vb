@@ -148,6 +148,7 @@ Partial Class ShiftForm
         Me.colBreakLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colIsRestDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.colRequiredLunch = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.colEarlyKnockOff = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.colIsExisting = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colMarkAsWholeDay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -719,7 +720,7 @@ Partial Class ShiftForm
         Me.grid.AllowUserToResizeRows = False
         Me.grid.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colId, Me.colEmployeeId, Me.colEmployeeNo, Me.colFullName, Me.colDayName, Me.colDate, Me.colTimeFrom, Me.colTimeTo, Me.colBreakTimeFrom, Me.colBreakLength, Me.colIsRestDay, Me.colRequiredLunch, Me.colIsExisting, Me.colHasChanged, Me.colMarkAsWholeDay, Me.colGracePeriod})
+        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colId, Me.colEmployeeId, Me.colEmployeeNo, Me.colFullName, Me.colDayName, Me.colDate, Me.colTimeFrom, Me.colTimeTo, Me.colBreakTimeFrom, Me.colBreakLength, Me.colIsRestDay, Me.colRequiredLunch, Me.colEarlyKnockOff, Me.colIsExisting, Me.colHasChanged, Me.colMarkAsWholeDay, Me.colGracePeriod})
         Me.grid.ContextMenuStrip = Me.ContextMenuStrip2
         Me.grid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.grid.Location = New System.Drawing.Point(0, 0)
@@ -1229,6 +1230,14 @@ Partial Class ShiftForm
         Me.colRequiredLunch.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.colRequiredLunch.Width = 48
         '
+        'colEarlyKnockOff
+        '
+        Me.colEarlyKnockOff.DataPropertyName = "EarlyKnockOff"
+        Me.colEarlyKnockOff.HeaderText = "Early Knock Off"
+        Me.colEarlyKnockOff.Name = "colEarlyKnockOff"
+        Me.colEarlyKnockOff.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colEarlyKnockOff.Width = 56
+        '
         'colIsExisting
         '
         Me.colIsExisting.DataPropertyName = "IsExisting"
@@ -1414,6 +1423,7 @@ Partial Class ShiftForm
     Friend WithEvents colBreakLength As DataGridViewTextBoxColumn
     Friend WithEvents colIsRestDay As DataGridViewCheckBoxColumn
     Friend WithEvents colRequiredLunch As DataGridViewCheckBoxColumn
+    Friend WithEvents colEarlyKnockOff As DataGridViewCheckBoxColumn
     Friend WithEvents colIsExisting As DataGridViewTextBoxColumn
     Friend WithEvents colHasChanged As DataGridViewTextBoxColumn
     Friend WithEvents colMarkAsWholeDay As DataGridViewCheckBoxColumn

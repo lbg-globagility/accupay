@@ -60,6 +60,12 @@ namespace AccuPay.Core.Entities
         public bool RequiresLunchInOut { get; set; }
 
         /// <summary>
+        /// When true, the employee is allowed to knock off early: no late or undertime
+        /// hours (and therefore no late/undertime deduction) are computed for this shift.
+        /// </summary>
+        public bool EarlyKnockOff { get; set; }
+
+        /// <summary>
         /// Computes the shift hours and also update the work hours.
         /// </summary>
         ///

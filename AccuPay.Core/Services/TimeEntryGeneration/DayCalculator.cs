@@ -211,6 +211,12 @@ namespace AccuPay.Core.Services
 
             timeEntry.ApplyLunchBreakDeviation(timeLog?.LunchOut, timeLog?.LunchIn, currentShift.BreakStartTime, currentShift.BreakLength);
 
+            if (currentShift.EarlyKnockOff)
+            {
+                timeEntry.LateHours = 0;
+                timeEntry.UndertimeHours = 0;
+            }
+
             timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
 
             if (leavePeriod != null)
@@ -746,7 +752,7 @@ namespace AccuPay.Core.Services
                     timeEntry.LateHours +
                     timeEntry.UndertimeHours);
 
-                if (missingHours > 0 && !payrate.IsHoliday)
+                if (missingHours > 0 && !payrate.IsHoliday && !currentShift.EarlyKnockOff)
                 {
                     timeEntry.UndertimeHours += missingHours;
                 }
