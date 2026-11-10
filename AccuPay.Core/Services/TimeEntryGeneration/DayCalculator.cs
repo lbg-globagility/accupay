@@ -664,7 +664,7 @@ namespace AccuPay.Core.Services
             if (IsExemptDueToHoliday(payrate, hasWorkedLastDay))
                 return;
 
-            timeEntry.AbsentHours = currentshift.WorkingHours;
+            timeEntry.AbsentHours = PayrollTools.WorkHoursPerDay;
         }
 
         /// <summary>
