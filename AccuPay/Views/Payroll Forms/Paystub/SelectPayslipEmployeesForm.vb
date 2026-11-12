@@ -47,8 +47,6 @@ Public Class SelectPayslipEmployeesForm
 
     Private _paystubs As List(Of Paystub)
 
-    Private _tickedPaystubIDs As IList(Of Integer)
-
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional reportType As String = PaystubEmail.TypePayslip)
 
         InitializeComponent()
@@ -107,7 +105,6 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Function Load() As Task
         _paystubs = Await LoadPaystubs()
-        _tickedPaystubIDs = _paystubs.Select(Function(x) x.RowID.Value).ToList()
         ShowEmployees(_paystubs)
     End Function
     Private Async Function LoadPaystubs() As Task(Of List(Of Paystub))
@@ -359,8 +356,10 @@ Public Class SelectPayslipEmployeesForm
 
                 Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
 
+                Dim tickedPaystubIds = GetTickedPaystubIds()
+
                 Dim employeeIds = _paystubs.
-                    Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+                    Where(Function(m) tickedPaystubIds.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
                     Select(Function(m) m.EmployeeID.Value).
                     ToArray()
 
@@ -393,8 +392,10 @@ Public Class SelectPayslipEmployeesForm
 
                 Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
 
+                Dim tickedPaystubIds = GetTickedPaystubIds()
+
                 Dim employeeIds = _paystubs.
-                Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+                Where(Function(m) tickedPaystubIds.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
                 Select(Function(m) m.EmployeeID.Value).
                 ToArray()
 
@@ -654,8 +655,10 @@ Public Class SelectPayslipEmployeesForm
 
             Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
 
+            Dim tickedPaystubIds = GetTickedPaystubIds()
+
             Dim employeeIds = _paystubs.
-            Where(Function(m) _tickedPaystubIDs.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
+            Where(Function(m) tickedPaystubIds.Contains(m.RowID.Value)).OrderBy(Function(d) d.Employee.LastName).
             Select(Function(m) m.EmployeeID.Value).
             ToArray()
 
@@ -674,6 +677,19 @@ Public Class SelectPayslipEmployeesForm
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
     End Sub
+    ''' <summary>
+    ''' Returns the paystub IDs of the rows currently ticked in the grid.
+    ''' </summary>
+    Private Function GetTickedPaystubIds() As HashSet(Of Integer)
+        ' Commit any pending checkbox edit so the latest tick state is read.
+        EmployeeGridView.EndEdit()
+
+        Return New HashSet(Of Integer)(
+            _employeeModels.
+                Where(Function(m) m.IsSelected).
+                Select(Function(m) m.PaystubId))
+    End Function
+
     Private Function GetDefaultFileName(
       reportName As String) As String
 
