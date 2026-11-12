@@ -47,6 +47,13 @@ Public Class SelectPayslipEmployeesForm
 
     Private _paystubs As List(Of Paystub)
 
+    Private Const EmployeeGroupEmployee As String = "Employee"
+
+    Private Const EmployeeGroupContractor As String = "Contractor"
+
+    ' Prevents the employee group dropdown from reloading the list while the form is still initializing.
+    Private _isEmployeeGroupInitialized As Boolean
+
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional reportType As String = PaystubEmail.TypePayslip)
 
         InitializeComponent()
@@ -87,6 +94,8 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowOrHideToolStripButtonsBasedOnPayPeriod()
 
+        InitializeEmployeeGroupDropdown()
+
         Await Load()
 
         If _policyHelper.ShowActual Then
@@ -103,9 +112,41 @@ Public Class SelectPayslipEmployeesForm
 
     End Sub
 
+    Private Sub InitializeEmployeeGroupDropdown()
+        ' The regular payslip lists everyone, so the Employee/Contractor filter only applies to the custom reports.
+        Dim showDropdown = _reportType <> PaystubEmail.TypePayslip
+
+        EmployeeGroupToolStripSeparator.Visible = showDropdown
+        EmployeeGroupToolStripLabel.Visible = showDropdown
+        EmployeeGroupToolStripComboBox.Visible = showDropdown
+
+        ' Access Offshoring payslip defaults to Contractor, Daily Attendance Report defaults to Employee.
+        EmployeeGroupToolStripComboBox.SelectedItem = If(
+            _reportType = PaystubEmail.TypeAccessOffshoringPayslip,
+            EmployeeGroupContractor,
+            EmployeeGroupEmployee)
+
+        _isEmployeeGroupInitialized = True
+    End Sub
+
+    Private Async Sub EmployeeGroupToolStripComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles EmployeeGroupToolStripComboBox.SelectedIndexChanged
+
+        If Not _isEmployeeGroupInitialized Then Return
+
+        DisableAllButtons()
+        Try
+            Await Load()
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name))
+        Finally
+            DisableAllButtons(disable:=False)
+        End Try
+    End Sub
+
     Private Async Function Load() As Task
         _paystubs = Await LoadPaystubs()
-        ShowEmployees(_paystubs)
+        Await ShowEmployees(_paystubs)
     End Function
     Private Async Function LoadPaystubs() As Task(Of List(Of Paystub))
         Dim paystubs = (Await _paystubRepository.
@@ -117,8 +158,8 @@ Public Class SelectPayslipEmployeesForm
             z_OrganizationID,
             New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate))
 
-        ' The Access Offshoring payslip is for contractors only, the Daily Attendance Report is for regular employees only.
-        Dim forContractors = _reportType = PaystubEmail.TypeAccessOffshoringPayslip
+        ' Show either contractors or regular employees depending on the selected employee group.
+        Dim forContractors = CStr(EmployeeGroupToolStripComboBox.SelectedItem) = EmployeeGroupContractor
 
         Return paystubs.
             Where(Function(p) contractorEmployeeIds.Contains(p.EmployeeID.Value) = forContractors).

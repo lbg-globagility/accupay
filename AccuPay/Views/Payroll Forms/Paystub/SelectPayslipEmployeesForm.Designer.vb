@@ -61,6 +61,9 @@ Partial Class SelectPayslipEmployeesForm
         Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.EmployeeGroupToolStripSeparator = New System.Windows.Forms.ToolStripSeparator()
+        Me.EmployeeGroupToolStripLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.EmployeeGroupToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.Panel1.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -259,7 +262,7 @@ Partial Class SelectPayslipEmployeesForm
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton, Me.EmployeeGroupToolStripSeparator, Me.EmployeeGroupToolStripLabel, Me.EmployeeGroupToolStripComboBox})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
@@ -353,6 +356,24 @@ Partial Class SelectPayslipEmployeesForm
         Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
         Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
+        'EmployeeGroupToolStripSeparator
+        '
+        Me.EmployeeGroupToolStripSeparator.Name = "EmployeeGroupToolStripSeparator"
+        Me.EmployeeGroupToolStripSeparator.Size = New System.Drawing.Size(6, 25)
+        '
+        'EmployeeGroupToolStripLabel
+        '
+        Me.EmployeeGroupToolStripLabel.Name = "EmployeeGroupToolStripLabel"
+        Me.EmployeeGroupToolStripLabel.Size = New System.Drawing.Size(39, 22)
+        Me.EmployeeGroupToolStripLabel.Text = "Show:"
+        '
+        'EmployeeGroupToolStripComboBox
+        '
+        Me.EmployeeGroupToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.EmployeeGroupToolStripComboBox.Items.AddRange(New Object() {"Employee", "Contractor"})
+        Me.EmployeeGroupToolStripComboBox.Name = "EmployeeGroupToolStripComboBox"
+        Me.EmployeeGroupToolStripComboBox.Size = New System.Drawing.Size(121, 25)
+        '
         'SelectPayslipEmployeesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -410,4 +431,7 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents PayslipTypeColumn As DataGridViewTextBoxColumn
     Friend WithEvents ResetEmailButtonColumn As DataGridViewLinkColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
+    Friend WithEvents EmployeeGroupToolStripSeparator As ToolStripSeparator
+    Friend WithEvents EmployeeGroupToolStripLabel As ToolStripLabel
+    Friend WithEvents EmployeeGroupToolStripComboBox As ToolStripComboBox
 End Class
