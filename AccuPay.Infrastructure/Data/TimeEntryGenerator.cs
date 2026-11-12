@@ -189,11 +189,11 @@ namespace AccuPay.Infrastructure.Data
             }
 
             PostLegalHolidayCheck(employee, timeEntries, resources.Policy, regularHolidaysList, resources.CalendarCollection, payPeriod.End);
-            timeEntries.ForEach(t =>
-            {
-                t.RegularHolidayPay += t.BasicRegularHolidayPay;
-                t.TotalDayPay += t.BasicRegularHolidayPay;
-            });
+            //timeEntries.ForEach(t =>
+            //{
+            //    t.RegularHolidayPay += t.BasicRegularHolidayPay;
+            //    t.TotalDayPay += t.BasicRegularHolidayPay;
+            //});
 
             if (employee.IsUnderAgency)
             {

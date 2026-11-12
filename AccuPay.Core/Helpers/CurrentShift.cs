@@ -130,7 +130,5 @@ namespace AccuPay.Core.Helpers
         public bool MarkedAsWholeDay => _shift?.MarkedAsWholeDay ?? false;
 
         public int? GracePeriod => _shift?.GracePeriod;
-
-        public bool EarlyKnockOff => _shift?.EarlyKnockOff ?? false;
     }
 }

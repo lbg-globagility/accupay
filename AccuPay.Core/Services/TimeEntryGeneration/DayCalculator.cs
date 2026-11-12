@@ -210,13 +210,9 @@ namespace AccuPay.Core.Services
             UpdateLateHoursByPolicies(timeEntry, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, coveredPeriod);
 
             timeEntry.ApplyLunchBreakDeviation(timeLog?.LunchOut, timeLog?.LunchIn, currentShift.BreakStartTime, currentShift.BreakLength);
-
-            if (currentShift.EarlyKnockOff)
-            {
-                timeEntry.LateHours = 0;
-                timeEntry.UndertimeHours = 0;
-            }
-
+            //remove the late and undetime
+            timeEntry.LateHours = 0;
+            timeEntry.UndertimeHours = 0;
             timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
 
             if (leavePeriod != null)
@@ -752,7 +748,7 @@ namespace AccuPay.Core.Services
                     timeEntry.LateHours +
                     timeEntry.UndertimeHours);
 
-                if (missingHours > 0 && !payrate.IsHoliday && !currentShift.EarlyKnockOff)
+                if (missingHours > 0 && !payrate.IsHoliday)
                 {
                     timeEntry.UndertimeHours += missingHours;
                 }
@@ -890,7 +886,7 @@ namespace AccuPay.Core.Services
                     var isPaidToday = timeEntry.GetTotalDayPay() > 0;
 
                     var isEntitledToHolidayPay =
-                        (isHolidayPayInclusive == false) &&
+                        
                         (hasWorkedLastDay ||
                         isPaidToday ||
                         _policy.RequiredToWorkTheDayBeforeHoliday == false);
