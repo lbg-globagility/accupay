@@ -60,7 +60,8 @@ namespace AccuPay.Infrastructure.Reports.Customize
             int organizationId,
             int payPeriodId,
             int[] employeeIds,
-            string saveFilePath)
+            string saveFilePath,
+            string sheetNameSuffix = null)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
@@ -93,12 +94,16 @@ namespace AccuPay.Infrastructure.Reports.Customize
                     g => g.Key,
                     g => g.GroupBy(s => s.DateSched.Date).ToDictionary(d => d.Key, d => d.First()));
 
-            var usedSheetNames = new HashSet<string>();
+            var usedSheetNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             var newFile = new FileInfo(saveFilePath);
 
             using (var excel = new ExcelPackage(newFile))
             {
+                // when appending to an existing workbook, avoid colliding with its sheet names
+                foreach (var existingWorksheet in excel.Workbook.Worksheets)
+                    usedSheetNames.Add(existingWorksheet.Name);
+
                 foreach (var paystub in paystubs)
                 {
                     var employee = paystub.Employee;
@@ -113,7 +118,7 @@ namespace AccuPay.Infrastructure.Reports.Customize
 
                     var allowanceItems = await _paystubRepository.GetAllowanceItemsAsync(paystub.RowID.Value);
 
-                    var sheetName = GetUniqueSheetName(employee.FullNameLastNameFirst, usedSheetNames);
+                    var sheetName = GetUniqueSheetName(employee.FullNameLastNameFirst, usedSheetNames, sheetNameSuffix);
 
                     var worksheet = excel.Workbook.Worksheets.Add(sheetName);
 
@@ -533,14 +538,25 @@ namespace AccuPay.Infrastructure.Reports.Customize
             ApplyGrid(worksheet.Cells[$"A{deductionsStartRow}:E{rowIndex}"]);
         }
 
-        private string GetUniqueSheetName(string preferredName, HashSet<string> usedSheetNames)
+        private string GetUniqueSheetName(string preferredName, HashSet<string> usedSheetNames, string nameSuffix = null)
         {
-            var sanitized = new string(preferredName
+            string Sanitize(string value) => new string((value ?? "")
                 .Select(c => "\\/?*[]:".IndexOf(c) >= 0 ? '-' : c)
                 .ToArray());
 
-            if (sanitized.Length > 31)
-                sanitized = sanitized.Substring(0, 31);
+            var sanitizedSuffix = Sanitize(nameSuffix);
+            if (sanitizedSuffix.Length > 31)
+                sanitizedSuffix = sanitizedSuffix.Substring(0, 31);
+
+            var sanitizedName = Sanitize(preferredName);
+            var maxNameLength = 31 - sanitizedSuffix.Length;
+            if (sanitizedName.Length > maxNameLength)
+                sanitizedName = sanitizedName.Substring(0, maxNameLength);
+
+            var sanitized = sanitizedName + sanitizedSuffix;
+
+            if (string.IsNullOrWhiteSpace(sanitized))
+                sanitized = "Sheet";
 
             var candidate = sanitized;
             var suffix = 1;

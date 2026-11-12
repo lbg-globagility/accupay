@@ -143,6 +143,7 @@ namespace AccupayWindowsService
                 {
                     await SendAccessOffshoringPayslipEmail(
                         accessOffshoringPayslipBuilder,
+                        dailyAttendanceReportBuilder,
                         paystubEmail,
                         paystubEmailLog,
                         payDate,
@@ -256,6 +257,7 @@ namespace AccupayWindowsService
 
         private async Task SendAccessOffshoringPayslipEmail(
             IAccessOffshoringPayslip accessOffshoringPayslipBuilder,
+            IDailyAttendanceReport dailyAttendanceReportBuilder,
             PaystubEmail paystubEmail,
             string paystubEmailLog,
             DateTime payDate,
@@ -270,17 +272,27 @@ namespace AccupayWindowsService
             var saveFolderPath = GetOrCreateDirectory(AccessOffshoringPayslipsFolderName);
             var filePath = Path.Combine(saveFolderPath, fileName);
 
+            var employeeIds = new int[] { employee.RowID.Value };
+
             await accessOffshoringPayslipBuilder.CreateReport(
                 organizationId: organizationId,
                 payPeriodId: payPeriodId,
-                employeeIds: new int[] { employee.RowID.Value },
+                employeeIds: employeeIds,
                 saveFilePath: filePath);
+
+            // append the timesheet (daily attendance report) as a new sheet in the same workbook
+            await dailyAttendanceReportBuilder.CreateReport(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId,
+                employeeIds: employeeIds,
+                saveFilePath: filePath,
+                sheetNameSuffix: " - Timesheet");
 
             var cutoffDate = payDate.ToString("MMMM d, yyyy");
 
             var subject = $"Payslip for {cutoffDate}";
 
-            var body = $"Please see attached payslip for {cutoffDate}." +
+            var body = $"Please see attached payslip and timesheet for {cutoffDate}." +
                 $"\n\n" +
                 $"Thank you," +
                 $"\n" +
