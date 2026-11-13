@@ -52,7 +52,14 @@ namespace AccuPay.Core.Entities
         [NotMapped]
         public DateTime? TimeOutFull => ToFullDate(TimeOut);
 
-        private DateTime? ToFullDate(TimeSpan? time) => time == null ? (DateTime?)null : LogDate.Date.Add(time.Value);
+        private DateTime? ToFullDate(TimeSpan? time)
+        {
+            if (time == null) return null;
+
+            var date = TimeIn.HasValue && time.Value < TimeIn.Value ? LogDate.Date.AddDays(1) : LogDate.Date;
+
+            return date.Add(time.Value);
+        }
 
     }
 }

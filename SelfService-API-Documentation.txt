@@ -583,6 +583,14 @@ writes its times to the employee's time log for that day (the time log
 is created if the employee has none for that date yet); times the
 filing doesn't have are left as they are.
 
+For a shift that runs past midnight (e.g. 9:00 PM - 5:00 AM), send
+logDate as the day the shift started. Only the time of day of checkIn,
+lunchOut, lunchIn and checkOut is kept, and a time earlier than the
+filing's checkIn is the next morning: the filing comes back with
+"checkOut": "2026-09-05T05:00:00" for "logDate": "2026-09-04", and
+payroll counts the shift until 5:00 AM. A filing without checkIn keeps
+all of its times on logDate.
+
 A correction that was already approved in Zoho People can be sent with
 "status": "Approved" to update the time log right away, or created as
 Pending and approved later with the approve call below.
@@ -625,6 +633,15 @@ time log right away):
   "checkOut": "2026-09-04T17:00:00",
   "reason": "Regularization",
   "status": "Approved"
+}
+
+Example - graveyard shift that started on 2026-09-04:
+{
+  "employeeNumber": "EMP-0001",
+  "logDate": "2026-09-04",
+  "checkIn": "2026-09-04T21:00:00",
+  "checkOut": "2026-09-05T05:00:00",
+  "reason": "Forgot to time out"
 }
 
 Response: { "id": <filingId>, "status": "Pending" | "Approved" }
