@@ -488,21 +488,24 @@ PUT  /api/self-service/timelogs                   (Check Out)
 PUT  /api/self-service/timelogs/lunch-out         (Lunch Out)
 PUT  /api/self-service/timelogs/lunch-in          (Lunch In)
 
-There is no {id} in the URL. Check Out/Lunch Out/Lunch In all locate
-the existing TimeLog row via employeeNumber + date in the request body
-(there is only ever one TimeLog row per employee per calendar day,
-created by Check In). All four actions share the same request DTO
+There is no {id} in the URL. Check In creates the employee's TimeLog
+row for "date". Check Out, Lunch Out and Lunch In attach to the
+employee's latest check-in from no more than 16 hours before the time
+being recorded (endTime, lunchOut or lunchIn), whatever its date, so a
+graveyard shift (e.g. 9:00 PM - 5:00 AM) is checked out on the row of
+the day it started. All four actions share the same request DTO
 (SelfServiceCreateTimeLogDto); each action only reads the field(s)
 relevant to it, but employeeNumber and date are always required by
-model validation.
+model validation. "date" is not used to find the row for Check Out,
+Lunch Out or Lunch In.
 
 Request body (SelfServiceCreateTimeLogDto):
   employeeNumber   string    (required)
   date             date      (required)
   startTime        datetime  (used by Check In)
-  endTime          datetime  (used by Check Out)
-  lunchOut         datetime  (used by Lunch Out)
-  lunchIn          datetime  (used by Lunch In)
+  endTime          datetime  (required by Check Out)
+  lunchOut         datetime  (required by Lunch Out)
+  lunchIn          datetime  (required by Lunch In)
 
 Example - Check In:
 POST /api/self-service/timelogs
@@ -536,10 +539,26 @@ PUT /api/self-service/timelogs
   "endTime": "2026-09-04T17:00:00"
 }
 
-Response: TimeLogDto.
+Example - Check Out of a graveyard shift checked in at 2026-09-04
+21:00 (saved on the 2026-09-04 row):
+PUT /api/self-service/timelogs
+{
+  "employeeNumber": "EMP-0001",
+  "date": "2026-09-05",
+  "endTime": "2026-09-05T05:00:00"
+}
 
-Note: Check In rejects a duplicate check-in for the same employee and
-date (employee already has a TimeIn recorded for that date).
+Response: TimeLogDto. Times are returned as recorded, so the graveyard
+checkout above comes back with "date": "2026-09-04" and
+"endTime": "2026-09-05T05:00:00".
+
+Notes:
+- Check In rejects a duplicate check-in for the same employee and
+  date (employee already has a TimeIn recorded for that date).
+- Check Out, Lunch Out and Lunch In return HTTP 400 when the time
+  they record is missing, when the employee has no check-in within
+  the 16 hours before it, or when that check-in already has the time
+  recorded (e.g. already checked out).
 
 
 ====================================================================

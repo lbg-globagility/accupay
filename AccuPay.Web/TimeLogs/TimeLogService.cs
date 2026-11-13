@@ -20,6 +20,8 @@ namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogService
     {
+        private static readonly TimeSpan CheckInWindow = TimeSpan.FromHours(16);
+
         private readonly ITimeLogDataService _dataService;
         private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
@@ -292,13 +294,12 @@ namespace AccuPay.Web.TimeLogs
         }
         internal async Task<TimeLogDto> Checkout(SelfServiceCreateTimeLogDto timeLog)
         {
+            if (timeLog.EndTime == null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("endTime is required.");
+
             var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
-            var date = timeLog.Date.Date;
 
-            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
-
-            if (existingTimeLog == null)
-                throw new Exception("Time log not found.");
+            var existingTimeLog = await GetCheckedInTimeLogAsync(employeeId, timeLog.EndTime.Value);
 
             if (existingTimeLog.TimeOutFull != null)
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log already checked out for the specified record.");
@@ -313,7 +314,7 @@ namespace AccuPay.Web.TimeLogs
             {
                 Id = existingTimeLog.RowID,
                 EmployeeId = existingTimeLog.EmployeeID ?? 0,
-                EndTime = existingTimeLog.TimeOutFull,
+                EndTime = existingTimeLog.TimeStampOut,
                 Date = existingTimeLog.LogDate,
                 BranchId = existingTimeLog.BranchID
             };
@@ -322,13 +323,12 @@ namespace AccuPay.Web.TimeLogs
         }
         internal async Task<TimeLogDto> LunchOut(SelfServiceCreateTimeLogDto timeLog)
         {
+            if (timeLog.LunchOut == null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("lunchOut is required.");
+
             var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
-            var date = timeLog.Date.Date;
 
-            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
-
-            if (existingTimeLog == null)
-                throw new Exception("Time log not found.");
+            var existingTimeLog = await GetCheckedInTimeLogAsync(employeeId, timeLog.LunchOut.Value);
 
             if (existingTimeLog.LunchOutFull != null)
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch out for the specified record.");
@@ -343,7 +343,7 @@ namespace AccuPay.Web.TimeLogs
             {
                 Id = existingTimeLog.RowID,
                 EmployeeId = existingTimeLog.EmployeeID ?? 0,
-                LunchOut = existingTimeLog.LunchOutFull,
+                LunchOut = existingTimeLog.TimeStampLunchOut,
                 Date = existingTimeLog.LogDate,
                 BranchId = existingTimeLog.BranchID
             };
@@ -352,13 +352,12 @@ namespace AccuPay.Web.TimeLogs
         }
         internal async Task<TimeLogDto> LunchIn(SelfServiceCreateTimeLogDto timeLog)
         {
+            if (timeLog.LunchIn == null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException("lunchIn is required.");
+
             var (employeeId, _) = await ResolveEmployeeAsync(timeLog.EmployeeNumber);
-            var date = timeLog.Date.Date;
 
-            var existingTimeLog = (await _repository.GetLatestByEmployeeAndDatePeriodAsync(employeeId, new TimePeriod(date, date))).FirstOrDefault();
-
-            if (existingTimeLog == null)
-                throw new Exception("Time log not found.");
+            var existingTimeLog = await GetCheckedInTimeLogAsync(employeeId, timeLog.LunchIn.Value);
 
             if (existingTimeLog.LunchInFull != null)
                 throw new AccuPay.Core.Exceptions.BusinessLogicException("Time log has already lunch in for the specified record.");
@@ -373,12 +372,31 @@ namespace AccuPay.Web.TimeLogs
             {
                 Id = existingTimeLog.RowID,
                 EmployeeId = existingTimeLog.EmployeeID ?? 0,
-                LunchIn = existingTimeLog.LunchInFull,
+                LunchIn = existingTimeLog.TimeStampLunchIn,
                 Date = existingTimeLog.LogDate,
                 BranchId = existingTimeLog.BranchID
             };
 
             return dto;
+        }
+
+        private async Task<TimeLog> GetCheckedInTimeLogAsync(int employeeId, DateTime stamp)
+        {
+            var timeLogs = await _repository.GetLatestByEmployeeAndDatePeriodAsync(
+                employeeId,
+                new TimePeriod(stamp.Date.AddDays(-1), stamp.Date));
+
+            var timeLog = timeLogs
+                .Where(x => x.TimeInFull != null && x.TimeInFull <= stamp)
+                .Where(x => stamp - x.TimeInFull.Value <= CheckInWindow)
+                .OrderByDescending(x => x.TimeInFull)
+                .FirstOrDefault();
+
+            if (timeLog == null)
+                throw new AccuPay.Core.Exceptions.BusinessLogicException(
+                    $"No check-in found within {CheckInWindow.TotalHours} hours before {stamp:yyyy-MM-dd HH:mm}.");
+
+            return timeLog;
         }
 
         public async Task<EmployeeTimelogFiling> CreateFiling(CreateEmployeeTimelogFilingDto dto)
